@@ -1,0 +1,7 @@
+//Android projects
+include  ':Android'
+include ':ClientLib'
+
+//Library projects
+include ':dependencyLibs:Mavlink'
+include ':dependencyLibs:usb-serial-for-android:UsbSerialLibrary'
