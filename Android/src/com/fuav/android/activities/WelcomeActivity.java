@@ -118,7 +118,7 @@ public class WelcomeActivity extends Activity{
                         @Override
                         public void onClick(View view) {
                             getSharedPreferences("pf",MODE_APPEND).edit().putString("first","right").commit();
-                            startActivity(new Intent(WelcomeActivity.this,AnimateActivity.class));
+                            startActivity(new Intent(WelcomeActivity.this,HomeActivity.class));
                             finish();
                         }
                     });

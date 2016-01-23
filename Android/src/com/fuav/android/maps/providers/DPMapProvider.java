@@ -4,7 +4,7 @@ package com.fuav.android.maps.providers;
 import com.fuav.android.maps.DPMap;
 import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
-import com.fuav.android.maps.providers.BaiduMap.BaiduMapFragment;
+import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapPrefFragment;
 
 /**

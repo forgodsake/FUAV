@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
-import com.fuav.android.fragments.WidgetsListFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
 
@@ -70,18 +68,20 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         if (isActionDrawerOpened)
             openActionDrawer();
+
+//        // Add the telemetry fragment
+//        final int actionDrawerId = getActionDrawerId();
+//        WidgetsListFragment widgetsListFragment = new WidgetsListFragment();
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(actionDrawerId, widgetsListFragment)
+//                .commit();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        // Add the telemetry fragment
-        final int actionDrawerId = getActionDrawerId();
-        WidgetsListFragment widgetsListFragment = new WidgetsListFragment();
-        getSupportFragmentManager().beginTransaction()
-                    .replace(actionDrawerId, widgetsListFragment)
-                    .commit();
+
 
     }
 

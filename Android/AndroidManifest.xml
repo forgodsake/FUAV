@@ -60,8 +60,8 @@
         android:name=".DroidPlannerApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/smargle1"
-        android:label="@string/app_title"
+        android:icon="@drawable/fuav"
+        android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme.Fullscreen"
         android:windowSoftInputMode="adjustPan">
