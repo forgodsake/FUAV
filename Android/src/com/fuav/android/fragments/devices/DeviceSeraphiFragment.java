@@ -1,4 +1,4 @@
-package com.fuav.android.fragments.Devices;
+package com.fuav.android.fragments.devices;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ public class DeviceSeraphiFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_device_seraphi, container, false);
-        view.findViewById(R.id.bt_connect).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.imageViewLogo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), FlightActivity.class));

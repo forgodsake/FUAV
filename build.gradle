@@ -15,7 +15,7 @@ buildscript {
         classpath 'com.zeroturnaround.jrebel.android:jr-android-gradle:0.9.18'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'io.fabric.tools:gradle:1.15.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.14.449"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584"
     }
 }
 

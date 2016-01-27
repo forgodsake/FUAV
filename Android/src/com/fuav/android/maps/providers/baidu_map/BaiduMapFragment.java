@@ -1,4 +1,4 @@
-package com.fuav.android.maps.providers.BaiduMap;
+package com.fuav.android.maps.providers.baidu_map;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,32 +17,47 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
-import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Polygon;
+import com.baidu.mapapi.map.PolygonOptions;
+import com.baidu.mapapi.map.Polyline;
+import com.baidu.mapapi.map.PolylineOptions;
+import com.baidu.mapapi.map.Projection;
 import com.baidu.mapapi.map.Stroke;
-
-import com.fuav.android.R;
-import com.fuav.android.core.gcs.location.Location;
-import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
-import com.google.android.gms.location.LocationServices;
-import com.o3dr.android.client.Drone;
-import com.o3dr.services.android.lib.coordinate.LatLong;
-import com.o3dr.services.android.lib.coordinate.LatLongAlt;
-import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
-import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.property.FootPrint;
-import com.o3dr.services.android.lib.drone.property.Gps;
-
+import com.baidu.mapapi.map.SupportMapFragment;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.fuav.android.DroidPlannerApp;
+import com.fuav.android.R;
 import com.fuav.android.maps.DPMap;
 import com.fuav.android.maps.MarkerInfo;
 import com.fuav.android.maps.providers.DPMapProvider;
+import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.utils.DroneHelper;
 import com.fuav.android.utils.collection.HashBiMap;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+import com.o3dr.android.client.Drone;
+import com.o3dr.services.android.lib.coordinate.LatLong;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.property.FootPrint;
+import com.o3dr.services.android.lib.drone.property.Gps;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,27 +65,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.model.LatLngBounds;
-import com.baidu.mapapi.map.Polyline;
-import com.baidu.mapapi.map.PolylineOptions;
-import com.baidu.mapapi.map.Polygon;
-import com.baidu.mapapi.map.PolygonOptions;
-import com.baidu.mapapi.map.SupportMapFragment;
-import com.baidu.mapapi.map.Projection;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.MyLocationData;
 
 public class BaiduMapFragment extends SupportMapFragment implements DPMap {
 
@@ -232,8 +225,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
             maxFlightPathSize = args.getInt(EXTRA_MAX_FLIGHT_PATH_SIZE);
         }
 
-        updateCamera(new LatLong(30.3250427246094,120.063011169434), GO_TO_MY_LOCATION_ZOOM);
-
         mMapView = getMapView();
         getBaiduMap().setMapType(BaiduMapPrefFragment.PrefManager.getMapType(context));
         getBaiduMap().setMyLocationEnabled(true);
@@ -245,9 +236,16 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+        updateCamera(new LatLong(30.3250427246094,120.063011169434), GO_TO_MY_LOCATION_ZOOM);
         Log.v("123", "clientstart");
 
-
+        int count = mMapView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = mMapView.getChildAt(i);
+            if (child instanceof ZoomControls ) {
+                child.setVisibility(View.INVISIBLE);
+            }
+        }
 
         return view;//inflater.inflate(R.layout.fragment_baidu_map, viewGroup, false);
     }

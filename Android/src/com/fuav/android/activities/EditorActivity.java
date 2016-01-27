@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -119,7 +121,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      */
     private String openedMissionFilename;
 
-    private FloatingActionButton itemDetailToggle;
     private EditorListFragment editorListFragment;
 
     @Override
@@ -130,9 +131,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
 
-
-
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
+
         setContentView(R.layout.activity_editor);
 
         gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
@@ -149,16 +151,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         zoomToFit.setVisibility(View.VISIBLE);
         zoomToFit.setOnClickListener(this);
 
-        final FloatingActionButton mGoToMyLocation = (FloatingActionButton) findViewById(R.id.my_location_button);
+        final ImageView mGoToMyLocation = (ImageView) findViewById(R.id.my_location_button);
         mGoToMyLocation.setOnClickListener(this);
         mGoToMyLocation.setOnLongClickListener(this);
 
-        final FloatingActionButton mGoToDroneLocation = (FloatingActionButton) findViewById(R.id.drone_location_button);
+        final ImageView mGoToDroneLocation = (ImageView) findViewById(R.id.drone_location_button);
         mGoToDroneLocation.setOnClickListener(this);
         mGoToDroneLocation.setOnLongClickListener(this);
 
-        itemDetailToggle = (FloatingActionButton) findViewById(R.id.toggle_action_drawer);
-        itemDetailToggle.setOnClickListener(this);
+
 
         if (savedInstanceState != null) {
             openedMissionFilename = savedInstanceState.getString(EXTRA_OPENED_MISSION_FILENAME);
@@ -185,7 +186,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         if (actionDrawer == null)
             return;
 
-        itemDetailToggle.setActivated(isOpened);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         missionProxy = dpApp.getMissionProxy();
         if (missionProxy != null) {
             missionProxy.selection.addSelectionUpdateListener(this);
-            itemDetailToggle.setVisibility(missionProxy.selection.getSelected().isEmpty() ? View.GONE : View.VISIBLE);
+
         }
 
         updateMissionLength();
@@ -217,17 +217,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final EditorMapFragment planningMapFragment = gestureMapFragment.getMapFragment();
 
         switch (v.getId()) {
-            case R.id.toggle_action_drawer:
-                if (missionProxy == null)
-                    return;
-
-                if (itemDetailFragment == null) {
-                    List<MissionItemProxy> selected = missionProxy.selection.getSelected();
-                    showItemDetail(selectMissionDetailType(selected));
-                } else {
-                    removeItemDetail();
-                }
-                break;
 
             case R.id.zoom_to_fit_button:
                 if (planningMapFragment != null) {
@@ -567,10 +556,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final boolean isEmpty = selected.isEmpty();
 
         if (isEmpty) {
-            itemDetailToggle.setVisibility(View.GONE);
             removeItemDetail();
         } else {
-            itemDetailToggle.setVisibility(View.VISIBLE);
             if (getTool() == EditorTools.SELECTOR)
                 removeItemDetail();
             else {

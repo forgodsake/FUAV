@@ -24,11 +24,6 @@
             android:icon="@drawable/ic_menu_settings_grey600_24dp"
             android:title="@string/settings" />
 
-        <item
-            android:id="@+id/navigation_contact_us"
-            android:icon="@drawable/ic_menu_flight_data_grey600_24dp"
-            android:title="@string/contact_us"/>
-
     </group>
 
 

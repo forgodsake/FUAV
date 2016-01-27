@@ -8,6 +8,7 @@
     <string name="label_other">Others</string>
     <string name="menu_drone_setup">Drone Setup</string>
     <string name="app_settings">App Settings</string>
+    <string name="app_name">FUAV</string>
     <string name="flight_data">Flight Data</string>
     <string name="editor">Editor</string>
     <string name="upload_mission">Upload mission</string>

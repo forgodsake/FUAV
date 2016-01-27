@@ -6,20 +6,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageView
         android:id="@+id/my_location_button"
         style="@style/Fab.MyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_location" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/me" />
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageView
         android:id="@+id/drone_location_button"
         style="@style/Fab.MyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_navigate" />
+        android:src="@drawable/plane_direction" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/zoom_to_fit_button"
@@ -27,15 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_expand"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/toggle_action_drawer"
-        style="@style/Fab.MyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_flip"
         android:visibility="gone"
         tools:visibility="visible" />
 </LinearLayout>

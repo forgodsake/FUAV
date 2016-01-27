@@ -1,4 +1,4 @@
-package com.fuav.android.fragments.Devices;
+package com.fuav.android.fragments.devices;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import com.fuav.android.R;
 
 
-public class DeviceGimbalFragment extends Fragment {
+public class DeviceSmargleFragment extends Fragment {
 
-
-    public DeviceGimbalFragment() {
+    public DeviceSmargleFragment() {
         // Required empty public constructor
     }
 
@@ -25,6 +24,8 @@ public class DeviceGimbalFragment extends Fragment {
 
         return view;
     }
+
+
 
 
 }

@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fuav.android.R;
-import com.fuav.android.fragments.Devices.DeviceGimbalFragment;
-import com.fuav.android.fragments.Devices.DeviceSeraphiFragment;
-import com.fuav.android.fragments.Devices.DeviceSmargleFragment;
+import com.fuav.android.fragments.devices.DeviceGimbalFragment;
+import com.fuav.android.fragments.devices.DeviceSeraphiFragment;
+import com.fuav.android.fragments.devices.DeviceSmargleFragment;
 
 import java.util.ArrayList;
 import java.util.List;

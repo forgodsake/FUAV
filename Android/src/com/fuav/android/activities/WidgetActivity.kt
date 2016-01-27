@@ -1,14 +1,16 @@
 package com.fuav.android.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.fuav.android.R
 import com.fuav.android.activities.helpers.SuperUI
-import com.fuav.android.fragments.FlightDataFragment
+import com.fuav.android.fragments.FlightMapFragment
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment
 import com.fuav.android.fragments.widget.TowerWidget
 import com.fuav.android.fragments.widget.TowerWidgets
+import com.fuav.android.fragments.widget.video.FullWidgetSoloLinkVideo
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
@@ -21,17 +23,19 @@ public class WidgetActivity : SuperUI() {
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE// 横屏
         setContentView(R.layout.activity_widget)
 
         val fm = supportFragmentManager
-        var flightDataFragment = fm.findFragmentById(R.id.map_view) as FlightDataFragment?
-        if(flightDataFragment == null){
-            flightDataFragment = FlightDataFragment()
-            fm.beginTransaction().add(R.id.map_view, flightDataFragment).commit()
+        var flightMapFragment = fm.findFragmentById(R.id.map_view) as FlightMapFragment?
+        if(flightMapFragment == null){
+            flightMapFragment = FlightMapFragment()
+            fm.beginTransaction().add(R.id.map_view, flightMapFragment).commit()
         }
+        fm.beginTransaction().replace(R.id.widget_view, FullWidgetSoloLinkVideo() ).commit()
 
-        handleIntent(intent)
-
+//        handleIntent(intent)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
     }
 
     override fun addToolbarFragment() {

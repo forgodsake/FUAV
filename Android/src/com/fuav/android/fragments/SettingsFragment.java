@@ -21,15 +21,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.o3dr.android.client.Drone;
-import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
-import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.connection.ConnectionType;
-import com.o3dr.services.android.lib.drone.property.Type;
-
-import org.beyene.sius.unit.length.LengthUnit;
 import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
 import com.fuav.android.activities.helpers.MapPreferencesActivity;
@@ -42,6 +33,14 @@ import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.fuav.android.utils.unit.UnitManager;
 import com.fuav.android.utils.unit.providers.length.LengthUnitProvider;
 import com.fuav.android.utils.unit.systems.UnitSystem;
+import com.google.android.gms.analytics.HitBuilders;
+import com.o3dr.android.client.Drone;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.connection.ConnectionType;
+import com.o3dr.services.android.lib.drone.property.Type;
+
+import org.beyene.sius.unit.length.LengthUnit;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -173,22 +172,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
             }
         }
 
-        // Set the usage statistics preference
-        final String usageStatKey = DroidPlannerPrefs.PREF_USAGE_STATISTICS;
-        final CheckBoxPreference usageStatPref = (CheckBoxPreference) findPreference(usageStatKey);
-        if (usageStatPref != null) {
-            usageStatPref
-                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
-                            // Update the google analytics singleton.
-                            final boolean optIn = (Boolean) newValue;
-                            final GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-                            analytics.setAppOptOut(!optIn);
-                            return true;
-                        }
-                    });
-        }
+
 
         try {
             Preference versionPref = findPreference(DroidPlannerPrefs.PREF_APP_VERSION);
@@ -216,29 +200,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
     private void setupWidgetsPreferences(){
         final Preference widgetsPref = findPreference(DroidPlannerPrefs.PREF_TOWER_WIDGETS);
         if(widgetsPref != null){
-            /*final Activity activity = getActivity();
-            final Preference.OnPreferenceChangeListener widgetPrefChangeListener = new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    final boolean addWidget = (boolean) newValue;
-                    lbm.sendBroadcast(new Intent(ACTION_WIDGET_PREFERENCE_UPDATED)
-                            .putExtra(EXTRA_ADD_WIDGET, addWidget)
-                            .putExtra(EXTRA_WIDGET_PREF_KEY, preference.getKey()));
-                    return true;
-                }
-            };
-
-            final TowerWidgets[] widgets = TowerWidgets.values();
-            for(TowerWidgets widget: widgets){
-                final CheckBoxPreference widgetPref = new CheckBoxPreference(activity);
-                widgetPref.setKey(widget.getPrefKey());
-                widgetPref.setTitle(widget.getLabelResId());
-                widgetPref.setSummary(widget.getDescriptionResId());
-                widgetPref.setChecked(dpPrefs.isWidgetEnabled(widget));
-                widgetPref.setOnPreferenceChangeListener(widgetPrefChangeListener);
-
-                widgetsPref.addPreference(widgetPref);
-            }*/
 
             widgetsPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
