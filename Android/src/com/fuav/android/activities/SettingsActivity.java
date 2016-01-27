@@ -2,6 +2,7 @@ package com.fuav.android.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.fuav.android.R;
@@ -14,6 +15,7 @@ public class SettingsActivity extends DrawerNavigationUI {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 

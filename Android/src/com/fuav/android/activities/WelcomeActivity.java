@@ -2,6 +2,7 @@ package com.fuav.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,7 @@ public class WelcomeActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         views = new ArrayList<View>(4);

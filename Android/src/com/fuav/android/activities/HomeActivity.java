@@ -1,5 +1,6 @@
 package com.fuav.android.activities;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         manager = getSupportFragmentManager();

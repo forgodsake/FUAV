@@ -1,5 +1,6 @@
 package com.fuav.android.activities;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,12 +12,10 @@ import android.view.WindowManager;
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
+import com.fuav.android.fragments.widget.video.MiniWidgetSoloLinkVideo;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
-
-    private static final String EXTRA_IS_ACTION_DRAWER_OPENED = "extra_is_action_drawer_opened";
-    private static final boolean DEFAULT_IS_ACTION_DRAWER_OPENED = true;
 
     private FlightDataFragment flightData;
 
@@ -43,8 +42,9 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
 
-
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 
         setContentView(R.layout.activity_flight);
 
@@ -61,28 +61,17 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             fm.beginTransaction().add(R.id.flight_data_container, flightData).commit();
         }
 
-        boolean isActionDrawerOpened = DEFAULT_IS_ACTION_DRAWER_OPENED;
-        if (savedInstanceState != null) {
-            isActionDrawerOpened = savedInstanceState.getBoolean(EXTRA_IS_ACTION_DRAWER_OPENED, isActionDrawerOpened);
-        }
 
-        if (isActionDrawerOpened)
-            openActionDrawer();
 
-//        // Add the telemetry fragment
-//        final int actionDrawerId = getActionDrawerId();
-//        WidgetsListFragment widgetsListFragment = new WidgetsListFragment();
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(actionDrawerId, widgetsListFragment)
-//                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.video_view, new MiniWidgetSoloLinkVideo())
+                .commit();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-
-
     }
 
 
@@ -107,7 +96,6 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(EXTRA_IS_ACTION_DRAWER_OPENED, isActionDrawerOpened());
     }
 
     @Override
@@ -127,24 +115,20 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
     @Override
     public void onPanelSlide(View view, float v) {
-        final int bottomMargin = (int) getResources().getDimension(R.dimen.action_drawer_margin_bottom);
 
         //Update the bottom margin for the action drawer
         final View flightActionBar = ((ViewGroup)view).getChildAt(0);
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
-        updateActionDrawerBottomMargin(viewLocs[0] + flightActionBar.getWidth(), Math.max((int) (view.getHeight() * v), bottomMargin));
     }
 
     @Override
     public void onPanelCollapsed(View view) {
-        final int bottomMargin = (int) getResources().getDimension(R.dimen.action_drawer_margin_bottom);
 
         //Reset the bottom margin for the action drawer
         final View flightActionBar = ((ViewGroup)view).getChildAt(0);
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
-        updateActionDrawerBottomMargin(viewLocs[0] + flightActionBar.getWidth(), bottomMargin);
     }
 
     @Override
@@ -153,7 +137,6 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         final View flightActionBar = ((ViewGroup)view).getChildAt(0);
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
-        updateActionDrawerBottomMargin(viewLocs[0] + flightActionBar.getWidth(), view.getHeight());
     }
 
     @Override
@@ -163,25 +146,10 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
     @Override
     public void onPanelHidden(View view) {
-        final int bottomMargin = (int) getResources().getDimension(R.dimen.action_drawer_margin_bottom);
 
         final View flightActionBar = ((ViewGroup)view).getChildAt(0);
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
-        updateActionDrawerBottomMargin(viewLocs[0] + flightActionBar.getWidth(), bottomMargin);
     }
 
-    private void updateActionDrawerBottomMargin(int rightEdge, int bottomMargin){
-        final ViewGroup actionDrawerParent = (ViewGroup) getActionDrawer();
-        final View actionDrawer = ((ViewGroup)actionDrawerParent.getChildAt(1)).getChildAt(0);
-
-        final int[] actionDrawerLocs = new int[2];
-        actionDrawer.getLocationInWindow(actionDrawerLocs);
-
-        if(actionDrawerLocs[0] <= rightEdge) {
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) actionDrawerParent.getLayoutParams();
-            lp.bottomMargin = bottomMargin;
-            actionDrawerParent.requestLayout();
-        }
-    }
 }

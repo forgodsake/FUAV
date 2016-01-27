@@ -251,10 +251,8 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         final State droneState = drone.getAttribute(AttributeType.STATE);
         if (isDroneConnected) {
             flightModeTelem.setText(droneState.getVehicleMode().getLabel());
-            flightModeTelem.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_navigation_light_blue_a400_18dp, 0, 0, 0);
         } else {
             flightModeTelem.setText(emptyString);
-            flightModeTelem.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_navigation_grey_700_18dp, 0, 0, 0);
         }
     }
 
@@ -315,10 +313,8 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         hdopStatusView.setVisibility(displayHdop ? View.GONE : View.VISIBLE);
 
         final String update;
-        final int gpsIcon;
         if (!drone.isConnected()) {
             update = (displayHdop ? "hdop: " : "") + emptyString;
-            gpsIcon = R.drawable.ic_gps_off_grey_700_18dp;
             satNoView.setText("S: " + emptyString);
             hdopStatusView.setText("hdop: " + emptyString);
         } else {
@@ -335,13 +331,11 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
                 case Gps.LOCK_3D:
                 case Gps.LOCK_3D_DGPS:
                 case Gps.LOCK_3D_RTK:
-                    gpsIcon = R.drawable.ic_gps_fixed_black_24dp;
                     break;
 
                 case Gps.LOCK_2D:
                 case Gps.NO_FIX:
                 default:
-                    gpsIcon = R.drawable.ic_gps_not_fixed_grey_700_18dp;
                     break;
             }
 
@@ -354,7 +348,6 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         }
 
         gpsTelem.setText(update);
-        gpsTelem.setCompoundDrawablesWithIntrinsicBounds(gpsIcon, 0, 0, 0);
         gpsPopup.update();
     }
 

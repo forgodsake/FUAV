@@ -7,7 +7,7 @@
         android:id="@+id/actionbar_container"
         layout="@layout/actionbar_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_alignParentTop="true" />
 
     <include

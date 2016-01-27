@@ -1,11 +1,12 @@
 package com.fuav.android.activities;
 
-import com.fuav.android.R;
-import com.fuav.android.fragments.SensorSetupFragment;
-
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import com.fuav.android.R;
+import com.fuav.android.fragments.SensorSetupFragment;
 
 /**
  * This class implements and handles the various ui used for the drone
@@ -25,6 +26,7 @@ public class ConfigurationActivity extends DrawerNavigationUI {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_configuration);
 

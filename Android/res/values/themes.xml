@@ -11,8 +11,8 @@
         <item name="android:actionMenuTextAppearance">@style/CustomActionBarTheme.ActionBar.Text</item>
         <item name="actionMenuTextAppearance">@style/CustomActionBarTheme.ActionBar.Text</item>
 
-        <item name="android:actionMenuTextColor">@color/greyText</item>
-        <item name="actionMenuTextColor">@color/greyText</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
 
         <item name="android:spinnerDropDownItemStyle">@style/DropDownItem</item>
         <item name="spinnerDropDownItemStyle">@style/DropDownItem</item>

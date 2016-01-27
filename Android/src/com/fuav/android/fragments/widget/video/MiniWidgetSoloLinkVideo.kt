@@ -10,9 +10,7 @@ import com.fuav.android.R
 import com.fuav.android.activities.WidgetActivity
 import com.fuav.android.fragments.widget.TowerWidget
 import com.fuav.android.fragments.widget.TowerWidgets
-import com.fuav.android.fragments.widget.telemetry.MiniWidgetGeoInfo
 import com.fuav.android.utils.VideoThread
-import me.grantland.widget.AutofitTextView
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
@@ -41,7 +39,7 @@ public class MiniWidgetSoloLinkVideo : TowerWidget() {
         VideoThread(_displayView,activity).start()
 
 
-//        _displayView?.setOnClickListener(View.OnClickListener { startActivity(Intent(activity, WidgetActivity::class.java)) })
+        _displayView?.setOnClickListener({ startActivity(Intent(activity, WidgetActivity::class.java)) })
 
 
     }

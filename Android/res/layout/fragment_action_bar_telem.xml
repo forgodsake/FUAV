@@ -12,48 +12,58 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:minWidth="@dimen/info_bar_flight_mode_width">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/mode"/>
 
         <TextView
             android:id="@+id/bar_flight_mode"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_navigation_grey_700_18dp"
-            android:drawableStart="@drawable/ic_navigation_grey_700_18dp"
+            android:layout_marginLeft="30dp"
             android:text="@string/empty_content"
             android:textSize="@dimen/info_bar_text_size"
+            android:textColor="#FFFFFF"
             tools:text="Acro" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:minWidth="90dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/satelite"/>
 
         <TextView
             android:id="@+id/bar_gps"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
             android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_gps_off_grey_700_18dp"
-            android:drawablePadding="@dimen/info_bar_drawable_padding"
-            android:drawableStart="@drawable/ic_gps_off_grey_700_18dp"
             android:minHeight="40dp"
             android:minWidth="90dp"
             android:text="@string/empty_content"
             android:textSize="@dimen/info_bar_text_size"
+            android:textColor="#FFFFFF"
             tools:text="3D" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:minWidth="80dp">
 
         <TextView
@@ -66,27 +76,7 @@
             android:drawableStart="@drawable/ic_home_grey_700_18dp"
             android:text="@string/empty_content"
             android:textSize="@dimen/info_bar_text_size"
-            tools:text="1000 m" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:minHeight="40dp"
-        android:minWidth="80dp">
-
-        <TextView
-            android:id="@+id/bar_altitude"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_file_upload_grey_700_18dp"
-            android:drawablePadding="@dimen/info_bar_drawable_padding"
-            android:drawableStart="@drawable/ic_file_upload_grey_700_18dp"
-            android:text="@string/empty_content"
-            android:textSize="@dimen/info_bar_text_size"
+            android:textColor="#FFFFFF"
             tools:text="1000 m" />
     </FrameLayout>
 
@@ -97,10 +87,37 @@
         android:minHeight="40dp"
         android:minWidth="80dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/high"/>
+
+        <TextView
+            android:id="@+id/bar_altitude"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:drawablePadding="@dimen/info_bar_drawable_padding"
+            android:text="@string/empty_content"
+            android:textSize="@dimen/info_bar_text_size"
+            android:textColor="#FFFFFF"
+            tools:text="1000 m" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:minHeight="40dp"
+        android:minWidth="80dp">
+
         <TextView
             android:id="@+id/bar_warning"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:singleLine="true"
@@ -124,7 +141,7 @@
         <ImageView
             android:id="@+id/bar_battery"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:src="@drawable/power_full"/>
     </FrameLayout>
@@ -132,14 +149,14 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:minWidth="75dp">
 
         <ImageView
             android:id="@+id/bar_signal"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
             android:layout_gravity="center"
             android:src="@drawable/wifi_100"/>
     </FrameLayout>
