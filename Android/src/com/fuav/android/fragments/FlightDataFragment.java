@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import com.o3dr.services.android.lib.drone.attribute.error.ErrorType;
 /**
  * Created by Fredia Huya-Kouadio on 8/27/15.
  */
-public class FlightDataFragment extends ApiListenerFragment implements SlidingDrawer.OnDrawerOpenListener, SlidingDrawer.OnDrawerCloseListener {
+public class FlightDataFragment extends ApiListenerFragment implements SlidingDrawer.OnDrawerOpenListener, SlidingDrawer.OnDrawerCloseListener,View.OnClickListener {
 
     public static final String EXTRA_SHOW_ACTION_DRAWER_TOGGLE = "extra_show_action_drawer_toggle";
     private static final boolean DEFAULT_SHOW_ACTION_DRAWER_TOGGLE = false;
@@ -158,6 +159,11 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
 
     private ImageView mGoToMyLocation;
     private ImageView mGoToDroneLocation;
+    private Button button_take_off;
+    private Button button_go_home;
+    private Button button_hover;
+    private Button button_write;
+    private int index= 0;
 
     private DrawerNavigationUI navActivity;
 
@@ -255,6 +261,15 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
 
         mGoToMyLocation = (ImageView) view.findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageView) view.findViewById(R.id.drone_location_button);
+
+        button_take_off= (Button) view.findViewById(R.id.button_take_off);
+        button_take_off.setOnClickListener(this);
+        button_go_home= (Button) view.findViewById(R.id.button_go_home);
+        button_take_off.setOnClickListener(this);
+        button_hover= (Button) view.findViewById(R.id.button_hover);
+        button_take_off.setOnClickListener(this);
+        button_write= (Button) view.findViewById(R.id.button_write);
+        button_take_off.setOnClickListener(this);
 
         mGoToMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -519,5 +534,34 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
 
     public void removeMapMarkerProvider(DroneMap.MapMarkerProvider provider) {
         mapFragment.removeMapMarkerProvider(provider);
+    }
+
+    @Override
+    public void onClick(View v) {
+        initBackground();
+        switch (v.getId()){
+            case R.id.button_take_off:
+                if(index%2==0){
+                    button_take_off.setBackgroundResource(R.drawable.button_land);
+                }
+                index++;
+                break;
+            case R.id.button_go_home:
+                button_go_home.setBackgroundResource(R.drawable.go_home_on);;
+                break;
+            case R.id.button_hover:
+                button_hover.setBackgroundResource(R.drawable.hover_on);
+                break;
+            case R.id.button_write:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initBackground() {
+        button_take_off.setBackgroundResource(R.drawable.button_take_off);
+        button_go_home.setBackgroundResource(R.drawable.button_go_home);
+        button_hover.setBackgroundResource(R.drawable.button_hover);
     }
 }

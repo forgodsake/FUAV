@@ -13,7 +13,7 @@ public class VideoThread extends Thread {
 	private static Module _module=null;
 	private Player _player;
 	private DisplayView _displayView;
-	private static String _moduleIp = "192.168.100.103";
+	private static String _moduleIp = "192.168.100.106";
 	private Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
 	
 	public VideoThread(DisplayView displayView, Context context){

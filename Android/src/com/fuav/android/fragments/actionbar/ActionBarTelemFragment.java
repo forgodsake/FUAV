@@ -355,9 +355,6 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         final Drone drone = getDrone();
 
         String update = getString(R.string.empty_content);
-        int drawableResId = appPrefs.isReturnToMeEnabled()
-                ? R.drawable.ic_person_grey_700_18dp
-                : R.drawable.ic_home_grey_700_18dp;
 
         if (drone.isConnected()) {
             final Gps droneGps = drone.getAttribute(AttributeType.GPS);
@@ -372,20 +369,17 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
 
                     case ReturnToMeState.STATE_UPDATING_HOME:
                         //Change the home telemetry icon
-                        drawableResId = R.drawable.ic_person_blue_a400_18dp;
                         break;
 
                     case ReturnToMeState.STATE_USER_LOCATION_INACCURATE:
                     case ReturnToMeState.STATE_USER_LOCATION_UNAVAILABLE:
                     case ReturnToMeState.STATE_WAITING_FOR_VEHICLE_GPS:
                     case ReturnToMeState.STATE_ERROR_UPDATING_HOME:
-                        drawableResId = R.drawable.ic_person_red_500_18dp;
                         break;
                 }
             }
         }
 
-        homeTelem.setCompoundDrawablesWithIntrinsicBounds(drawableResId, 0, 0, 0);
         homeTelem.setText(update);
     }
 

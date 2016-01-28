@@ -32,20 +32,20 @@
         android:layout_marginLeft="20dp"
         android:orientation="vertical"
         android:id="@+id/linearLayout">
-        <ImageView
+        <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/way_point"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/undo"/>
-        <ImageView
+            android:background="@drawable/button_waypoint"/>
+        <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/delete"/>
+            android:background="@drawable/button_undo"/>
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_delete"/>
     </LinearLayout>
 
 

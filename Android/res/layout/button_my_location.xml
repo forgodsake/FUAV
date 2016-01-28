@@ -11,7 +11,7 @@
         style="@style/Fab.MyLocation"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/me" />
+        android:src="@drawable/button_me" />
 
     <ImageView
         android:id="@+id/drone_location_button"
@@ -19,7 +19,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:scaleType="centerInside"
-        android:src="@drawable/plane_direction" />
+        android:src="@drawable/button_plane_direction" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/zoom_to_fit_button"

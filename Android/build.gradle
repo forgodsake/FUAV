@@ -38,7 +38,6 @@ dependencies {
     compile files('libs/httpclient-4.5.1.jar')
     compile files('libs/baidumapapi_v3_2_0.jar')
     compile files('libs/locSDK_3.1.jar')
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4584'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.sothree.slidinguppanel:library:2.0.2'
     compile 'com.googlecode.mp4parser:isoparser:1.1.7'
@@ -47,6 +46,7 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.5@aar'
     compile 'com.github.zafarkhaja:java-semver:0.9.0'
     compile 'com.jcraft:jsch:0.1.51'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589"
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)
@@ -72,7 +72,7 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId 'com.fuav.android'
@@ -172,7 +172,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4589"
     }
 }
 repositories {
