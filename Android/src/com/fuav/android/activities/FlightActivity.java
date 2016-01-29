@@ -63,15 +63,16 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
 
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.video_view, new MiniWidgetSoloLinkVideo())
-                .commit();
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.video_view, new MiniWidgetSoloLinkVideo())
+                .commit();
     }
 
 
@@ -151,5 +152,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
     }
+
+
 
 }

@@ -40,7 +40,7 @@ public class VideoThread extends Thread {
 		_player.setRecordFrameRate(10);
 
 		_player.setDisplayView(_displayView);
-		_pipe = Enums.Pipe.H264_PRIMARY;
+		_pipe = Enums.Pipe.MJPEG_PRIMARY;
 		_player.play(_pipe, Enums.Transport.UDP);
 		_displayView.setFullScreen(true);
 	}

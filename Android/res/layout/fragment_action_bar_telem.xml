@@ -16,6 +16,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/mode"/>
 
@@ -59,6 +60,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_gravity="center"
             android:src="@drawable/distance"/>
 
@@ -82,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="6dp"
             android:src="@drawable/high"/>
 
         <TextView

@@ -265,11 +265,11 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         button_take_off= (Button) view.findViewById(R.id.button_take_off);
         button_take_off.setOnClickListener(this);
         button_go_home= (Button) view.findViewById(R.id.button_go_home);
-        button_take_off.setOnClickListener(this);
+        button_go_home.setOnClickListener(this);
         button_hover= (Button) view.findViewById(R.id.button_hover);
-        button_take_off.setOnClickListener(this);
+        button_hover.setOnClickListener(this);
         button_write= (Button) view.findViewById(R.id.button_write);
-        button_take_off.setOnClickListener(this);
+        button_write.setOnClickListener(this);
 
         mGoToMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
