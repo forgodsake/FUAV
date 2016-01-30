@@ -18,9 +18,15 @@
             tools:background="#000000"
             android:layout_width="160dp"
             android:layout_height="100dp"
-            android:layout_gravity="left|bottom" />
+            android:layout_gravity="left|bottom">
+        </FrameLayout>
 
-
+        <FrameLayout
+            android:id="@+id/control_view"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:layout_gravity="left|bottom">
+        </FrameLayout>
 
     </FrameLayout>
 
@@ -84,25 +90,29 @@
         android:layout_marginRight="60dp"
         android:layout_marginBottom="20dp"
         android:orientation="horizontal">
-        <ImageView
+        <Button
+            android:id="@+id/button_take_off"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/take_off_on"/>
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/go_home"/>
-        <ImageView
+            android:background="@drawable/button_take_off"/>
+        <Button
+            android:id="@+id/button_go_home"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/hover"/>
-        <ImageView
+            android:background="@drawable/button_go_home"/>
+        <Button
+            android:id="@+id/button_hover"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/follow_me"/>
+            android:background="@drawable/button_hover"/>
+        <Button
+            android:id="@+id/button_follow_me"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_follow_me"/>
     </LinearLayout>
 
 

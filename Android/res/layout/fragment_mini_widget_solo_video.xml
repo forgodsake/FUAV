@@ -9,9 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="108dp"
         android:minHeight="85dp">
-        </com.demo.sdk.DisplayView>
-
-
+    </com.demo.sdk.DisplayView>
 
 
 </LinearLayout>

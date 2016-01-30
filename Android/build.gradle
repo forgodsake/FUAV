@@ -38,7 +38,6 @@ dependencies {
     compile files('libs/httpclient-4.5.1.jar')
     compile files('libs/baidumapapi_v3_2_0.jar')
     compile files('libs/locSDK_3.1.jar')
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4584'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.sothree.slidinguppanel:library:2.0.2'
     compile 'com.googlecode.mp4parser:isoparser:1.1.7'
@@ -73,7 +72,7 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId 'com.fuav.android'
@@ -174,8 +173,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+<<<<<<< HEAD
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+=======
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4589"
+>>>>>>> 51d10b91398e4fdae58166d2e7ec03b4a0c8c7d0
     }
 }
 repositories {
