@@ -5,20 +5,12 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 
 ext {
-<<<<<<< HEAD
-    support_lib_version = '23.0.1'
-=======
     support_lib_version = '23.1.1'
->>>>>>> 06ac751364f1a7c32fe2ce1d3dd1556967af68c1
     okhttp_version = '2.3.0'
 }
 
 dependencies {
-<<<<<<< HEAD
-    compile 'com.google.android.gms:play-services:8.1.0'
-=======
     compile 'com.google.android.gms:play-services:7.8.+'
->>>>>>> 06ac751364f1a7c32fe2ce1d3dd1556967af68c1
     compile "com.android.support:support-v4:${support_lib_version}"
     compile "com.android.support:appcompat-v7:${support_lib_version}"
     compile "com.android.support:cardview-v7:${support_lib_version}"
@@ -55,10 +47,7 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.5@aar'
     compile 'com.github.zafarkhaja:java-semver:0.9.0'
     compile 'com.jcraft:jsch:0.1.51'
-<<<<<<< HEAD
-
-=======
->>>>>>> 06ac751364f1a7c32fe2ce1d3dd1556967af68c1
+    compile "org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589"
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)
@@ -179,12 +168,14 @@ android {
     }
 }
 buildscript {
+    ext.kotlin_version = '1.0.0-beta-4589'
 
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 repositories {

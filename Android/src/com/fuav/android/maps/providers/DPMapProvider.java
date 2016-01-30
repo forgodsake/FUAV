@@ -6,6 +6,7 @@ import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
 import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapPrefFragment;
+import com.google.android.gms.maps.GoogleMap;
 
 /**
  * Contains a listing of the various map providers supported, and implemented in
@@ -69,5 +70,5 @@ public enum DPMapProvider {
 	/**
 	 * By default, Google Map is the map provider.
 	 */
-	public static final DPMapProvider DEFAULT_MAP_PROVIDER = 百度地图;
+	public static final DPMapProvider DEFAULT_MAP_PROVIDER = GOOGLE_MAP;
 }
