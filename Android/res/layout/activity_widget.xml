@@ -17,9 +17,11 @@
         android:layout_below="@+id/actionbar_container" />
 
     <FrameLayout
-        android:id="@+id/control_view"
+        android:id="@+id/mission_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
 
     </FrameLayout>
 

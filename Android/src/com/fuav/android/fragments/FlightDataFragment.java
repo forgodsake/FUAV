@@ -241,8 +241,6 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
 
         actionbarShadow = view.findViewById(R.id.actionbar_shadow);
 
-        final FragmentManager fm = getChildFragmentManager();
-
 
         warningView = (TextView) view.findViewById(R.id.failsafeTextView);
 
@@ -474,8 +472,8 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
             case R.id.button_take_off:
                 if(index%2==0){
                     button_take_off.setBackgroundResource(R.drawable.button_land);
-                    getArmingConfirmation();
                     getTakeOffConfirmation();
+                    getArmingConfirmation();
                 }else{
                     getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
                 }

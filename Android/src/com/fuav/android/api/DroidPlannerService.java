@@ -445,7 +445,7 @@ public class DroidPlannerService extends Service {
 
         //Put the service in the foreground
         final Notification.Builder notifBuilder = new Notification.Builder(context)
-                .setContentTitle("3DR Services")
+                .setContentTitle("FUAV Service")
                 .setSmallIcon(R.drawable.ic_stat_notify)
                 .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context,
                         FlightActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0));
@@ -453,9 +453,9 @@ public class DroidPlannerService extends Service {
         final int connectedCount = droneApiStore.size();
         if (connectedCount > 0) {
             if (connectedCount == 1) {
-                notifBuilder.setContentText("1 connected app");
+                notifBuilder.setContentText("1 connected vehicle");
             } else {
-                notifBuilder.setContentText(connectedCount + " connected apps");
+                notifBuilder.setContentText(connectedCount + " connected vehicle");
             }
         }
 

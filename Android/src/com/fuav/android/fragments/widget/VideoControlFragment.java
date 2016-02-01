@@ -1,26 +1,150 @@
 package com.fuav.android.fragments.widget;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.fragments.control.BaseFlightControlFragment;
+import com.fuav.android.fragments.control.FlightControlManagerFragment;
+import com.fuav.android.utils.analytics.GAUtils;
+import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.android.client.Drone;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
-;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class VideoControlFragment extends BaseFlightControlFragment {
+
+    private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
+
+    private static final IntentFilter eventFilter = new IntentFilter();
+
+    private void updateFlightModeButtons() {
+    }
+
+    private void setupButtonsByFlightState() {
+    }
+
+    private void updateFollowButton() {
+    }
+
+
+    private int orangeColor;
+
+    static {
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_MESSAGE);
+        eventFilter.addAction(AttributeEvent.STATE_ARMING);
+        eventFilter.addAction(AttributeEvent.STATE_CONNECTED);
+        eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
+        eventFilter.addAction(AttributeEvent.STATE_UPDATED);
+        eventFilter.addAction(AttributeEvent.TYPE_UPDATED);
+        eventFilter.addAction(AttributeEvent.STATE_VEHICLE_MODE);
+        eventFilter.addAction(AttributeEvent.FOLLOW_START);
+        eventFilter.addAction(AttributeEvent.FOLLOW_STOP);
+        eventFilter.addAction(AttributeEvent.FOLLOW_UPDATE);
+        eventFilter.addAction(AttributeEvent.MISSION_DRONIE_CREATED);
+    }
+
+    private final BroadcastReceiver eventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            switch (action) {
+                case AttributeEvent.AUTOPILOT_ERROR:
+                    break;
+
+                case AttributeEvent.AUTOPILOT_MESSAGE:
+                    break;
+
+                case AttributeEvent.STATE_ARMING:
+                case AttributeEvent.STATE_CONNECTED:
+                case AttributeEvent.STATE_DISCONNECTED:
+                case AttributeEvent.STATE_UPDATED:
+                    setupButtonsByFlightState();
+                    break;
+                case AttributeEvent.TYPE_UPDATED:
+                    break;
+                case AttributeEvent.STATE_VEHICLE_MODE:
+                    updateFlightModeButtons();
+                    break;
+
+                case AttributeEvent.FOLLOW_START:
+                case AttributeEvent.FOLLOW_STOP:
+                    final FollowState followState = getDrone().getAttribute(AttributeType.FOLLOW_STATE);
+                    if (followState != null) {
+                        String eventLabel = null;
+                        switch (followState.getState()) {
+                            case FollowState.STATE_START:
+                                eventLabel = "FollowMe enabled";
+                                break;
+
+                            case FollowState.STATE_RUNNING:
+                                eventLabel = "FollowMe running";
+                                break;
+
+                            case FollowState.STATE_END:
+                                eventLabel = "FollowMe disabled";
+                                break;
+
+                            case FollowState.STATE_INVALID:
+                                eventLabel = "FollowMe error: invalid state";
+                                break;
+
+                            case FollowState.STATE_DRONE_DISCONNECTED:
+                                eventLabel = "FollowMe error: drone not connected";
+                                break;
+
+                            case FollowState.STATE_DRONE_NOT_ARMED:
+                                eventLabel = "FollowMe error: drone not armed";
+                                break;
+                        }
+
+                        if (eventLabel != null) {
+                            HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder()
+                                    .setCategory(GAUtils.Category.FLIGHT)
+                                    .setAction(ACTION_FLIGHT_ACTION_BUTTON)
+                                    .setLabel(eventLabel);
+                            GAUtils.sendEvent(eventBuilder);
+
+                            Toast.makeText(getActivity(), eventLabel, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                 /* FALL - THROUGH */
+                case AttributeEvent.FOLLOW_UPDATE:
+                    updateFlightModeButtons();
+                    updateFollowButton();
+                    break;
+
+                case AttributeEvent.MISSION_DRONIE_CREATED:
+                    //Get the bearing of the dronie mission.
+                    float bearing = intent.getFloatExtra(AttributeEventExtra.EXTRA_MISSION_DRONIE_BEARING, -1);
+                    if (bearing >= 0) {
+                        final FlightControlManagerFragment parent = (FlightControlManagerFragment) getParentFragment();
+                        if (parent != null) {
+                            parent.updateMapBearing(bearing);
+                        }
+                    }
+                    break;
+
+
+            }
+        }
+    };
+
 
 
     private Button button_take_off;
@@ -65,8 +189,8 @@ public class VideoControlFragment extends BaseFlightControlFragment {
             case R.id.button_take_off:
                 if(index%2==0){
                     button_take_off.setBackgroundResource(R.drawable.button_land);
-                    getArmingConfirmation();
                     getTakeOffConfirmation();
+                    getArmingConfirmation();
                 }else{
                     getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
                 }
@@ -93,6 +217,23 @@ public class VideoControlFragment extends BaseFlightControlFragment {
                 break;
         }
 
+    }
+
+    @Override
+    public void onApiConnected() {
+        super.onApiConnected();
+
+        setupButtonsByFlightState();
+        updateFlightModeButtons();
+        updateFollowButton();
+
+        getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
+    }
+
+    @Override
+    public void onApiDisconnected() {
+        super.onApiDisconnected();
+        getBroadcastManager().unregisterReceiver(eventReceiver);
     }
 
     @Override
