@@ -18,22 +18,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.DrawerNavigationUI;
-import com.fuav.android.fragments.helpers.ApiListenerFragment;
+import com.fuav.android.dialogs.SlideToUnlockDialog;
+import com.fuav.android.fragments.control.BaseFlightControlFragment;
+import com.fuav.android.fragments.control.FlightControlManagerFragment;
+import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.view.SlidingDrawer;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.attribute.error.ErrorType;
+import com.o3dr.services.android.lib.drone.property.VehicleMode;
+import com.o3dr.services.android.lib.gcs.follow.FollowState;
 
 /**
  * Created by Fredia Huya-Kouadio on 8/27/15.
  */
-public class FlightDataFragment extends ApiListenerFragment implements SlidingDrawer.OnDrawerOpenListener, SlidingDrawer.OnDrawerCloseListener,View.OnClickListener {
+public class FlightDataFragment extends BaseFlightControlFragment implements SlidingDrawer.OnDrawerOpenListener, SlidingDrawer.OnDrawerCloseListener,View.OnClickListener {
 
     public static final String EXTRA_SHOW_ACTION_DRAWER_TOGGLE = "extra_show_action_drawer_toggle";
     private static final boolean DEFAULT_SHOW_ACTION_DRAWER_TOGGLE = false;
@@ -45,7 +54,24 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
      */
     private static final long WARNING_VIEW_DISPLAY_TIMEOUT = 10000l; //ms
 
+    private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
+
+    private static final String DRONIE_CREATION_DIALOG_TAG = "Confirm dronie creation";
+
     private static final IntentFilter eventFilter = new IntentFilter();
+
+
+    private void updateFlightModeButtons() {
+    }
+
+    private void setupButtonsByFlightState() {
+    }
+
+    private void updateFollowButton() {
+    }
+
+
+    private int orangeColor;
 
     static {
         eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
@@ -55,7 +81,10 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
         eventFilter.addAction(AttributeEvent.STATE_UPDATED);
         eventFilter.addAction(AttributeEvent.TYPE_UPDATED);
+        eventFilter.addAction(AttributeEvent.STATE_VEHICLE_MODE);
         eventFilter.addAction(AttributeEvent.FOLLOW_START);
+        eventFilter.addAction(AttributeEvent.FOLLOW_STOP);
+        eventFilter.addAction(AttributeEvent.FOLLOW_UPDATE);
         eventFilter.addAction(AttributeEvent.MISSION_DRONIE_CREATED);
     }
 
@@ -80,23 +109,71 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
                 case AttributeEvent.STATE_CONNECTED:
                 case AttributeEvent.STATE_DISCONNECTED:
                 case AttributeEvent.STATE_UPDATED:
+                    setupButtonsByFlightState();
+                    break;
                 case AttributeEvent.TYPE_UPDATED:
-//                    enableSlidingUpPanel(getDrone());
+                    break;
+                case AttributeEvent.STATE_VEHICLE_MODE:
+                    updateFlightModeButtons();
                     break;
 
                 case AttributeEvent.FOLLOW_START:
-                    //Extend the sliding drawer if collapsed.
-//                    if (!mSlidingPanelCollapsing.get()
-//                            && mSlidingPanel.isSlidingEnabled()
-//                            && !mSlidingPanel.isPanelExpanded()) {
-//                        mSlidingPanel.expandPanel();
-//                    }
+                case AttributeEvent.FOLLOW_STOP:
+                    final FollowState followState = getDrone().getAttribute(AttributeType.FOLLOW_STATE);
+                    if (followState != null) {
+                        String eventLabel = null;
+                        switch (followState.getState()) {
+                            case FollowState.STATE_START:
+                                eventLabel = "FollowMe enabled";
+                                break;
+
+                            case FollowState.STATE_RUNNING:
+                                eventLabel = "FollowMe running";
+                                break;
+
+                            case FollowState.STATE_END:
+                                eventLabel = "FollowMe disabled";
+                                break;
+
+                            case FollowState.STATE_INVALID:
+                                eventLabel = "FollowMe error: invalid state";
+                                break;
+
+                            case FollowState.STATE_DRONE_DISCONNECTED:
+                                eventLabel = "FollowMe error: drone not connected";
+                                break;
+
+                            case FollowState.STATE_DRONE_NOT_ARMED:
+                                eventLabel = "FollowMe error: drone not armed";
+                                break;
+                        }
+
+                        if (eventLabel != null) {
+                            HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder()
+                                    .setCategory(GAUtils.Category.FLIGHT)
+                                    .setAction(ACTION_FLIGHT_ACTION_BUTTON)
+                                    .setLabel(eventLabel);
+                            GAUtils.sendEvent(eventBuilder);
+
+                            Toast.makeText(getActivity(), eventLabel, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                 /* FALL - THROUGH */
+                case AttributeEvent.FOLLOW_UPDATE:
+                    updateFlightModeButtons();
+                    updateFollowButton();
                     break;
 
                 case AttributeEvent.MISSION_DRONIE_CREATED:
-                    float dronieBearing = intent.getFloatExtra(AttributeEventExtra.EXTRA_MISSION_DRONIE_BEARING, -1);
-                    if (dronieBearing != -1)
-                        updateMapBearing(dronieBearing);
+                    //Get the bearing of the dronie mission.
+                    float bearing = intent.getFloatExtra(AttributeEventExtra.EXTRA_MISSION_DRONIE_BEARING, -1);
+                    if (bearing >= 0) {
+                        final FlightControlManagerFragment parent = (FlightControlManagerFragment) getParentFragment();
+                        if (parent != null) {
+                            parent.updateMapBearing(bearing);
+                        }
+                    }
                     break;
 
 
@@ -104,37 +181,7 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         }
     };
 
-//    private final AtomicBoolean mSlidingPanelCollapsing = new AtomicBoolean(false);
-//
-//    private final String disablePanelSlidingLabel = "disablingListener";
-//    private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding = new
-//            SlidingUpPanelLayout.PanelSlideListener() {
-//                @Override
-//                public void onPanelSlide(View view, float v) {
-//                }
-//
-//                @Override
-//                public void onPanelCollapsed(View view) {
-//                    mSlidingPanel.setSlidingEnabled(false);
-//                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
-//                    mSlidingPanelCollapsing.set(false);
-//
-//                    //Remove the panel slide listener
-//                    slidingPanelListenerMgr.removePanelSlideListener(disablePanelSlidingLabel);
-//                }
-//
-//                @Override
-//                public void onPanelExpanded(View view) {
-//                }
-//
-//                @Override
-//                public void onPanelAnchored(View view) {
-//                }
-//
-//                @Override
-//                public void onPanelHidden(View view) {
-//                }
-//            };
+
 
     private final Runnable hideWarningView = new Runnable() {
         @Override
@@ -152,10 +199,6 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
     private TextView warningView;
 
     private FlightMapFragment mapFragment;
-//    private FlightControlManagerFragment flightActions;
-
-//    private SlidingUpPanelLayout mSlidingPanel;
-//    private View mFlightActionsView;
 
     private ImageView mGoToMyLocation;
     private ImageView mGoToDroneLocation;
@@ -167,56 +210,7 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
 
     private DrawerNavigationUI navActivity;
 
-//    private static class SlidingPanelListenerManager implements SlidingUpPanelLayout.PanelSlideListener {
-//        private final HashMap<String, SlidingUpPanelLayout.PanelSlideListener> panelListenerClients = new HashMap<>();
-//
-//        public void addPanelSlideListener(String label, SlidingUpPanelLayout.PanelSlideListener listener){
-//            panelListenerClients.put(label, listener);
-//        }
-//
-//        public void removePanelSlideListener(String label){
-//            panelListenerClients.remove(label);
-//        }
-//
-//        @Override
-//        public void onPanelSlide(View view, float v) {
-//            for(SlidingUpPanelLayout.PanelSlideListener listener: panelListenerClients.values()){
-//                listener.onPanelSlide(view, v);
-//            }
-//        }
-//
-//        @Override
-//        public void onPanelCollapsed(View view) {
-//            for(SlidingUpPanelLayout.PanelSlideListener listener: panelListenerClients.values()){
-//                listener.onPanelCollapsed(view);
-//            }
-//        }
-//
-//        @Override
-//        public void onPanelExpanded(View view) {
-//            for(SlidingUpPanelLayout.PanelSlideListener listener: panelListenerClients.values()){
-//                listener.onPanelExpanded(view);
-//            }
-//        }
-//
-//        @Override
-//        public void onPanelAnchored(View view) {
-//            for(SlidingUpPanelLayout.PanelSlideListener listener: panelListenerClients.values()){
-//                listener.onPanelAnchored(view);
-//            }
-//        }
-//
-//        @Override
-//        public void onPanelHidden(View view) {
-//            for(SlidingUpPanelLayout.PanelSlideListener listener: panelListenerClients.values()){
-//                listener.onPanelHidden(view);
-//            }
-//        }
-//    }
 
-//    private final String parentActivityPanelListenerLabel = "parentListener";
-//
-//    private final SlidingPanelListenerManager slidingPanelListenerMgr = new SlidingPanelListenerManager();
 
     @Override
     public void onAttach(Activity activity) {
@@ -224,15 +218,12 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         if (activity instanceof DrawerNavigationUI)
             navActivity = (DrawerNavigationUI) activity;
 
-//        if(activity instanceof SlidingUpPanelLayout.PanelSlideListener)
-//            slidingPanelListenerMgr.addPanelSlideListener(parentActivityPanelListenerLabel, (SlidingUpPanelLayout.PanelSlideListener) activity);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         navActivity = null;
-//        slidingPanelListenerMgr.removePanelSlideListener(parentActivityPanelListenerLabel);
     }
 
     @Override
@@ -245,16 +236,14 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         super.onViewCreated(view, savedInstanceState);
 
         final Bundle arguments = getArguments();
-        final boolean showActionDrawerToggle = arguments == null
-                ? DEFAULT_SHOW_ACTION_DRAWER_TOGGLE
-                : arguments.getBoolean(EXTRA_SHOW_ACTION_DRAWER_TOGGLE, DEFAULT_SHOW_ACTION_DRAWER_TOGGLE);
+
+        orangeColor = getResources().getColor(R.color.orange);
 
         actionbarShadow = view.findViewById(R.id.actionbar_shadow);
 
         final FragmentManager fm = getChildFragmentManager();
 
-//        mSlidingPanel = (SlidingUpPanelLayout) view.findViewById(R.id.slidingPanelContainer);
-//        mSlidingPanel.setPanelSlideListener(slidingPanelListenerMgr);
+
         warningView = (TextView) view.findViewById(R.id.failsafeTextView);
 
         setupMapFragment();
@@ -313,31 +302,7 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
             }
         });
 
-//        flightActions = (FlightControlManagerFragment) fm.findFragmentById(R.id.flightActionsFragment);
-//        if (flightActions == null) {
-//            flightActions = new FlightControlManagerFragment();
-//            fm.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
-//        }
-//
-//        mFlightActionsView = view.findViewById(R.id.flightActionsFragment);
-//        mFlightActionsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
-//                .OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                if (!mSlidingPanelCollapsing.get()) {
-//                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
-//                }
-//            }
-//        });
 
-        // Add the mode info panel fragment
-//        FlightModePanel flightModePanel = (FlightModePanel) fm.findFragmentById(R.id.sliding_drawer_content);
-//        if (flightModePanel == null) {
-//            flightModePanel = new FlightModePanel();
-//            fm.beginTransaction()
-//                    .add(R.id.sliding_drawer_content, flightModePanel)
-//                    .commit();
-//        }
     }
 
     public void updateActionbarShadow(int shadowHeight){
@@ -357,13 +322,18 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
 
     @Override
     public void onApiConnected() {
-//        enableSlidingUpPanel(getDrone());
+        super.onApiConnected();
+
+        setupButtonsByFlightState();
+        updateFlightModeButtons();
+        updateFollowButton();
+
         getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
     }
 
     @Override
     public void onApiDisconnected() {
-//        enableSlidingUpPanel(getDrone());
+        super.onApiDisconnected();
         getBroadcastManager().unregisterReceiver(eventReceiver);
     }
 
@@ -419,46 +389,6 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
             mapFragment.updateMapBearing(bearing);
     }
 
-//    private void enableSlidingUpPanel(Drone api) {
-//        if (mSlidingPanel == null || api == null) {
-//            return;
-//        }
-//
-//        final boolean isEnabled = flightActions != null && flightActions.isSlidingUpPanelEnabled
-//                (api);
-//
-//        if (isEnabled) {
-//            mSlidingPanel.setSlidingEnabled(true);
-//            mSlidingPanel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    if(mSlidingPanel.isPanelExpanded()){
-//                        slidingPanelListenerMgr.onPanelExpanded(mSlidingPanel.getChildAt(1));
-//                    }
-//                    else if(mSlidingPanel.isPanelAnchored()){
-//                        slidingPanelListenerMgr.onPanelAnchored(mSlidingPanel.getChildAt(1));
-//                    }
-//                    else if(mSlidingPanel.isPanelHidden()){
-//                        slidingPanelListenerMgr.onPanelHidden(mSlidingPanel.getChildAt(1));
-//                    }
-//
-//                    mSlidingPanel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                }
-//            });
-//
-//        } else {
-//            if (!mSlidingPanelCollapsing.get()) {
-//                if (mSlidingPanel.isPanelExpanded()) {
-//                    slidingPanelListenerMgr.addPanelSlideListener(disablePanelSlidingLabel, mDisablePanelSliding);
-//                    mSlidingPanel.collapsePanel();
-//                    mSlidingPanelCollapsing.set(true);
-//                } else {
-//                    mSlidingPanel.setSlidingEnabled(false);
-//                    mSlidingPanelCollapsing.set(false);
-//                }
-//            }
-//        }
-//    }
 
     private void onAutopilotError(ErrorType errorType) {
         if (errorType == null)
@@ -539,18 +469,30 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
     @Override
     public void onClick(View v) {
         initBackground();
+        final Drone drone = getDrone();
         switch (v.getId()){
             case R.id.button_take_off:
                 if(index%2==0){
                     button_take_off.setBackgroundResource(R.drawable.button_land);
+                    getArmingConfirmation();
+                    getTakeOffConfirmation();
+                }else{
+                    getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
                 }
                 index++;
                 break;
             case R.id.button_go_home:
                 button_go_home.setBackgroundResource(R.drawable.go_home_on);;
+                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
                 break;
             case R.id.button_hover:
                 button_hover.setBackgroundResource(R.drawable.hover_on);
+                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+                if (followState.isEnabled()) {
+                    drone.disableFollowMe();
+                }
+
+                drone.pauseAtCurrentLocation();
                 break;
             case R.id.button_write:
                 break;
@@ -563,5 +505,31 @@ public class FlightDataFragment extends ApiListenerFragment implements SlidingDr
         button_take_off.setBackgroundResource(R.drawable.button_take_off);
         button_go_home.setBackgroundResource(R.drawable.button_go_home);
         button_hover.setBackgroundResource(R.drawable.button_hover);
+    }
+
+    @Override
+    public boolean isSlidingUpPanelEnabled(Drone drone) {
+        return false;
+    }
+
+    private void getArmingConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
+            @Override
+            public void run() {
+                getDrone().arm(true);
+            }
+        });
+        unlockDialog.show(getChildFragmentManager(), "Slide To Arm");
+    }
+
+    private void getTakeOffConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("take off", new Runnable() {
+            @Override
+            public void run() {
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                getDrone().doGuidedTakeoff(takeOffAltitude);
+            }
+        });
+        unlockDialog.show(getChildFragmentManager(), "Slide to take off");
     }
 }

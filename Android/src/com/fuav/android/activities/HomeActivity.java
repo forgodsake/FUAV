@@ -3,27 +3,33 @@ package com.fuav.android.activities;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.fuav.android.R;
+import com.fuav.android.activities.helpers.SuperUI;
 import com.fuav.android.fragments.home.DeviceFragment;
 import com.fuav.android.fragments.home.LibraryFragment;
 import com.fuav.android.fragments.home.MallFragment;
 import com.fuav.android.fragments.home.SupportFragment;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     private ImageView imDevice,imMedia,imStore,imSupport;
     private FragmentManager manager;
     private MallFragment mallFragment;
+    private int index=0;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected int getToolbarId() {
+        return 0;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -49,16 +55,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.imageViewDevice:
                 manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
+                index = 1;
                 break;
             case R.id.imageViewMedia:
                 manager.beginTransaction().replace(R.id.content,new LibraryFragment()).commit();
+                index = 2;
                 break;
             case R.id.imageViewStore:
                 mallFragment = new MallFragment();
                 manager.beginTransaction().replace(R.id.content,mallFragment).commit();
+                index = 3;
                 break;
             case R.id.imageViewSupport:
                 manager.beginTransaction().replace(R.id.content,new SupportFragment()).commit();
+                index = 4;
                 break;
             default:
                 break;
@@ -70,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         if(keyCode==KeyEvent.KEYCODE_BACK)
         {
-            if (null!=mallFragment){
+            if (null!=mallFragment&&index==3){
                 WebView webView = (WebView)mallFragment.getView().findViewById(R.id.webView);
                 if(webView.canGoBack())
                 {
