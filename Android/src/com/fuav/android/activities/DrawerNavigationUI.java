@@ -169,6 +169,11 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
                         .putExtra(ConfigurationActivity.EXTRA_CONFIG_SCREEN_ID, id);
                 break;
 
+            case R.id.navigation_rc:
+                mNavigationIntent = new Intent(this, ConfigurationActivity.class)
+                        .putExtra(ConfigurationActivity.EXTRA_CONFIG_SCREEN_ID, id);
+                break;
+
             case R.id.navigation_settings:
                 mNavigationIntent = new Intent(this, SettingsActivity.class);
                 break;

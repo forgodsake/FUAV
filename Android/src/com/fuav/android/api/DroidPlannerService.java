@@ -1,8 +1,6 @@
 package com.fuav.android.api;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +9,6 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,28 +16,25 @@ import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import com.fuav.android.activities.FlightActivity;
+import com.fuav.android.communication.connection.AndroidMavLinkConnection;
+import com.fuav.android.communication.connection.AndroidTcpConnection;
+import com.fuav.android.communication.connection.AndroidUdpConnection;
+import com.fuav.android.communication.connection.BluetoothConnection;
+import com.fuav.android.communication.connection.usb.UsbConnection;
+import com.fuav.android.core.MAVLink.connection.MavLinkConnection;
+import com.fuav.android.core.MAVLink.connection.MavLinkConnectionListener;
+import com.fuav.android.core.drone.DroneManager;
+import com.fuav.android.core.survey.CameraInfo;
+import com.fuav.android.exception.ConnectionException;
+import com.fuav.android.utils.Utils;
+import com.fuav.android.utils.analytics.GAUtils;
+import com.fuav.android.utils.file.IO.CameraInfoLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
 import com.o3dr.services.android.lib.drone.mission.item.complex.CameraDetail;
 import com.o3dr.services.android.lib.model.IApiListener;
 import com.o3dr.services.android.lib.model.IDroidPlannerServices;
-
-import com.fuav.android.core.MAVLink.connection.MavLinkConnection;
-import com.fuav.android.core.MAVLink.connection.MavLinkConnectionListener;
-import com.fuav.android.core.survey.CameraInfo;
-import com.fuav.android.R;
-import com.fuav.android.communication.connection.AndroidMavLinkConnection;
-import com.fuav.android.communication.connection.AndroidTcpConnection;
-import com.fuav.android.communication.connection.AndroidUdpConnection;
-import com.fuav.android.communication.connection.BluetoothConnection;
-import com.fuav.android.communication.connection.usb.UsbConnection;
-import com.fuav.android.core.drone.DroneManager;
-import com.fuav.android.exception.ConnectionException;
-import com.fuav.android.utils.Utils;
-import com.fuav.android.utils.analytics.GAUtils;
-import com.fuav.android.utils.file.IO.CameraInfoLoader;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -443,26 +437,26 @@ public class DroidPlannerService extends Service {
     private void updateForegroundNotification() {
         final Context context = getApplicationContext();
 
-        //Put the service in the foreground
-        final Notification.Builder notifBuilder = new Notification.Builder(context)
-                .setContentTitle("FUAV Service")
-                .setSmallIcon(R.drawable.ic_stat_notify)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context,
-                        FlightActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0));
-
-        final int connectedCount = droneApiStore.size();
-        if (connectedCount > 0) {
-            if (connectedCount == 1) {
-                notifBuilder.setContentText("1 connected vehicle");
-            } else {
-                notifBuilder.setContentText(connectedCount + " connected vehicle");
-            }
-        }
-
-        final Notification notification = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                ? notifBuilder.build()
-                : notifBuilder.getNotification();
-        startForeground(FOREGROUND_ID, notification);
+//        //Put the service in the foreground
+//        final Notification.Builder notifBuilder = new Notification.Builder(context)
+//                .setContentTitle("FUAV Service")
+//                .setSmallIcon(R.drawable.ic_stat_notify)
+//                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context,
+//                        FlightActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0));
+//
+//        final int connectedCount = droneApiStore.size();
+//        if (connectedCount > 0) {
+//            if (connectedCount == 1) {
+//                notifBuilder.setContentText("1 connected vehicle");
+//            } else {
+//                notifBuilder.setContentText(connectedCount + " connected vehicle");
+//            }
+//        }
+//
+//        final Notification notification = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+//                ? notifBuilder.build()
+//                : notifBuilder.getNotification();
+//        startForeground(FOREGROUND_ID, notification);
     }
 
     @Override
@@ -485,7 +479,7 @@ public class DroidPlannerService extends Service {
         mavConnections.clear();
         dpServices.destroy();
 
-        stopForeground(true);
+//        stopForeground(true);
 
         if(wifiLock != null){
             Timber.i("Releasing wifi wake lock.");

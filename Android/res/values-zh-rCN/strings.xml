@@ -12,6 +12,7 @@
 
     <!-- Drone Setup tabs -->
     <string name="screen_cal">校准</string>
+    <string name="screen_rc">遥控器</string>
     <string name="screen_checklist">检查清单</string>
     <string name="screen_parameters">参数</string>
     

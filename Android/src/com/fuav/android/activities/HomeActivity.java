@@ -30,8 +30,8 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         setContentView(R.layout.activity_home);
         manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();

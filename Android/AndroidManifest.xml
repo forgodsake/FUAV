@@ -81,7 +81,6 @@
 
         </activity>
         <activity
-            android:configChanges="keyboardHidden|screenSize|orientation"
             android:name=".activities.EditorActivity"
             android:label="@string/editor"
             android:launchMode="singleTop"
@@ -199,8 +198,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="s7uqBA4MvUs5BiZEFmKAT2V0" />
 
-        <activity android:name=".activities.HomeActivity"
-            android:screenOrientation="landscape">
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

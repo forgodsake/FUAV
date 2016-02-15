@@ -64,6 +64,11 @@ public class DroneInterfaces {
 		ARMING,
 
 		/**
+		 *
+		 */
+		PARAMETER,
+
+		/**
          *
          */
 		AUTOPILOT_WARNING,

@@ -21,6 +21,7 @@ import com.MAVLink.common.msg_sys_status;
 import com.MAVLink.common.msg_vibration;
 import com.MAVLink.enums.MAV_MODE_FLAG;
 import com.MAVLink.enums.MAV_STATE;
+import com.fuav.android.core.drone.variables.RC;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.action.CapabilityActions;
@@ -99,6 +100,7 @@ public class GenericMavLinkDrone implements MavLinkDrone {
 
     private final Home vehicleHome = new Home();
     private final Gps vehicleGps = new Gps();
+    private final RC RC = new RC(this);
     private final Parameters parameters = new Parameters();
     protected final Altitude altitude = new Altitude();
     protected final Speed speed = new Speed();
@@ -232,6 +234,16 @@ public class GenericMavLinkDrone implements MavLinkDrone {
     @Override
     public byte getCompid() {
         return heartbeat.getCompid();
+    }
+
+    @Override
+    public ParameterManager getParameters() {
+        return parameterManager;
+    }
+
+    @Override
+    public RC getRC() {
+        return RC;
     }
 
     @Override

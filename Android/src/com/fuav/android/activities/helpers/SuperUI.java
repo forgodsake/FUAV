@@ -88,6 +88,7 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
     protected DroidPlannerPrefs mAppPrefs;
     protected UnitSystem unitSystem;
     protected DroidPlannerApp dpApp;
+    protected Drone drone;
 
     private VehicleStatusFragment statusFragment;
 
@@ -168,6 +169,7 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
         final Context context = getApplicationContext();
 
         dpApp = (DroidPlannerApp) getApplication();
+        drone = dpApp.getDrone();
         lbm = LocalBroadcastManager.getInstance(context);
 
         mAppPrefs = new DroidPlannerPrefs(context);

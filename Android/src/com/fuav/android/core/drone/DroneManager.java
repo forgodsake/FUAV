@@ -86,7 +86,7 @@ public class DroneManager implements MAVLinkStreams.MavlinkInputStream, DroneInt
     private final Context context;
     private final Handler handler;
 
-    private MavLinkDrone drone;
+    public static MavLinkDrone drone;
     private Follow followMe;
     private ReturnToMe returnToMe;
 

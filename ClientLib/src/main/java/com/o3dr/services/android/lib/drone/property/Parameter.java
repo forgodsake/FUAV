@@ -1,7 +1,6 @@
 package com.o3dr.services.android.lib.drone.property;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -21,8 +20,8 @@ public class Parameter implements DroneAttribute, Comparable<Parameter> {
         formatter.applyPattern("0.###");
     }
 
-    private String name;
-    private double value;
+    public String name;
+    public double value;
     private int type;
 
     private String displayName;

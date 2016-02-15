@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 
 import com.fuav.android.R;
 import com.fuav.android.fragments.SensorSetupFragment;
+import com.fuav.android.fragments.SetupRadioFragment;
 
 /**
  * This class implements and handles the various ui used for the drone
@@ -80,6 +81,9 @@ public class ConfigurationActivity extends DrawerNavigationUI {
         switch(fragmentId){
             case R.id.navigation_calibration:
                 fragment = new SensorSetupFragment();
+                break;
+            case R.id.navigation_rc:
+                fragment = new SetupRadioFragment();
                 break;
             default:
                 fragment = new SensorSetupFragment();
