@@ -94,8 +94,7 @@ public class ConfigurationActivity extends DrawerNavigationUI {
     }
 
     private int getIdForFragment(Fragment fragment){
-            return R.id.navigation_calibration;
-
+        return fragment.getId();
     }
 
     @Override

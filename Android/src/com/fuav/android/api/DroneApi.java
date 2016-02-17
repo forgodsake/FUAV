@@ -57,7 +57,7 @@ import timber.log.Timber;
 /**
  * Implementation for the IDroneApi interface.
  */
-public final class DroneApi extends IDroneApi.Stub implements DroneInterfaces.OnDroneListener, DroneInterfaces.AttributeEventListener,
+ public final class DroneApi extends IDroneApi.Stub implements DroneInterfaces.OnDroneListener, DroneInterfaces.AttributeEventListener,
         DroneInterfaces.OnParameterManagerListener, MagnetometerCalibrationImpl.OnMagnetometerCalibrationListener, IBinder.DeathRecipient {
 
     //The Reset ROI mission item was introduced in version 2.6.8. Any client library older than this do not support it.
@@ -77,7 +77,7 @@ public final class DroneApi extends IDroneApi.Stub implements DroneInterfaces.On
 
     private ConnectionParameter connectionParams;
 
-    DroneApi(DroidPlannerService dpService, IApiListener listener, String ownerId) {
+    public DroneApi(DroidPlannerService dpService, IApiListener listener, String ownerId) {
 
         this.service = dpService;
         this.context = dpService.getApplicationContext();

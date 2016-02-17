@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
@@ -95,6 +96,8 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 		switch (event) {
 		case RC_IN:
 			updatePanelInfo();
+			data = drone.getRC().in;
+			Toast.makeText(getActivity(),"遥控通道一"+data[0],Toast.LENGTH_SHORT).show();
 			break;
 		case RC_OUT:
 		default:

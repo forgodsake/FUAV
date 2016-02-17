@@ -1,0 +1,77 @@
+Applications Graphics Acceleration Info:
+Uptime: 552168 Realtime: 552161
+
+** Graphics info for pid 9669 [com.fuav.android.debug] **
+
+Stats since: 404126879015ns
+Total frames rendered: 4514
+Janky frames: 969 (21.47%)
+90th percentile: 24ms
+95th percentile: 29ms
+99th percentile: 44ms
+Number Missed Vsync: 80
+Number High input latency: 1
+Number Slow UI thread: 475
+Number Slow bitmap uploads: 30
+Number Slow issue draw commands: 406
+
+Caches:
+Current memory usage / total memory usage (bytes):
+  TextureCache         31959316 / 75497472
+  LayerCache                  0 / 50331648 (numLayers = 0)
+  Layers total          0 (numLayers = 0)
+  RenderBufferCache           0 /  8388608
+  GradientCache               0 /  1048576
+  PathCache               77700 / 33554432
+  TessellationCache        1488 /  1048576
+  TextDropShadowCache     76208 /  6291456
+  PatchCache                512 /   131072
+  FontRenderer 0 A8     1048576 /  1048576
+  FontRenderer 0 RGBA         0 /        0
+  FontRenderer 0 total  1048576 /  1048576
+Other:
+  FboCache                    0 /        0
+Total memory usage:
+  33163800 bytes, 31.63 MB
+
+Profile data in ms:
+
+	com.fuav.android.debug/com.fuav.android.activities.HomeActivity/android.view.ViewRootImpl@d5bbc62 (visibility=8)
+Stats since: 404126879015ns
+Total frames rendered: 4514
+Janky frames: 969 (21.47%)
+90th percentile: 24ms
+95th percentile: 29ms
+99th percentile: 44ms
+Number Missed Vsync: 80
+Number High input latency: 1
+Number Slow UI thread: 475
+Number Slow bitmap uploads: 30
+Number Slow issue draw commands: 406
+
+	com.fuav.android.debug/com.fuav.android.activities.FlightActivity/android.view.ViewRootImpl@94141f3 (visibility=0)
+Stats since: 404126879015ns
+Total frames rendered: 4514
+Janky frames: 969 (21.47%)
+90th percentile: 24ms
+95th percentile: 29ms
+99th percentile: 44ms
+Number Missed Vsync: 80
+Number High input latency: 1
+Number Slow UI thread: 475
+Number Slow bitmap uploads: 30
+Number Slow issue draw commands: 406
+
+View hierarchy:
+
+  com.fuav.android.debug/com.fuav.android.activities.HomeActivity/android.view.ViewRootImpl@d5bbc62
+  33 views, 26.04 kB of display lists
+
+  com.fuav.android.debug/com.fuav.android.activities.FlightActivity/android.view.ViewRootImpl@94141f3
+  93 views, 90.19 kB of display lists
+
+
+Total ViewRootImpl: 2
+Total Views:        126
+Total DisplayList:  116.23 kB
+

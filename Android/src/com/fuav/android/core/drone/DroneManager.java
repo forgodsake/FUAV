@@ -11,27 +11,6 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.ardupilotmega.msg_mag_cal_progress;
 import com.MAVLink.ardupilotmega.msg_mag_cal_report;
 import com.MAVLink.common.msg_command_ack;
-import com.google.android.gms.location.LocationRequest;
-import com.o3dr.services.android.lib.coordinate.LatLong;
-import com.o3dr.services.android.lib.drone.action.ControlActions;
-import com.o3dr.services.android.lib.drone.action.GimbalActions;
-import com.o3dr.services.android.lib.drone.action.StateActions;
-import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
-import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
-import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.attribute.error.CommandExecutionError;
-import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
-import com.o3dr.services.android.lib.drone.connection.ConnectionType;
-import com.o3dr.services.android.lib.drone.connection.DroneSharePrefs;
-import com.o3dr.services.android.lib.drone.mission.action.MissionActions;
-import com.o3dr.services.android.lib.drone.property.DroneAttribute;
-import com.o3dr.services.android.lib.drone.property.Parameter;
-import com.o3dr.services.android.lib.gcs.action.FollowMeActions;
-import com.o3dr.services.android.lib.gcs.follow.FollowType;
-import com.o3dr.services.android.lib.gcs.returnToMe.ReturnToMeState;
-import com.o3dr.services.android.lib.model.ICommandListener;
-import com.o3dr.services.android.lib.model.action.Action;
-
 import com.fuav.android.api.DroneApi;
 import com.fuav.android.api.MavLinkServiceApi;
 import com.fuav.android.communication.connection.DroneshareClient;
@@ -60,6 +39,26 @@ import com.fuav.android.exception.ConnectionException;
 import com.fuav.android.utils.AndroidApWarningParser;
 import com.fuav.android.utils.CommonApiUtils;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+import com.google.android.gms.location.LocationRequest;
+import com.o3dr.services.android.lib.coordinate.LatLong;
+import com.o3dr.services.android.lib.drone.action.ControlActions;
+import com.o3dr.services.android.lib.drone.action.GimbalActions;
+import com.o3dr.services.android.lib.drone.action.StateActions;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.attribute.error.CommandExecutionError;
+import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
+import com.o3dr.services.android.lib.drone.connection.ConnectionType;
+import com.o3dr.services.android.lib.drone.connection.DroneSharePrefs;
+import com.o3dr.services.android.lib.drone.mission.action.MissionActions;
+import com.o3dr.services.android.lib.drone.property.DroneAttribute;
+import com.o3dr.services.android.lib.drone.property.Parameter;
+import com.o3dr.services.android.lib.gcs.action.FollowMeActions;
+import com.o3dr.services.android.lib.gcs.follow.FollowType;
+import com.o3dr.services.android.lib.gcs.returnToMe.ReturnToMeState;
+import com.o3dr.services.android.lib.model.ICommandListener;
+import com.o3dr.services.android.lib.model.action.Action;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +85,7 @@ public class DroneManager implements MAVLinkStreams.MavlinkInputStream, DroneInt
     private final Context context;
     private final Handler handler;
 
-    public static MavLinkDrone drone;
+    public  static MavLinkDrone drone;
     private Follow followMe;
     private ReturnToMe returnToMe;
 
@@ -429,8 +428,8 @@ public class DroneManager implements MAVLinkStreams.MavlinkInputStream, DroneInt
         }
     }
 
-    public MavLinkDrone getDrone() {
-        return this.drone;
+    public static MavLinkDrone getDrone() {
+        return drone;
     }
 
     public Follow getFollowMe() {

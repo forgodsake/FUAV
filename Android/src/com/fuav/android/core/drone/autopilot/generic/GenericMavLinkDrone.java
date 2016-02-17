@@ -87,7 +87,7 @@ public class GenericMavLinkDrone implements MavLinkDrone {
 
     protected final VideoManager videoMgr;
 
-    private final DroneEvents events;
+    private final DroneEvents events ;
     protected final Type type;
     private final State state;
     private final HeartBeat heartbeat;

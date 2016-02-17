@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.ConfigurationActivity;
@@ -93,18 +94,25 @@ public abstract class SuperSetupFragment extends Fragment implements DroneInterf
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.drone = DroneManager.drone;
+		this.drone = DroneManager.getDrone();
 	}
 
 	@Override
 	public void onStart() {
-//		drone.addDroneListener(this);
+		if(drone!=null){
+			drone.addDroneListener(this);
+		}else{
+			Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+		}
+
 		super.onStart();
 	}
 
 	@Override
 	public void onStop() {
-//		drone.removeDroneListener(this);
+		if(drone!=null){
+			drone.removeDroneListener(this);
+		}
 		super.onStop();
 	}
 

@@ -1,6 +1,7 @@
 package com.fuav.android.fragments.helpers;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.core.drone.DroneInterfaces;
@@ -32,7 +33,7 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.drone = DroneManager.drone;
+		this.drone = DroneManager.getDrone();
 		parameters = getParameterHandler();
 		parameters.setOnCalibrationEventListener(this);
 		onInitialize();
@@ -47,19 +48,27 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 	@Override
 	public void onResume() {
 		super.onResume();
-//		drone.addDroneListener(this);
+		if(drone!=null){
+			drone.addDroneListener(this);
+		}else{
+			Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-//		drone.removeDroneListener(this);
+		if(drone!=null){
+			drone.removeDroneListener(this);
+		}
+
 	}
 
 	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, MavLinkDrone drone) {
 		switch (event) {
 			case PARAMETER:
+				Toast.makeText(getActivity(),"参数"+parameters.toString(),Toast.LENGTH_SHORT).show();
 				if (parameters != null) {
 					parameters.processReceivedParam();
 				}

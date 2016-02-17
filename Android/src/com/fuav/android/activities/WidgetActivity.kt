@@ -8,8 +8,7 @@ import android.widget.FrameLayout
 import com.fuav.android.R
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment
 import com.fuav.android.fragments.widget.VideoControlFragment
-import com.fuav.android.fragments.widget.video.FullWidgetSoloLinkVideo
-import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment
+import com.google.android.gms.maps.SupportMapFragment
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
@@ -34,12 +33,17 @@ public class WidgetActivity : DrawerNavigationUI() {
         control_frame?.setOnClickListener({
             startActivity(Intent(this, FlightActivity::class.java))
         })
-        val fm = supportFragmentManager
-        var flightMapFragment = BaiduMapFragment()
-            fm.beginTransaction().replace(R.id.map_view, flightMapFragment).commit()
-        fm.beginTransaction().replace(R.id.widget_view, FullWidgetSoloLinkVideo() ).commit()
-        fm.beginTransaction().replace(R.id.mission_view,VideoControlFragment()).commit()
+
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val fm = supportFragmentManager
+        var flightMapFragment = SupportMapFragment()
+//        fm.beginTransaction().replace(R.id.map_view, flightMapFragment).commit()
+//        fm.beginTransaction().replace(R.id.widget_view, FullWidgetSoloLinkVideo()).commit()
+        fm.beginTransaction().replace(R.id.mission_view, VideoControlFragment()).commit()
     }
 
     override fun addToolbarFragment() {
