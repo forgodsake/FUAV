@@ -61,7 +61,11 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             fm.beginTransaction().add(R.id.flight_data_container, flightData).commit();
         }
 
+    }
 
+
+    public FlightDataFragment getFlightData(){
+        return  flightData;
     }
 
 

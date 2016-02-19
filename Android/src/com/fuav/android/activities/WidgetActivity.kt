@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment
 import android.widget.FrameLayout
 import com.baidu.mapapi.map.SupportMapFragment
 import com.fuav.android.R
+import com.fuav.android.fragments.FlightDataFragment
 import com.fuav.android.fragments.FlightMapFragment
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment
 import com.fuav.android.fragments.widget.VideoControlFragment
 import com.fuav.android.fragments.widget.video.FullWidgetSoloLinkVideo
 import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment
+import com.fuav.android.utils.prefs.DroidPlannerPrefs
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
@@ -44,8 +46,10 @@ public class WidgetActivity : DrawerNavigationUI() {
         super.onResume()
         val fm = supportFragmentManager
         var flightMapFragment = FlightMapFragment()
-        if(flightMapFragment.equals(BaiduMapFragment())){
-            fm.beginTransaction().replace(R.id.map_view, SupportMapFragment()).commit()
+
+        var dpPrefs = DroidPlannerPrefs(this)
+        if(dpPrefs.mapProviderName.equals("百度地图")){
+            fm.beginTransaction().replace(R.id.map_view, flightMapFragment).commit()
         }else{
             fm.beginTransaction().replace(R.id.map_view2, flightMapFragment).commit()
         }

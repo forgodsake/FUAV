@@ -306,6 +306,7 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
 
     }
 
+
     public void updateActionbarShadow(int shadowHeight){
         if(actionbarShadow == null || actionbarShadow.getLayoutParams().height == shadowHeight)
             return;

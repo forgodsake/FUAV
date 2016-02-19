@@ -49,6 +49,8 @@
     <string name="pref_server_port">服务器端口</string>
     <string name="pref_server_udp">UDP连接</string>
     <string name="pref_udp_server_port">UDP服务器端口</string>
+    <string name="pref_connection_subtitle">USB,TCP和UDP参数设置</string>
+    <string name="label_other">其他</string>
     <string name="about">关于</string>
     <string name="version">版本</string>
     <!-- Toast Message -->

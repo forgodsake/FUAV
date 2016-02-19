@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.demo.sdk.DisplayView
 import com.fuav.android.R
+import com.fuav.android.activities.FlightActivity
 import com.fuav.android.activities.WidgetActivity
 import com.fuav.android.fragments.widget.TowerWidget
 import com.fuav.android.fragments.widget.TowerWidgets
@@ -38,7 +39,7 @@ public class MiniWidgetSoloLinkVideo : TowerWidget() {
 
         VideoThread(_displayView,activity).start()
 
-
+        var activity = activity as FlightActivity;
         _displayView?.setOnClickListener({ startActivity(Intent(activity, WidgetActivity::class.java)) })
 
 
