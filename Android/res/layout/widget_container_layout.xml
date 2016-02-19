@@ -3,29 +3,18 @@
     android:id="@+id/widget_container_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:baselineAligned="false">
 
     <FrameLayout
         android:id="@+id/widget_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <FrameLayout
             android:id="@+id/map_view"
             android:layout_width="160dp"
             android:layout_height="100dp"
-            android:layout_gravity="left|bottom">
+            android:layout_gravity="bottom|left">
         </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/control_view"
-            android:layout_width="160dp"
-            android:layout_height="100dp"
-            android:layout_gravity="left|bottom">
-        </FrameLayout>
-
     </FrameLayout>
 
     <RelativeLayout

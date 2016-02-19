@@ -179,7 +179,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
             if (versionPref != null) {
                 String version = context.getPackageManager().getPackageInfo(
                         context.getPackageName(), 0).versionName;
-                versionPref.setSummary(version);
+                versionPref.setSummary("1.0");
             }
         } catch (NameNotFoundException e) {
             Log.e(TAG, "Unable to retrieve version name.", e);

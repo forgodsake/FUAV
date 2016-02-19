@@ -138,12 +138,14 @@ public class ParameterManager extends DroneVariable implements OnDroneListener {
         // Are all parameters here? Notify the listener with the parameters
         if (parameters.size() >= m_value.param_count) {
             killWatchdog();
+            myDrone.notifyDroneEvent(DroneEventsType.PARAMETERS_DOWNLOADED);
             isRefreshing.set(false);
 
             notifyParametersReceiptEnd();
         } else {
             resetWatchdog();
         }
+        myDrone.notifyDroneEvent(DroneEventsType.PARAMETER);
     }
 
     private void reRequestMissingParams(int howManyParams) {

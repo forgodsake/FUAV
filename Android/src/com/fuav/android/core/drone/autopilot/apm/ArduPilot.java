@@ -22,6 +22,24 @@ import com.MAVLink.common.msg_sys_status;
 import com.MAVLink.common.msg_vfr_hud;
 import com.MAVLink.enums.MAV_MOUNT_MODE;
 import com.MAVLink.enums.MAV_SYS_STATUS_SENSOR;
+import com.fuav.android.core.MAVLink.MAVLinkStreams;
+import com.fuav.android.core.MAVLink.MavLinkParameters;
+import com.fuav.android.core.MAVLink.WaypointManager;
+import com.fuav.android.core.MAVLink.command.doCmd.MavLinkDoCmds;
+import com.fuav.android.core.drone.DroneInterfaces;
+import com.fuav.android.core.drone.LogMessageListener;
+import com.fuav.android.core.drone.autopilot.apm.variables.APMHeartBeat;
+import com.fuav.android.core.drone.autopilot.generic.GenericMavLinkDrone;
+import com.fuav.android.core.drone.variables.ApmModes;
+import com.fuav.android.core.drone.variables.Camera;
+import com.fuav.android.core.drone.variables.GuidedPoint;
+import com.fuav.android.core.drone.variables.HeartBeat;
+import com.fuav.android.core.drone.variables.Magnetometer;
+import com.fuav.android.core.drone.variables.calibration.AccelCalibration;
+import com.fuav.android.core.drone.variables.calibration.MagnetometerCalibrationImpl;
+import com.fuav.android.core.mission.Mission;
+import com.fuav.android.core.model.AutopilotWarningParser;
+import com.fuav.android.utils.CommonApiUtils;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.action.ControlActions;
@@ -41,26 +59,6 @@ import com.o3dr.services.android.lib.gcs.action.CalibrationActions;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
 import com.o3dr.services.android.lib.model.ICommandListener;
 import com.o3dr.services.android.lib.model.action.Action;
-
-import com.fuav.android.core.MAVLink.MAVLinkStreams;
-import com.fuav.android.core.MAVLink.MavLinkParameters;
-import com.fuav.android.core.MAVLink.WaypointManager;
-import com.fuav.android.core.MAVLink.command.doCmd.MavLinkDoCmds;
-import com.fuav.android.core.drone.DroneInterfaces;
-import com.fuav.android.core.drone.LogMessageListener;
-import com.fuav.android.core.drone.autopilot.apm.variables.APMHeartBeat;
-import com.fuav.android.core.drone.autopilot.generic.GenericMavLinkDrone;
-import com.fuav.android.core.drone.variables.ApmModes;
-import com.fuav.android.core.drone.variables.Camera;
-import com.fuav.android.core.drone.variables.GuidedPoint;
-import com.fuav.android.core.drone.variables.HeartBeat;
-import com.fuav.android.core.drone.variables.Magnetometer;
-import com.fuav.android.core.drone.variables.RC;
-import com.fuav.android.core.drone.variables.calibration.AccelCalibration;
-import com.fuav.android.core.drone.variables.calibration.MagnetometerCalibrationImpl;
-import com.fuav.android.core.mission.Mission;
-import com.fuav.android.core.model.AutopilotWarningParser;
-import com.fuav.android.utils.CommonApiUtils;
 
 import timber.log.Timber;
 
@@ -91,7 +89,7 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
 
         this.waypointManager = new WaypointManager(this, handler);
 
-        rc = new RC(this);
+        rc = getRC();
         this.mission = new Mission(this);
         this.guidedPoint = new GuidedPoint(this, handler);
         this.accelCalibrationSetup = new AccelCalibration(this, handler);
@@ -371,12 +369,12 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
 
     @Override
     public void onMavLinkMessageReceived(MAVLinkMessage message) {
-        int compId = message.compid;
-        if (compId != AUTOPILOT_COMPONENT_ID
-                && compId != ARTOO_COMPONENT_ID
-                && compId != TELEMETRY_RADIO_COMPONENT_ID) {
-            return;
-        }
+//        int compId = message.compid;
+//        if (compId != AUTOPILOT_COMPONENT_ID
+//                && compId != ARTOO_COMPONENT_ID
+//                && compId != TELEMETRY_RADIO_COMPONENT_ID) {
+//            return;
+//        }
 
         if (!getParameterManager().processMessage(message)) {
 

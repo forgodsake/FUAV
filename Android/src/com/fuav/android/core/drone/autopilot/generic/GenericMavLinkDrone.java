@@ -100,7 +100,7 @@ public class GenericMavLinkDrone implements MavLinkDrone {
 
     private final Home vehicleHome = new Home();
     private final Gps vehicleGps = new Gps();
-    private final RC RC = new RC(this);
+    private final com.fuav.android.core.drone.variables.RC RC = new RC(this);
     private final Parameters parameters = new Parameters();
     protected final Altitude altitude = new Altitude();
     protected final Speed speed = new Speed();

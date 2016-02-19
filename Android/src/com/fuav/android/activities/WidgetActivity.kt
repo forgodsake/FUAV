@@ -5,10 +5,13 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.FrameLayout
+import com.baidu.mapapi.map.SupportMapFragment
 import com.fuav.android.R
+import com.fuav.android.fragments.FlightMapFragment
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment
 import com.fuav.android.fragments.widget.VideoControlFragment
-import com.google.android.gms.maps.SupportMapFragment
+import com.fuav.android.fragments.widget.video.FullWidgetSoloLinkVideo
+import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
@@ -40,9 +43,13 @@ public class WidgetActivity : DrawerNavigationUI() {
     override fun onResume() {
         super.onResume()
         val fm = supportFragmentManager
-        var flightMapFragment = SupportMapFragment()
-//        fm.beginTransaction().replace(R.id.map_view, flightMapFragment).commit()
-//        fm.beginTransaction().replace(R.id.widget_view, FullWidgetSoloLinkVideo()).commit()
+        var flightMapFragment = FlightMapFragment()
+        if(flightMapFragment.equals(BaiduMapFragment())){
+            fm.beginTransaction().replace(R.id.map_view, SupportMapFragment()).commit()
+        }else{
+            fm.beginTransaction().replace(R.id.map_view2, flightMapFragment).commit()
+        }
+        fm.beginTransaction().replace(R.id.widget_view, FullWidgetSoloLinkVideo()).commit()
         fm.beginTransaction().replace(R.id.mission_view, VideoControlFragment()).commit()
     }
 

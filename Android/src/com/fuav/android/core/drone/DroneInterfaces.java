@@ -69,6 +69,11 @@ public class DroneInterfaces {
 		PARAMETER,
 
 		/**
+		 *
+		 */
+		PARAMETERS_DOWNLOADED,
+
+		/**
          *
          */
 		AUTOPILOT_WARNING,

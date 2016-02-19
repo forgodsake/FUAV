@@ -25,6 +25,7 @@ import com.fuav.android.activities.DrawerNavigationUI;
 import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.fragments.control.BaseFlightControlFragment;
 import com.fuav.android.fragments.control.FlightControlManagerFragment;
+import com.fuav.android.fragments.widget.video.MiniWidgetSoloLinkVideo;
 import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.view.SlidingDrawer;
@@ -245,6 +246,8 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
         warningView = (TextView) view.findViewById(R.id.failsafeTextView);
 
         setupMapFragment();
+
+        getChildFragmentManager().beginTransaction().replace(R.id.video_view2,new MiniWidgetSoloLinkVideo()).commit();
 
         mGoToMyLocation = (ImageView) view.findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageView) view.findViewById(R.id.drone_location_button);

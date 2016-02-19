@@ -4,50 +4,54 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/flight_data_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/flight_data_container">
+        android:layout_height="match_parent">
     </FrameLayout>
 
     <com.fuav.android.view.FitsSystemWindowsFrameLayout
-        android:layout_gravity="top"
+        android:id="@+id/actionbar_container"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:id="@+id/actionbar_container"
+        android:layout_gravity="top"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/actionbar_toolbar"/>
+        <include layout="@layout/actionbar_toolbar" />
     </com.fuav.android.view.FitsSystemWindowsFrameLayout>
 
     <FrameLayout
         android:id="@+id/video_view"
         android:layout_width="160dp"
         android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
         android:layout_marginLeft="20dp"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/button_waypoint"/>
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_undo"/>
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_delete"/>
-    </LinearLayout>
+        android:layout_marginTop="80dp"
+        android:orientation="vertical">
 
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_waypoint" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_undo" />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_delete" />
+    </LinearLayout>
 
 
 </RelativeLayout>

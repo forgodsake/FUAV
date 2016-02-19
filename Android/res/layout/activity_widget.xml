@@ -25,4 +25,20 @@
 
     </FrameLayout>
 
+    <FrameLayout
+            android:id="@+id/map_view2"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/control_view"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true">
+    </FrameLayout>
+
 </RelativeLayout>

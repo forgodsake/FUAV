@@ -51,7 +51,7 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 		if(drone!=null){
 			drone.addDroneListener(this);
 		}else{
-			Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(),"无人机未连接",Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -68,9 +68,8 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, MavLinkDrone drone) {
 		switch (event) {
 			case PARAMETER:
-				Toast.makeText(getActivity(),"参数"+parameters.toString(),Toast.LENGTH_SHORT).show();
 				if (parameters != null) {
-					parameters.processReceivedParam();
+				parameters.processReceivedParam();
 				}
 			default:
 				break;

@@ -325,13 +325,6 @@
             android:selectable="false"
             android:shouldDisableView="false"
             android:title="@string/firmware_version" />
-        <Preference
-            android:enabled="false"
-            android:key="pref_vehicle_type"
-            android:persistent="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:title="@string/vehicle_type" />
 
     </PreferenceCategory>
 

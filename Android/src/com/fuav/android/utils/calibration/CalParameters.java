@@ -1,11 +1,10 @@
 package com.fuav.android.utils.calibration;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.fuav.android.core.drone.autopilot.MavLinkDrone;
-import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.property.Parameter;
-import com.o3dr.services.android.lib.drone.property.Parameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +35,9 @@ public class CalParameters {
 	}
 
 	public void processReceivedParam() {
-		if (myDrone == null) {
-			return;
-		}
+//		if (myDrone == null) {
+//			return;
+//		}
 //		Parameter param = myDrone.getParameters().getLastParameter();
 //		if (param == null) {
 //			return;
@@ -102,17 +101,17 @@ public class CalParameters {
 		}
 	}
 
-	public void sendParameters(Context context, Drone drone) {
+	public void sendParameters(Context context) {
 		isUpdating = true;
 			if (this.listener != null) {
 				this.listener.onCalibrationData(uploadIndex, paramCount, isUpdating);
 			}
 			if (myDrone != null) {
-				drone.writeParameters(new Parameters(calParameterItems));
-//				for (Parameter param : calParameterItems) {
-//					myDrone.getParameters().sendParameter(param);
-//					Toast.makeText(context," "+param.getValue()+"  "+param.name, Toast.LENGTH_SHORT).show();
-//				}
+//				drone.writeParameters(new Parameters(calParameterItems));
+				for (Parameter param : calParameterItems) {
+					myDrone.getParameters().sendParameter(param);
+					Toast.makeText(context," "+param.getValue()+"  "+param.name, Toast.LENGTH_SHORT).show();
+				}
 			}
 	}
 

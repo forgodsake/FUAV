@@ -31,4 +31,14 @@ public class FragmentSetupMAG extends SetupMainPanel {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void onApiConnected() {
+
+	}
+
+	@Override
+	public void onApiDisconnected() {
+
+	}
 }

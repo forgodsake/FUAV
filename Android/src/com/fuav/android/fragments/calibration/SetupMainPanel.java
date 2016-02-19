@@ -1,15 +1,15 @@
 package com.fuav.android.fragments.calibration;
 
-import com.fuav.android.activities.ConfigurationActivity;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class SetupMainPanel extends Fragment {
+import com.fuav.android.activities.ConfigurationActivity;
+import com.fuav.android.fragments.helpers.ApiListenerFragment;
+
+public abstract class SetupMainPanel extends ApiListenerFragment {
 
 	protected ConfigurationActivity parentActivity;
 	protected SetupSidePanel sidePanel;

@@ -62,8 +62,6 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         }
 
 
-
-
     }
 
 

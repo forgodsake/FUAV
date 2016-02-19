@@ -49,7 +49,7 @@
     <string name="pref_server_port">服务器端口</string>
     <string name="pref_server_udp">UDP连接</string>
     <string name="pref_udp_server_port">UDP服务器端口</string>
-    <string name="about">关于（翻译：APM中文网 四季天书/酷酷小狼）</string>
+    <string name="about">关于</string>
     <string name="version">版本</string>
     <!-- Toast Message -->
     <string name="user_autopan_long_press">长按图示可以启动地图中使用者位置置中</string>

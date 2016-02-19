@@ -46,7 +46,8 @@ public class HeartBeat extends DroneVariable implements OnDroneListener {
         myDrone.addDroneListener(this);
     }
 
-    public byte getSysid() {
+    public byte
+    getSysid() {
         return sysid;
     }
 

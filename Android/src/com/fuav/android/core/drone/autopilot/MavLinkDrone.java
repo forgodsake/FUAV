@@ -38,9 +38,9 @@ public interface MavLinkDrone extends Drone {
 
     byte getCompid();
 
-    public ParameterManager getParameters();
+    ParameterManager getParameters();
 
-    public RC getRC();
+    RC getRC();
 
     State getState();
 

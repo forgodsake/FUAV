@@ -4,9 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
 import com.fuav.android.core.drone.DroneInterfaces;
 import com.fuav.android.core.drone.autopilot.MavLinkDrone;
@@ -21,7 +19,6 @@ import com.fuav.android.utils.calibration.CalParameters;
 import com.fuav.android.utils.calibration.RC_CalParameters;
 import com.fuav.android.view.FillBar.FillBar;
 import com.fuav.android.view.RcStick.RcStick;
-import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.property.Parameter;
 
 
@@ -41,8 +38,6 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 			"CH 7", "CH 8" };
 
 	private int calibrationStep = 0;
-
-	private DroidPlannerApp app;
 
 	private FillBar bar1;
 	private FillBar bar2;
@@ -96,8 +91,6 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 		switch (event) {
 		case RC_IN:
 			updatePanelInfo();
-			data = drone.getRC().in;
-			Toast.makeText(getActivity(),"遥控通道一"+data[0],Toast.LENGTH_SHORT).show();
 			break;
 		case RC_OUT:
 		default:
@@ -216,7 +209,10 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 
 	@Override
 	protected void updatePanelInfo() {
+
 		data = drone.getRC().in;
+
+
 		bar1.setValue(data[0]);
 		bar2.setValue(data[1]);
 		bar3.setValue(data[2]);
@@ -305,8 +301,16 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 		setFillBarShowMinMax(false);
 		getProgressPanel(true);
 		Context context = getActivity();
-		app = (DroidPlannerApp) context.getApplicationContext();
-		Drone drone = app.getDrone();
-		parameters.sendParameters(context,drone);
+		parameters.sendParameters(context);
+	}
+
+	@Override
+	public void onApiConnected() {
+
+	}
+
+	@Override
+	public void onApiDisconnected() {
+
 	}
 }
