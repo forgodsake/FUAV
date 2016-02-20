@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.fuav.android.R;
+import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.fragments.control.BaseFlightControlFragment;
 import com.fuav.android.fragments.control.FlightControlManagerFragment;
@@ -40,8 +41,6 @@ public class VideoControlFragment extends BaseFlightControlFragment {
     private void updateFollowButton() {
     }
 
-
-    private int orangeColor;
 
     static {
         eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
@@ -183,40 +182,30 @@ public class VideoControlFragment extends BaseFlightControlFragment {
 
     @Override
     public void onClick(View v) {
-        initBackground();
-        final Drone drone = getDrone();
-        switch (v.getId()){
-            case R.id.button_take_off:
-                if(index%2==0){
-                    button_take_off.setBackgroundResource(R.drawable.button_land);
-                    getTakeOffConfirmation();
-                    getArmingConfirmation();
-                }else{
-                    getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
-                }
-                index++;
-                break;
-            case R.id.button_go_home:
-                button_go_home.setBackgroundResource(R.drawable.go_home_on);;
-                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
-                break;
-            case R.id.button_hover:
-                button_hover.setBackgroundResource(R.drawable.hover_on);
-                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
-                if (followState.isEnabled()) {
-                    drone.disableFollowMe();
-                }
-
-                drone.pauseAtCurrentLocation();
-                break;
-            case R.id.button_follow_me:
-                button_follow_me.setBackgroundResource(R.drawable.follow_me_on);
-                toggleFollowMe();
-                break;
-            default:
-                break;
+        if(DroneManager.getDrone()!=null){
+            switch (v.getId()){
+                case R.id.button_take_off:
+                    if(index%2==0){
+                        getArmingConfirmation();
+                    }else{
+                        getLandConfirmation();
+                    }
+                    break;
+                case R.id.button_go_home:
+                    getGoHomeConfirmation();
+                    break;
+                case R.id.button_hover:
+                    getHoverConfirmation();
+                    break;
+                case R.id.button_follow_me:
+                    getFolloeMeConfirmation();
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            Toast.makeText(getActivity(),"无人机未连接",Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -242,7 +231,6 @@ public class VideoControlFragment extends BaseFlightControlFragment {
     }
 
     private void initBackground() {
-        button_take_off.setBackgroundResource(R.drawable.button_take_off);
         button_go_home.setBackgroundResource(R.drawable.button_go_home);
         button_hover.setBackgroundResource(R.drawable.button_hover);
     }
@@ -252,19 +240,69 @@ public class VideoControlFragment extends BaseFlightControlFragment {
             @Override
             public void run() {
                 getDrone().arm(true);
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                getDrone().doGuidedTakeoff(takeOffAltitude);
+                initBackground();
+                button_take_off.setBackgroundResource(R.drawable.button_land);
+                index++;
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide To Arm");
     }
 
-    private void getTakeOffConfirmation() {
-        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("take off", new Runnable() {
+    private void getGoHomeConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("GoHome", new Runnable() {
             @Override
             public void run() {
-                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                getDrone().doGuidedTakeoff(takeOffAltitude);
+                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
+                initBackground();
+                button_go_home.setBackgroundResource(R.drawable.go_home_on);
             }
         });
-        unlockDialog.show(getChildFragmentManager(), "Slide to take off");
+        unlockDialog.show(getChildFragmentManager(), "Slide To GoHome");
+    }
+
+    private void getHoverConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Hover", new Runnable() {
+            @Override
+            public void run() {
+                final Drone drone = getDrone();
+                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+                if (followState.isEnabled()) {
+                    drone.disableFollowMe();
+                }
+
+                drone.pauseAtCurrentLocation();
+                initBackground();
+                button_hover.setBackgroundResource(R.drawable.hover_on);
+            }
+        });
+        unlockDialog.show(getChildFragmentManager(), "Slide To Hover");
+    }
+
+    private void getLandConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Land off", new Runnable() {
+            @Override
+            public void run() {
+                getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
+                initBackground();
+                button_take_off.setBackgroundResource(R.drawable.button_take_off);
+                index++;
+            }
+        });
+        unlockDialog.show(getChildFragmentManager(), "Slide to Land off");
+    }
+
+    private void getFolloeMeConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Folloe Me", new Runnable() {
+            @Override
+            public void run() {
+                button_follow_me.setBackgroundResource(R.drawable.follow_me_on);
+                toggleFollowMe();
+                initBackground();
+                index++;
+            }
+        });
+        unlockDialog.show(getChildFragmentManager(), "Slide to Folloe Me");
     }
 }

@@ -4,7 +4,11 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.FrameLayout
+import android.widget.ImageView
 import com.baidu.mapapi.map.SupportMapFragment
 import com.fuav.android.R
 import com.fuav.android.fragments.FlightDataFragment
@@ -27,7 +31,12 @@ public class WidgetActivity : DrawerNavigationUI() {
     companion object {
         const val EXTRA_WIDGET_ID = "extra_widget_id"
     }
+    private var shot_switch_left:ImageView?=null
+    private var shot_switch_right:ImageView?=null
+    private var video:ImageView?=null
+    private var camera:ImageView?=null
     private var control_frame: FrameLayout? =null
+    private var index :Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -39,6 +48,37 @@ public class WidgetActivity : DrawerNavigationUI() {
             startActivity(Intent(this, FlightActivity::class.java))
         })
 
+
+        var animationl:Animation = TranslateAnimation(0f,200f,0f,0f)
+        animationl.duration = 1200
+        var animationr:Animation = TranslateAnimation(0f,-200f,0f,0f)
+        animationr.duration = 1200
+        shot_switch_left = findViewById(R.id.shot_switch_left) as ImageView
+        shot_switch_right = findViewById(R.id.shot_switch_right) as ImageView
+        video = findViewById(R.id.video) as ImageView
+        camera = findViewById(R.id.camera) as ImageView
+        shot_switch_left?.setOnClickListener({
+            if(index%2==0){
+                shot_switch_left?.startAnimation(animationl)
+                video?.setImageResource(R.drawable.video_off)
+                camera?.setImageResource(R.drawable.camera_on)
+                shot_switch_left?.visibility= View.GONE
+                shot_switch_right?.visibility= View.VISIBLE
+                index++
+            }
+
+        })
+        shot_switch_right?.setOnClickListener({
+            if(index%2==1){
+                shot_switch_right?.startAnimation(animationr)
+                video?.setImageResource(R.drawable.video_on)
+                camera?.setImageResource(R.drawable.camera_off)
+                shot_switch_right?.visibility= View.GONE
+                shot_switch_left?.visibility= View.VISIBLE
+                index++
+            }
+
+        })
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     }
 

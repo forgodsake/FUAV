@@ -45,24 +45,33 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:id="@+id/shot_switch"
+            android:id="@+id/shot_switch_left"
             android:src="@drawable/shot_switch"
             android:layout_marginTop="11dp"
             android:layout_marginLeft="13dp"
             android:layout_toRightOf="@id/shot_key_on"/>
         <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/shot_switch_right"
+            android:src="@drawable/shot_switch"
+            android:layout_marginTop="11dp"
+            android:layout_marginLeft="80dp"
+            android:visibility="gone"
+            android:layout_toRightOf="@id/shot_key_on"/>
+        <ImageView
             android:layout_width="40dp"
             android:layout_height="18dp"
             android:src="@drawable/camera_off"
-            android:id="@+id/camera_off"
-            android:layout_alignTop="@+id/video_on"
+            android:id="@+id/camera"
+            android:layout_alignTop="@+id/video"
             android:layout_centerHorizontal="true" />
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="18dp"
             android:src="@drawable/video_on"
-            android:id="@+id/video_on"
+            android:id="@+id/video"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"

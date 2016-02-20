@@ -619,6 +619,19 @@ public class Drone {
         CalibrationApi.getApi(this).startIMUCalibration();
     }
 
+    public void startMAGCalibration() {
+        CalibrationApi.getApi(this).startMagnetometerCalibration();
+    }
+
+    /**
+     * @deprecated Use {@link CalibrationApi#startIMUCalibration()} instead.
+     */
+    public void sendCalibration() {
+        CalibrationApi.getApi(this).acceptMagnetometerCalibration();
+    }
+
+
+
     /**
      * @deprecated Use {@link CalibrationApi#sendIMUAck(int)} instead.
      */

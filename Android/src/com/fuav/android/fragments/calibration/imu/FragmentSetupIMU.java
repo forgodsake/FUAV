@@ -114,7 +114,7 @@ public class FragmentSetupIMU extends ApiListenerFragment  {
         btnStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                processCalibrationStep(calibration_step);
+                    processCalibrationStep(calibration_step);
             }
         });
 
@@ -265,6 +265,8 @@ public class FragmentSetupIMU extends ApiListenerFragment  {
 			dpApi.startIMUCalibration();
 		}
 	}
+
+
 
 	private void processMAVMessage(String message, boolean updateTime) {
 		if (message.contains("Place") || message.contains("Calibration")) {

@@ -77,7 +77,7 @@ public class CalibrationApi extends Api {
      * Start the magnetometer calibration process.
      */
     public void startMagnetometerCalibration() {
-        startMagnetometerCalibration(false, true, 0);
+        startMagnetometerCalibration(false, false, 0);
     }
 
     /**
