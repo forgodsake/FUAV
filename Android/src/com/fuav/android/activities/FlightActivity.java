@@ -1,5 +1,6 @@
 package com.fuav.android.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
 import com.fuav.android.fragments.widget.video.MiniWidgetSoloLinkVideo;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
@@ -61,20 +63,63 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             fm.beginTransaction().add(R.id.flight_data_container, flightData).commit();
         }
 
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+
+        MiniWidgetSoloLinkVideo miniVideo2 = new MiniWidgetSoloLinkVideo();
+
+        if(!pre.getMapProviderName().equals("GOOGLE_MAP")){
+
+            fm.beginTransaction()
+                    .replace(R.id.video_view2, miniVideo2)
+                    .commit();
+        }else{
+
+            fm.beginTransaction()
+                    .remove(miniVideo2)
+                    .commit();
+        }
+
     }
 
-
-    public FlightDataFragment getFlightData(){
-        return  flightData;
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.video_view, new MiniWidgetSoloLinkVideo())
-                .commit();
+
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+
+        findViewById(R.id.controlview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FlightActivity.this,WidgetActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+
+        MiniWidgetSoloLinkVideo miniVideo = new MiniWidgetSoloLinkVideo();
+
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+
+            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.video_view, miniVideo)
+                    .commit();
+        }else{
+
+            getSupportFragmentManager().beginTransaction()
+                    .remove(miniVideo)
+                    .commit();
+
+            findViewById(R.id.video_view).setVisibility(View.GONE);
+        }
+
+
     }
 
 

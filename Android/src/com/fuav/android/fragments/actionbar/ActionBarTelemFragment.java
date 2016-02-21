@@ -458,6 +458,10 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
 
             this.altitudeTelem.setText(altUnit.toString());
         }
+
+        if(getDrone()==null){
+            this.altitudeTelem.setText("--");
+        }
     }
 
 }

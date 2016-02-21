@@ -36,6 +36,11 @@ public class FullWidgetSoloLinkVideo : TowerWidget() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         VideoThread(_displayView,activity).start()
     }
 }

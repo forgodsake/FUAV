@@ -3,20 +3,20 @@ package com.fuav.android.activities
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.baidu.mapapi.map.SupportMapFragment
+import com.baidu.platform.comapi.map.B
+import com.baidu.platform.comapi.map.C
 import com.fuav.android.R
-import com.fuav.android.fragments.FlightDataFragment
 import com.fuav.android.fragments.FlightMapFragment
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment
 import com.fuav.android.fragments.widget.VideoControlFragment
 import com.fuav.android.fragments.widget.video.FullWidgetSoloLinkVideo
-import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment
 import com.fuav.android.utils.prefs.DroidPlannerPrefs
 
 /**
@@ -45,7 +45,9 @@ public class WidgetActivity : DrawerNavigationUI() {
 
         control_frame = findViewById(R.id.control_view) as FrameLayout?
         control_frame?.setOnClickListener({
-            startActivity(Intent(this, FlightActivity::class.java))
+            var intent = Intent(this, FlightActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         })
 
 
@@ -63,7 +65,9 @@ public class WidgetActivity : DrawerNavigationUI() {
                 video?.setImageResource(R.drawable.video_off)
                 camera?.setImageResource(R.drawable.camera_on)
                 shot_switch_left?.visibility= View.GONE
-                shot_switch_right?.visibility= View.VISIBLE
+                Handler().postDelayed({
+                    shot_switch_right?.visibility= View.VISIBLE
+                }, 1200)//delay 2000ms
                 index++
             }
 
@@ -74,12 +78,18 @@ public class WidgetActivity : DrawerNavigationUI() {
                 video?.setImageResource(R.drawable.video_on)
                 camera?.setImageResource(R.drawable.camera_off)
                 shot_switch_right?.visibility= View.GONE
-                shot_switch_left?.visibility= View.VISIBLE
+                Handler().postDelayed({
+                    shot_switch_left?.visibility= View.VISIBLE
+                }, 1200)//delay 2000ms
                 index++
             }
 
         })
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
     }
 
     override fun onResume() {
@@ -109,5 +119,9 @@ public class WidgetActivity : DrawerNavigationUI() {
 
 
     override fun getToolbarId() = R.id.actionbar_container
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+    }
 
 }

@@ -271,7 +271,7 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
     @Override
     public void onDestroy() {
         // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
-        mLocClient.stop();
+//        mLocClient.stop();
 
         super.onDestroy();
     }

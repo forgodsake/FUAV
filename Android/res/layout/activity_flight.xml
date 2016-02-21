@@ -4,6 +4,13 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/video_view2"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <FrameLayout
         android:id="@+id/flight_data_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,6 +28,13 @@
 
     <FrameLayout
         android:id="@+id/video_view"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+
+    <FrameLayout
+        android:id="@+id/controlview"
         android:layout_width="160dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"

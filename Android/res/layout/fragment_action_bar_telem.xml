@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/bar_gps"
-            android:layout_width="20dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="36dp"
             android:gravity="center_vertical"
@@ -96,12 +96,11 @@
             android:drawablePadding="@dimen/info_bar_drawable_padding"
             android:text="@string/empty_content"
             android:textSize="@dimen/info_bar_text_size"
-            android:textColor="#FFFFFF"
-            tools:text="1000 m" />
+            android:textColor="#FFFFFF" />
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="160dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:minHeight="40dp"
         android:minWidth="80dp">

@@ -16,7 +16,7 @@ import com.fuav.android.utils.VideoThread
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
  */
-public class MiniWidgetSoloLinkVideo : TowerWidget() {
+class MiniWidgetSoloLinkVideo : TowerWidget() {
 
     override fun getWidgetType()= TowerWidgets.SOLO_VIDEO
 
@@ -31,18 +31,13 @@ public class MiniWidgetSoloLinkVideo : TowerWidget() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         return inflater?.inflate(R.layout.fragment_mini_widget_solo_video, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         VideoThread(_displayView,activity).start()
-
-        var activity = activity as FlightActivity;
-        _displayView?.setOnClickListener({ startActivity(Intent(activity, WidgetActivity::class.java)) })
-
-
     }
 
 }
