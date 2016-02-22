@@ -25,7 +25,6 @@ import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
 import com.fuav.android.activities.helpers.MapPreferencesActivity;
 import com.fuav.android.dialogs.ClearBTDialogPreference;
-import com.fuav.android.fragments.widget.WidgetsListPrefFragment;
 import com.fuav.android.maps.providers.DPMapProvider;
 import com.fuav.android.utils.Utils;
 import com.fuav.android.utils.analytics.GAUtils;
@@ -185,7 +184,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
             Log.e(TAG, "Unable to retrieve version name.", e);
         }
 
-        setupWidgetsPreferences();
+//        setupWidgetsPreferences();
         setupMapProviders();
         setupPeriodicControls();
         setupConnectionPreferences();
@@ -197,19 +196,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         setupAltitudePreferences();
     }
 
-    private void setupWidgetsPreferences(){
-        final Preference widgetsPref = findPreference(DroidPlannerPrefs.PREF_TOWER_WIDGETS);
-        if(widgetsPref != null){
 
-            widgetsPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    new WidgetsListPrefFragment().show(getFragmentManager(), "Widgets List Preferences");
-                    return true;
-                }
-            });
-        }
-    }
 
     private void setupMapProviders(){
         // Populate the map preference category

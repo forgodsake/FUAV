@@ -10,8 +10,6 @@ import android.text.TextUtils;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
 
 import com.fuav.android.core.drone.variables.StreamRates;
-import com.fuav.android.fragments.widget.TowerWidgets;
-import com.fuav.android.fragments.widget.video.WidgetVideoPreferences;
 import com.fuav.android.maps.providers.DPMapProvider;
 import com.fuav.android.utils.Utils;
 import com.fuav.android.utils.unit.systems.UnitSystem;
@@ -466,13 +464,9 @@ public class DroidPlannerPrefs {
         return prefs.getBoolean(PREF_IS_TTS_ENABLED, DEFAULT_TTS_ENABLED);
     }
 
-    public void enableWidget(TowerWidgets widget, boolean enable){
-        prefs.edit().putBoolean(widget.getPrefKey(), enable).apply();
-    }
 
-    public boolean isWidgetEnabled(TowerWidgets widget) {
-        return prefs.getBoolean(widget.getPrefKey(), widget.isEnabledByDefault());
-    }
+
+
 
     public boolean isReturnToMeEnabled() {
         return prefs.getBoolean(PREF_RETURN_TO_ME, DEFAULT_RETURN_TO_ME);
@@ -487,15 +481,6 @@ public class DroidPlannerPrefs {
         return prefs.getBoolean(PREF_VEHICLE_HOME_UPDATE_WARNING, DEFAULT_VEHICLE_HOME_UPDATE_WARNING);
     }
 
-    public void setVideoWidgetType(@WidgetVideoPreferences.VideoType int videoType){
-        prefs.edit().putInt(PREF_WIDGET_VIDEO_TYPE, videoType).apply();
-    }
-
-    @WidgetVideoPreferences.VideoType
-    public int getVideoWidgetType(){
-        @WidgetVideoPreferences.VideoType final int videoType = prefs.getInt(PREF_WIDGET_VIDEO_TYPE, WidgetVideoPreferences.SOLO_VIDEO_TYPE);
-        return videoType;
-    }
 
     public void setCustomVideoUdpPort(int udpPort){
         prefs.edit().putInt(PREF_CUSTOM_VIDEO_UDP_PORT, udpPort).apply();

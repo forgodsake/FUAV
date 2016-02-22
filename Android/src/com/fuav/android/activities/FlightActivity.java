@@ -13,13 +13,14 @@ import android.view.WindowManager;
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
-import com.fuav.android.fragments.widget.video.MiniWidgetSoloLinkVideo;
+import com.fuav.android.fragments.widget.video.MiniVideoFragment;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
 
     private FlightDataFragment flightData;
+    private MiniVideoFragment miniVideo2;
 
     @Override
     public void onDrawerClosed() {
@@ -64,8 +65,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         }
 
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-
-        MiniWidgetSoloLinkVideo miniVideo2 = new MiniWidgetSoloLinkVideo();
+        miniVideo2 = new MiniVideoFragment();
 
         if(!pre.getMapProviderName().equals("GOOGLE_MAP")){
 
@@ -92,16 +92,23 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
 
+        final FragmentManager fm = getSupportFragmentManager();
+
         findViewById(R.id.controlview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FlightActivity.this,WidgetActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
+                finish();
+                fm.beginTransaction()
+                        .remove(miniVideo2)
+                        .commit();
+
             }
         });
 
-        MiniWidgetSoloLinkVideo miniVideo = new MiniWidgetSoloLinkVideo();
+        MiniVideoFragment miniVideo = new MiniVideoFragment();
 
         if(pre.getMapProviderName().equals("GOOGLE_MAP")){
 
@@ -118,6 +125,8 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
             findViewById(R.id.video_view).setVisibility(View.GONE);
         }
+
+
 
 
     }
@@ -199,7 +208,4 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
     }
-
-
-
 }

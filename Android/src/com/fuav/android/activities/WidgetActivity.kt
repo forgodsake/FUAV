@@ -46,7 +46,7 @@ public class WidgetActivity : DrawerNavigationUI() {
         control_frame = findViewById(R.id.control_view) as FrameLayout?
         control_frame?.setOnClickListener({
             var intent = Intent(this, FlightActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         })
 

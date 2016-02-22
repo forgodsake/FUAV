@@ -1,27 +1,18 @@
 package com.fuav.android.fragments.widget.video
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.demo.sdk.DisplayView
 import com.fuav.android.R
-import com.fuav.android.fragments.widget.TowerWidget
-import com.fuav.android.fragments.widget.TowerWidgets
 import com.fuav.android.utils.VideoThread
 
 /**
  * Created by Fredia Huya-Kouadio on 7/19/15.
  */
-public class FullWidgetSoloLinkVideo : TowerWidget() {
-
-    override fun getWidgetType()= TowerWidgets.SOLO_VIDEO
-
-    override fun onApiDisconnected() {
-    }
-
-    override fun onApiConnected() {
-    }
+public class FullWidgetSoloLinkVideo : Fragment() {
 
 
 
