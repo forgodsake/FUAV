@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.demo.sdk.DisplayView;
+import com.demo.sdk.Enums;
+import com.demo.sdk.Module;
+import com.demo.sdk.Player;
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
@@ -108,20 +112,39 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             }
         });
 
-        MiniVideoFragment miniVideo = new MiniVideoFragment();
+//        MiniVideoFragment miniVideo = new MiniVideoFragment();
 
         if(pre.getMapProviderName().equals("GOOGLE_MAP")){
 
             findViewById(R.id.video_view).setVisibility(View.VISIBLE);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.video_view, miniVideo)
-                    .commit();
+            Module _module= new Module(this);
+            DisplayView _displayView = (DisplayView)findViewById(R.id.video_view);
+            String _moduleIp = "192.168.100.108";
+
+
+            _module.setUsername("admin");
+            _module.setPassword("admin");
+            _module.setPlayerPort(554);
+            _module.setModuleIp(_moduleIp);
+
+            Player _player = _module.getPlayer();
+            _player.setTimeout(10000);
+
+            _player.setDisplayView(_displayView);
+            Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
+            _player.play(_pipe, Enums.Transport.UDP);
+
+            _displayView.setFullScreen(true);
+
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.video_view, miniVideo)
+//                    .commit();
         }else{
 
-            getSupportFragmentManager().beginTransaction()
-                    .remove(miniVideo)
-                    .commit();
+//            getSupportFragmentManager().beginTransaction()
+//                    .remove(miniVideo)
+//                    .commit();
 
             findViewById(R.id.video_view).setVisibility(View.GONE);
         }

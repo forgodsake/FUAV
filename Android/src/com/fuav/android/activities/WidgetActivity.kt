@@ -52,9 +52,9 @@ public class WidgetActivity : DrawerNavigationUI() {
 
 
         var animationl:Animation = TranslateAnimation(0f,200f,0f,0f)
-        animationl.duration = 1200
+        animationl.duration = 800
         var animationr:Animation = TranslateAnimation(0f,-200f,0f,0f)
-        animationr.duration = 1200
+        animationr.duration = 800
         shot_switch_left = findViewById(R.id.shot_switch_left) as ImageView
         shot_switch_right = findViewById(R.id.shot_switch_right) as ImageView
         video = findViewById(R.id.video) as ImageView
@@ -67,7 +67,7 @@ public class WidgetActivity : DrawerNavigationUI() {
                 shot_switch_left?.visibility= View.GONE
                 Handler().postDelayed({
                     shot_switch_right?.visibility= View.VISIBLE
-                }, 1200)//delay 2000ms
+                }, 800)//delay 2000ms
                 index++
             }
 
@@ -80,7 +80,7 @@ public class WidgetActivity : DrawerNavigationUI() {
                 shot_switch_right?.visibility= View.GONE
                 Handler().postDelayed({
                     shot_switch_left?.visibility= View.VISIBLE
-                }, 1200)//delay 2000ms
+                }, 800)//delay 2000ms
                 index++
             }
 
