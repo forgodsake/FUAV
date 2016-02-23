@@ -17,14 +17,14 @@ import com.demo.sdk.Player;
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
-import com.fuav.android.fragments.widget.video.MiniVideoFragment;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
 
     private FlightDataFragment flightData;
-    private MiniVideoFragment miniVideo2;
+    private Player _player;
+    private  Module _module;
 
     @Override
     public void onDrawerClosed() {
@@ -68,19 +68,29 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             fm.beginTransaction().add(R.id.flight_data_container, flightData).commit();
         }
 
+        _module= new Module(this);
+        _module.setUsername("admin");
+        _module.setPassword("admin");
+        _module.setPlayerPort(554);
+        String _moduleIp = "192.168.100.108";
+        _module.setModuleIp(_moduleIp);
+
+        _player = _module.getPlayer();
+        _player.setTimeout(10000);
+        Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
+        _player.play(_pipe, Enums.Transport.UDP);
+
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-        miniVideo2 = new MiniVideoFragment();
 
         if(!pre.getMapProviderName().equals("GOOGLE_MAP")){
 
-            fm.beginTransaction()
-                    .replace(R.id.video_view2, miniVideo2)
-                    .commit();
-        }else{
+            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
+            DisplayView _displayView = (DisplayView)findViewById(R.id.video_view2);
+            _player.setDisplayView(_displayView);
+            _displayView.setFullScreen(true);
 
-            fm.beginTransaction()
-                    .remove(miniVideo2)
-                    .commit();
+        }else{
+            findViewById(R.id.video_view).setVisibility(View.GONE);
         }
 
     }
@@ -96,56 +106,25 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
 
-        final FragmentManager fm = getSupportFragmentManager();
-
         findViewById(R.id.controlview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FlightActivity.this,WidgetActivity.class);
+                Intent intent = new Intent(FlightActivity.this,VideoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();
-                fm.beginTransaction()
-                        .remove(miniVideo2)
-                        .commit();
 
             }
         });
 
-//        MiniVideoFragment miniVideo = new MiniVideoFragment();
-
         if(pre.getMapProviderName().equals("GOOGLE_MAP")){
 
             findViewById(R.id.video_view).setVisibility(View.VISIBLE);
-
-            Module _module= new Module(this);
             DisplayView _displayView = (DisplayView)findViewById(R.id.video_view);
-            String _moduleIp = "192.168.100.108";
-
-
-            _module.setUsername("admin");
-            _module.setPassword("admin");
-            _module.setPlayerPort(554);
-            _module.setModuleIp(_moduleIp);
-
-            Player _player = _module.getPlayer();
-            _player.setTimeout(10000);
-
             _player.setDisplayView(_displayView);
-            Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
-            _player.play(_pipe, Enums.Transport.UDP);
-
             _displayView.setFullScreen(true);
 
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.video_view, miniVideo)
-//                    .commit();
         }else{
-
-//            getSupportFragmentManager().beginTransaction()
-//                    .remove(miniVideo)
-//                    .commit();
-
             findViewById(R.id.video_view).setVisibility(View.GONE);
         }
 
