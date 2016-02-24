@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/bar_gps"
-            android:layout_width="30dp"
+            android:layout_width="36dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="26dp"
             android:gravity="center"
@@ -130,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+            android:layout_margin="3dp"
             android:textSize="@dimen/info_bar_text_size"
             android:textColor="#FFFFFF"
             android:text="00:00"/>

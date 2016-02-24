@@ -12,7 +12,8 @@ public class VideoThread extends Thread {
 	private Context context;
 	private static Module _module=null;
 	private DisplayView _displayView;
-	private static String _moduleIp = "192.168.100.106";
+	private static String _moduleIp = "192.168.100.108";
+	private Player _player;
 
 	public VideoThread(DisplayView displayView, Context context){
 		this._displayView = displayView;
@@ -34,15 +35,18 @@ public class VideoThread extends Thread {
 		_module.setPlayerPort(554);
 		_module.setModuleIp(_moduleIp);
 
-		Player _player = _module.getPlayer();
+		_player = _module.getPlayer();
 		_player.setTimeout(10000);
 		_player.setRecordFrameRate(10);
-
 		_player.setDisplayView(_displayView);
 		Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
 		_player.play(_pipe, Enums.Transport.UDP);
 
 		_displayView.setFullScreen(true);
 	}
-	
+
+	public void stopPlay(){
+		_player.stop();
+	}
+
 }

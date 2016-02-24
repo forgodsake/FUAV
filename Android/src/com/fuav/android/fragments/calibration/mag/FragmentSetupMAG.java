@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.MAVLink.ardupilotmega.msg_mag_cal_progress;
+import com.MAVLink.ardupilotmega.msg_mag_cal_report;
 import com.fuav.android.R;
+import com.fuav.android.core.drone.variables.calibration.MagnetometerCalibrationImpl;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 import com.fuav.android.notifications.TTSNotificationProvider;
 import com.o3dr.android.client.Drone;
@@ -24,9 +26,8 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.State;
 
 
-public class FragmentSetupMAG extends ApiListenerFragment {
+public class FragmentSetupMAG extends ApiListenerFragment implements MagnetometerCalibrationImpl.OnMagnetometerCalibrationListener {
 
-	private final static long TIMEOUT_MAX = 30000l; //ms
 	private final static long UPDATE_TIMEOUT_PERIOD = 100l; //ms
 	private static final String EXTRA_UPDATE_TIMESTAMP = "extra_update_timestamp";
 
@@ -43,10 +44,12 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 		public void onReceive(Context context, Intent intent) {
 			final String action = intent.getAction();
 			switch (action) {
-				case AttributeEvent.CALIBRATION_IMU: {
-					String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_IMU_MESSAGE);
-					if (message != null)
-						processMAVMessage(message, true);
+				case AttributeEvent.CALIBRATION_MAG_PROGRESS: {
+					if (getDrone().isConnected()) {
+						String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_MAG_PROGRESS);
+						if (message != null)
+							relayInstructions(message);
+					}
 					break;
 				}
 				case AttributeEvent.STATE_CONNECTED:
@@ -61,9 +64,9 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 					btnStep.setEnabled(false);
 					resetCalibration();
 					break;
-				case AttributeEvent.CALIBRATION_IMU_TIMEOUT:
+				case AttributeEvent.CALIBRATION_MAG_COMPLETED:
 					if (getDrone().isConnected()) {
-						String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_IMU_MESSAGE);
+						String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_MAG_RESULT);
 						if (message != null)
 							relayInstructions(message);
 					}
@@ -75,14 +78,11 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 	private long updateTimestamp;
 
 	private int calibration_step = 0;
-//	private TextView textViewStep;
-//	private ProgressBar pbTimeOut;
 
 	private final Handler handler = new Handler();
 
 	private Button btnStep;
 	private Button btnSend;
-	private TextView textDesc;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,17 +92,12 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-//		textViewStep = (TextView) view.findViewById(R.id.textViewIMUStep);
-//		pbTimeOut = (ProgressBar) view.findViewById(R.id.progressBarTimeOut);
-
-		textDesc = (TextView) view.findViewById(R.id.textViewDesc);
 
 		btnStep = (Button) view.findViewById(R.id.buttonStep);
 		btnStep.setEnabled(false);
 		btnStep.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				processCalibrationStep(calibration_step);
 				startCalibration();
 			}
 		});
@@ -114,8 +109,6 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 				sendCalibration();
 			}
 		});
-
-//		pbTimeOut.setVisibility(View.INVISIBLE);
 
 		if(savedInstanceState != null){
 			updateTimestamp = savedInstanceState.getLong(EXTRA_UPDATE_TIMESTAMP);
@@ -131,19 +124,6 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 	private void resetCalibration(){
 		calibration_step = 0;
 		updateDescription(calibration_step);
-	}
-
-	private void processCalibrationStep(int step) {
-		if (step == 0) {
-			startCalibration();
-			updateTimestamp = System.currentTimeMillis();
-		} else if (step > 0 && step < 7) {
-
-		} else {
-			calibration_step = 0;
-
-//			textViewStep.setText(R.string.setup_imu_step);
-		}
 	}
 
 
@@ -167,45 +147,20 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 	}
 
 	public void updateDescription(int calibration_step) {
-		int id;
-		switch (calibration_step) {
-			case 0:
-				id = R.string.setup_imu_start;
-				break;
-			case 1:
-				id = R.string.setup_imu_normal;
-			case 6:
-				id = R.string.setup_imu_back;
-				break;
-			case 7:
-				id = R.string.setup_imu_completed;
-				break;
-			default:
-				return;
-		}
-
-		if (textDesc != null) {
-			textDesc.setText(id);
-		}
 
 		if (btnStep != null) {
 			if (calibration_step == 0)
 				btnStep.setText(R.string.button_setup_calibrate);
-			else if (calibration_step == 7)
+			else if (calibration_step == 2)
 				btnStep.setText(R.string.button_setup_done);
 			else
 				btnStep.setText(R.string.button_setup_next);
 		}
 
-		if (calibration_step == 7 || calibration_step == 0) {
+		if (calibration_step == 2 || calibration_step == 0) {
 			handler.removeCallbacks(runnable);
-
-//			pbTimeOut.setVisibility(View.INVISIBLE);
 		} else {
 			handler.removeCallbacks(runnable);
-
-//			pbTimeOut.setIndeterminate(true);
-//			pbTimeOut.setVisibility(View.VISIBLE);
 			handler.postDelayed(runnable, UPDATE_TIMEOUT_PERIOD);
 		}
 	}
@@ -214,14 +169,10 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 		if (message.contains("level"))
 			calibration_step = 1;
 		else if (message.contains("LEFT"))
-			calibration_step = 6;
-		else if (message.contains("Calibration"))
-			calibration_step = 7;
+			calibration_step = 2;
 
 		String msg = message.replace("any key.", "'Next'");
 		relayInstructions(msg);
-
-//		textViewStep.setText(msg);
 
 		updateDescription(calibration_step);
 	}
@@ -230,7 +181,6 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 		@Override
 		public void run() {
 			handler.removeCallbacks(this);
-			updateTimeOutProgress();
 			handler.postDelayed(this, UPDATE_TIMEOUT_PERIOD);
 		}
 	};
@@ -246,19 +196,6 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 						.putExtra(TTSNotificationProvider.EXTRA_MESSAGE_TO_SPEAK, instructions));
 
 		Toast.makeText(context, instructions, Toast.LENGTH_LONG).show();
-	}
-
-	protected void updateTimeOutProgress() {
-		final long timeElapsed = System.currentTimeMillis() - updateTimestamp;
-		long timeLeft = (int) (TIMEOUT_MAX - timeElapsed);
-
-		if (timeLeft >= 0) {
-
-//			pbTimeOut.setIndeterminate(false);
-//			pbTimeOut.setMax((int) TIMEOUT_MAX);
-//			pbTimeOut.setProgress((int) timeLeft);
-
-		}
 	}
 
 	private void sendCalibration() {
@@ -295,5 +232,20 @@ public class FragmentSetupMAG extends ApiListenerFragment {
 	@Override
 	public void onApiDisconnected() {
 		getBroadcastManager().unregisterReceiver(broadcastReceiver);
+	}
+
+	@Override
+	public void onCalibrationCancelled() {
+
+	}
+
+	@Override
+	public void onCalibrationProgress(msg_mag_cal_progress progress) {
+		Toast.makeText(getActivity(),""+progress.completion_pct,Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onCalibrationCompleted(msg_mag_cal_report result) {
+
 	}
 }

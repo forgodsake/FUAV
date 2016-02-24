@@ -73,6 +73,7 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
                     case R.id.navigation_drawer_container:
                         if (mNavigationIntent != null) {
                             startActivity(mNavigationIntent);
+                            finish();
                             mNavigationIntent = null;
                         }
                         break;
@@ -121,8 +122,6 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
 
         navigationView = (NavigationView) findViewById(R.id.navigation_drawer_container);
         navigationView.setNavigationItemSelectedListener(this);
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     }
 

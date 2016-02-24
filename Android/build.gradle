@@ -137,9 +137,7 @@ android {
         variant.outputs.each { output ->
             def file = output.outputFile
             if (file != null && file.name.endsWith('.apk')) {
-                def buildType = variant.buildType.getName()
-                def versionCode = defaultConfig.versionCode
-                output.outputFile = new File(file.parent, "tower-${buildType}.${versionCode}.apk")
+                output.outputFile = new File(file.parent, "FUAV.apk")
             }
         }
     }

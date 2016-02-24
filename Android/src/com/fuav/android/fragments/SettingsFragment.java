@@ -184,7 +184,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
             Log.e(TAG, "Unable to retrieve version name.", e);
         }
 
-//        setupWidgetsPreferences();
         setupMapProviders();
         setupPeriodicControls();
         setupConnectionPreferences();

@@ -12,20 +12,20 @@ import com.demo.sdk.DisplayView;
 import com.fuav.android.R;
 import com.fuav.android.utils.VideoThread;
 
-public class MiniVideoFragment extends Fragment {
+public class VideoFragment extends Fragment {
 
     private DisplayView displayView;
 
 
-    public MiniVideoFragment() {
+    public VideoFragment() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mini_video, container, false);
-        displayView = (DisplayView) view.findViewById(R.id.sololink_video_view);
+        View view = inflater.inflate(R.layout.fragment_widget_sololink_video, container, false);
+        displayView = (DisplayView) view.findViewById(R.id.full_video_view);
         return view;
     }
 
@@ -38,5 +38,10 @@ public class MiniVideoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         new VideoThread(displayView,getActivity()).start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

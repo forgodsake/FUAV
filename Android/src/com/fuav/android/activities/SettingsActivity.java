@@ -15,8 +15,9 @@ public class SettingsActivity extends DrawerNavigationUI {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
+
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 		setContentView(R.layout.activity_settings);
 
 		FragmentManager fm = getFragmentManager();
@@ -41,4 +42,5 @@ public class SettingsActivity extends DrawerNavigationUI {
 	public void onApiConnected() {
         super.onApiConnected();
 	}
+
 }

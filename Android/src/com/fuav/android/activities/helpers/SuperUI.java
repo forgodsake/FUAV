@@ -79,7 +79,6 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
         }
     };
 
-    private ScreenOrientation screenOrientation = new ScreenOrientation(this);
     private LocalBroadcastManager lbm;
 
     /**
@@ -188,7 +187,6 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        screenOrientation.unlock();
         Utils.updateUILanguage(context);
 
         bindService(new Intent(context, AppService.class), this, Context.BIND_AUTO_CREATE);
@@ -226,12 +224,10 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
 
     protected void onDroneConnected() {
         invalidateOptionsMenu();
-        screenOrientation.requestLock();
     }
 
     protected void onDroneDisconnected() {
         invalidateOptionsMenu();
-        screenOrientation.unlock();
     }
 
     @Override

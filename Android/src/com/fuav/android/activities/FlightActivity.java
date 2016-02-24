@@ -10,21 +10,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.demo.sdk.DisplayView;
-import com.demo.sdk.Enums;
-import com.demo.sdk.Module;
-import com.demo.sdk.Player;
 import com.fuav.android.R;
 import com.fuav.android.fragments.FlightDataFragment;
+import com.fuav.android.fragments.FlightMapFragment;
 import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
+import com.fuav.android.fragments.widget.video.VideoControlFragment;
+import com.fuav.android.fragments.widget.video.VideoFragment;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener {
+public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener,View.OnClickListener {
 
     private FlightDataFragment flightData;
-    private Player _player;
-    private  Module _module;
+    private FragmentManager fm;
+    private int index = 0;
 
     @Override
     public void onDrawerClosed() {
@@ -55,7 +54,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         setContentView(R.layout.activity_flight);
 
-        final FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
 
         //Add the flight data fragment
         flightData = (FlightDataFragment) fm.findFragmentById(R.id.flight_data_container);
@@ -68,29 +67,9 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
             fm.beginTransaction().add(R.id.flight_data_container, flightData).commit();
         }
 
-        _module= new Module(this);
-        _module.setUsername("admin");
-        _module.setPassword("admin");
-        _module.setPlayerPort(554);
-        String _moduleIp = "192.168.100.108";
-        _module.setModuleIp(_moduleIp);
-
-        _player = _module.getPlayer();
-        _player.setTimeout(10000);
-        Enums.Pipe _pipe = Enums.Pipe.H264_PRIMARY;
-        _player.play(_pipe, Enums.Transport.UDP);
-
-        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-
-        if(!pre.getMapProviderName().equals("GOOGLE_MAP")){
-
-            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
-            DisplayView _displayView = (DisplayView)findViewById(R.id.video_view2);
-            _player.setDisplayView(_displayView);
-            _displayView.setFullScreen(true);
-
-        }else{
-            findViewById(R.id.video_view).setVisibility(View.GONE);
+        setVisible();
+        if (findViewById(R.id.video_view2).getVisibility()==View.VISIBLE){
+            fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
         }
 
     }
@@ -103,37 +82,12 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
     @Override
     public void onResume() {
         super.onResume();
-
-        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-
-        findViewById(R.id.controlview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FlightActivity.this,VideoActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
-                finish();
-
-            }
-        });
-
-        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
-
-            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
-            DisplayView _displayView = (DisplayView)findViewById(R.id.video_view);
-            _player.setDisplayView(_displayView);
-            _displayView.setFullScreen(true);
-
-        }else{
-            findViewById(R.id.video_view).setVisibility(View.GONE);
+        findViewById(R.id.controlview).setOnClickListener(this);
+        setVisible();
+        if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
+            fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
         }
-
-
-
-
     }
-
-
 
     @Override
     protected void onToolbarLayoutChange(int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom){
@@ -209,5 +163,46 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         final View flightActionBar = ((ViewGroup)view).getChildAt(0);
         final int[] viewLocs = new int[2];
         flightActionBar.getLocationInWindow(viewLocs);
+    }
+
+    public void setVisible(){
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view2).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.video_view2).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view).setVisibility(View.GONE);
+        }
+    }
+
+    public int getVideoView(){
+        int i ;
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            i = R.id.video_view;
+        }else{
+            i = R.id.video_view2;
+        }
+        return i;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.controlview:
+                if (index%2==0){
+                    fm.beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+                    fm.beginTransaction().replace(R.id.flight_data_container,new VideoControlFragment()).commit();
+                }else{
+                    fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+                    fm.beginTransaction().replace(R.id.flight_data_container,flightData).commit();
+                }
+                index++;
+                break;
+            default:
+                break;
+        }
     }
 }

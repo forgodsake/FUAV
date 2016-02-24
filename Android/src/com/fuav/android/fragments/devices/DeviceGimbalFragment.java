@@ -5,11 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 
 
-public class DeviceGimbalFragment extends Fragment {
+public class DeviceGimbalFragment extends Fragment implements View.OnClickListener{
 
 
     public DeviceGimbalFragment() {
@@ -26,5 +27,20 @@ public class DeviceGimbalFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.imageViewLogo).setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.imageViewLogo:
+                Toast.makeText(getActivity(),"即将发布",Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 }

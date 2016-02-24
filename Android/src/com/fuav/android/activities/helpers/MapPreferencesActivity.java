@@ -1,14 +1,15 @@
 package com.fuav.android.activities.helpers;
 
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
 import com.fuav.android.R;
 import com.fuav.android.dialogs.EditInputDialog;
 import com.fuav.android.maps.providers.DPMapProvider;
 import com.fuav.android.maps.providers.MapProviderPreferences;
-
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import timber.log.Timber;
 
@@ -29,7 +30,7 @@ public class MapPreferencesActivity extends FragmentActivity implements EditInpu
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 		setContentView(R.layout.activity_map_preferences);
 		handleIntent(getIntent());
 	}

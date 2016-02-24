@@ -4,7 +4,8 @@
     android:layout_height="match_parent">
 
     <com.demo.sdk.DisplayView
-        android:id="@+id/sololink_video_view"
+        android:id="@+id/full_video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </RelativeLayout>

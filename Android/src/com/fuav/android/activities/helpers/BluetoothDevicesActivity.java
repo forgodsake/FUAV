@@ -1,14 +1,5 @@
 package com.fuav.android.activities.helpers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import com.fuav.android.R;
-import com.fuav.android.DroidPlannerApp;
-import com.fuav.android.utils.prefs.DroidPlannerPrefs;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -27,6 +19,15 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.fuav.android.DroidPlannerApp;
+import com.fuav.android.R;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This is used to show the user a list of bluetooth devices to connect to.
@@ -161,7 +162,7 @@ public class BluetoothDevicesActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         setContentView(R.layout.activity_bluetooth_device_list);
 
         // Get the local bluetooth adapter

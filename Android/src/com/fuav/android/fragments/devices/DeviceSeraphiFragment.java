@@ -10,7 +10,6 @@ import com.fuav.android.R;
 import com.fuav.android.activities.FlightActivity;
 import com.fuav.android.activities.helpers.SuperUI;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
-import com.o3dr.android.client.Drone;
 
 
 public class DeviceSeraphiFragment extends ApiListenerFragment implements View.OnClickListener{
@@ -41,11 +40,10 @@ public class DeviceSeraphiFragment extends ApiListenerFragment implements View.O
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.imageViewLogo:
-                ((SuperUI) getActivity()).toggleDroneConnection();
-                Drone drone=getDrone();
-//                if(drone.isConnected()) {
-                    startActivity(new Intent(getActivity(), FlightActivity.class));
-//                }
+                if(null==getDrone()){
+                    ((SuperUI) getActivity()).toggleDroneConnection();
+                }
+                startActivity(new Intent(getActivity(), FlightActivity.class));
                 break;
         }
     }
