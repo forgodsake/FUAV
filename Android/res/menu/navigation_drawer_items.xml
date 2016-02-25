@@ -18,10 +18,6 @@
             android:id="@+id/navigation_calibration"
             android:icon="@drawable/ic_menu_calibration_grey600_24dp"
             android:title="@string/screen_cal" />
-        <item
-            android:id="@+id/navigation_rc"
-            android:icon="@drawable/ic_menu_calibration_grey600_24dp"
-            android:title="@string/screen_rc" />
 
         <item
             android:id="@+id/navigation_settings"

@@ -18,7 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,11 +151,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         zoomToFit.setVisibility(View.VISIBLE);
         zoomToFit.setOnClickListener(this);
 
-        final ImageView mGoToMyLocation = (ImageView) findViewById(R.id.my_location_button);
+        final Button mGoToMyLocation = (Button) findViewById(R.id.my_location_button);
         mGoToMyLocation.setOnClickListener(this);
         mGoToMyLocation.setOnLongClickListener(this);
 
-        final ImageView mGoToDroneLocation = (ImageView) findViewById(R.id.drone_location_button);
+        final Button mGoToDroneLocation = (Button) findViewById(R.id.drone_location_button);
         mGoToDroneLocation.setOnClickListener(this);
         mGoToDroneLocation.setOnLongClickListener(this);
 
@@ -169,7 +169,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         itemDetailFragment = (MissionDetailFragment) fragmentManager.findFragmentByTag(ITEM_DETAIL_TAG);
 
         gestureMapFragment.setOnPathFinishedListener(this);
-        openActionDrawer();
+//        openActionDrawer();
     }
 
     @Override
@@ -182,9 +182,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-        final View actionDrawer = getActionDrawer();
-        if (actionDrawer == null)
-            return;
+//        final View actionDrawer = getActionDrawer();
+//        if (actionDrawer == null)
+//            return;
 
     }
 

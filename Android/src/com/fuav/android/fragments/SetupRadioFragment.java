@@ -3,6 +3,7 @@ package com.fuav.android.fragments;
 import android.os.Bundle;
 
 import com.fuav.android.R;
+import com.fuav.android.core.MAVLink.MavLinkStreamRates;
 import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.core.drone.autopilot.MavLinkDrone;
 import com.fuav.android.fragments.calibration.SetupMainPanel;
@@ -77,7 +78,7 @@ public class SetupRadioFragment extends SuperSetupFragment {
 
 	public void setupDataStreamingForRcSetup() {
 		if(drone!=null){
-//			MavLinkStreamRates.setupStreamRates(drone.getMavClient(),drone.getSysid(),drone.getCompid(), 1, 0, 1, 1, 1, RC_MSG_RATE,0,0);
+			MavLinkStreamRates.setupStreamRates(drone.getMavClient(),drone.getSysid(),drone.getCompid(), 1, 0, 1, 1, 1, RC_MSG_RATE,0,0);
 		}
 	}
 }

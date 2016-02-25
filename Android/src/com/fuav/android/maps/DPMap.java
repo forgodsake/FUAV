@@ -1,19 +1,18 @@
 package com.fuav.android.maps;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import com.fuav.android.maps.providers.DPMapProvider;
-import com.fuav.android.utils.prefs.AutoPanMode;
-
 import android.graphics.Color;
 import android.location.LocationListener;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fuav.android.maps.providers.DPMapProvider;
+import com.fuav.android.utils.prefs.AutoPanMode;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.property.FootPrint;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Defines the functionality expected from the map providers.
@@ -42,10 +41,10 @@ public interface DPMap {
 	int FOOTPRINT_FILL_COLOR = Color.argb(80, 0, 0, 200);
 	
 	String PREF_LAT = "pref_map_lat";
-	float DEFAULT_LATITUDE = 37.8575523f;
+	float DEFAULT_LATITUDE = 30.3250427246094f;
 
 	String PREF_LNG = "pref_map_lng";
-	float DEFAULT_LONGITUDE = -122.292767f;
+	float DEFAULT_LONGITUDE = 120.063011169434f;
 
 	String PREF_BEA = "pref_map_bea";
 	int DEFAULT_BEARING = 0;

@@ -1,15 +1,16 @@
 package com.fuav.android.utils.location;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fuav.android.R;
+import com.fuav.android.fragments.SettingsFragment;
+import com.fuav.android.fragments.control.BaseFlightControlFragment;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -21,10 +22,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager;
-
-import com.fuav.android.R;
-import com.fuav.android.fragments.SettingsFragment;
-import com.fuav.android.fragments.control.BaseFlightControlFragment;
 
 import java.lang.ref.WeakReference;
 
@@ -162,12 +159,12 @@ public class CheckLocationSettings implements GoogleApiClientManager.ManagerList
     public void onUnavailableGooglePlayServices(int i) {
         final Activity activity = activityRef.get();
         if (activity != null) {
-            GooglePlayServicesUtil.showErrorDialogFragment(i, activity, 0, new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    activity.finish();
-                }
-            });
+//            GooglePlayServicesUtil.showErrorDialogFragment(i, activity, 0, new DialogInterface.OnCancelListener() {
+//                @Override
+//                public void onCancel(DialogInterface dialog) {
+//                    activity.finish();
+//                }
+//            });
         }
     }
 

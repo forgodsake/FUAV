@@ -10,8 +10,9 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
 
         <ImageView
             android:layout_width="30dp"
@@ -33,8 +34,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
 
         <ImageView
             android:layout_width="30dp"
@@ -55,8 +57,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="46dp"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,8 +80,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="66dp"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -100,9 +104,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="160dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:minHeight="40dp"
+        android:layout_weight="4"
         android:minWidth="80dp">
 
         <TextView
@@ -122,23 +126,24 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="3dp"
             android:textSize="@dimen/info_bar_text_size"
             android:textColor="#FFFFFF"
             android:text="00:00"/>
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <ImageView
             android:id="@+id/bar_battery"
@@ -149,8 +154,9 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8">
 
         <ImageView
             android:id="@+id/bar_signal"

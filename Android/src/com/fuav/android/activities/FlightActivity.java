@@ -57,7 +57,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         fm = getSupportFragmentManager();
 
         //Add the flight data fragment
-        flightData = (FlightDataFragment) fm.findFragmentById(R.id.flight_data_container);
+//        flightData = (FlightDataFragment) fm.findFragmentById(R.id.flight_data_container);
         if(flightData == null){
             Bundle args = new Bundle();
             args.putBoolean(FlightDataFragment.EXTRA_SHOW_ACTION_DRAWER_TOGGLE, true);
@@ -197,7 +197,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
                     fm.beginTransaction().replace(R.id.flight_data_container,new VideoControlFragment()).commit();
                 }else{
                     fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-                    fm.beginTransaction().replace(R.id.flight_data_container,flightData).commit();
+                    fm.beginTransaction().replace(R.id.flight_data_container,new FlightDataFragment()).commit();
                 }
                 index++;
                 break;

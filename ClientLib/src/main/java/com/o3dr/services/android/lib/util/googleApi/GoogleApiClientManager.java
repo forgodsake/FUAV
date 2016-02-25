@@ -7,7 +7,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -210,10 +209,10 @@ public class GoogleApiClientManager implements GoogleApiClient.ConnectionCallbac
      */
     public void start() {
         //Check if google play services is available.
-        final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
-        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
+//        final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+//        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
 
-        if (isValid) {
+//        if (isValid) {
             //Clear the queue
             mTaskQueue.clear();
 
@@ -225,11 +224,11 @@ public class GoogleApiClientManager implements GoogleApiClient.ConnectionCallbac
                 //Connect to the google api.
                 mGoogleApiClient.connect();
             }
-        } else {
-            Log.e(TAG, "Google Play Services is unavailable.");
-            if (listener != null)
-                listener.onUnavailableGooglePlayServices(playStatus);
-        }
+//        } else {
+//            Log.e(TAG, "Google Play Services is unavailable.");
+//            if (listener != null)
+//                listener.onUnavailableGooglePlayServices(playStatus);
+//        }
     }
 
 

@@ -203,7 +203,7 @@ public class FusedLocation extends LocationCallback implements LocationFinder, G
     public void onUnavailableGooglePlayServices(int status) {
         notifyLocationUnavailable();
 
-        GooglePlayServicesUtil.showErrorNotification(status, this.context);
+//        GooglePlayServicesUtil.showErrorNotification(status, this.context);
     }
 
     private void notifyLocationUnavailable() {

@@ -1,10 +1,8 @@
 package com.fuav.android.fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -16,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +27,6 @@ import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.view.SlidingDrawer;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
@@ -199,8 +194,8 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
 
     private FlightMapFragment mapFragment;
 
-    private ImageView mGoToMyLocation;
-    private ImageView mGoToDroneLocation;
+    private Button mGoToMyLocation;
+    private Button mGoToDroneLocation;
     private Button button_take_off;
     private Button button_go_home;
     private Button button_hover;
@@ -234,8 +229,6 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Bundle arguments = getArguments();
-
         actionbarShadow = view.findViewById(R.id.actionbar_shadow);
 
 
@@ -244,10 +237,8 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
         setupMapFragment();
 
 
-//        getChildFragmentManager().beginTransaction().replace(R.id.video_view2,new MiniWidgetSoloLinkVideo()).commit();
-
-        mGoToMyLocation = (ImageView) view.findViewById(R.id.my_location_button);
-        mGoToDroneLocation = (ImageView) view.findViewById(R.id.drone_location_button);
+        mGoToMyLocation = (Button) view.findViewById(R.id.my_location_button);
+        mGoToDroneLocation = (Button) view.findViewById(R.id.drone_location_button);
 
         button_take_off= (Button) view.findViewById(R.id.button_take_off);
         button_take_off.setOnClickListener(this);
@@ -431,24 +422,24 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
      */
     private boolean isGooglePlayServicesValid(boolean showErrorDialog) {
         // Check for the google play services is available
-        final int playStatus = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(getContext());
-        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
-
-        if (!isValid && showErrorDialog) {
-            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(playStatus, getActivity(),
-                    GOOGLE_PLAY_SERVICES_REQUEST_CODE, new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            if (isAdded()) {
-                                getActivity().finish();
-                            }
-                        }
-                    });
-
-            if (errorDialog != null)
-                errorDialog.show();
-        }
+//        final int playStatus = GooglePlayServicesUtil
+//                .isGooglePlayServicesAvailable(getContext());
+        final boolean isValid = true;
+//
+//        if (!isValid && showErrorDialog) {
+//            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(playStatus, getActivity(),
+//                    GOOGLE_PLAY_SERVICES_REQUEST_CODE, new DialogInterface.OnCancelListener() {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog) {
+//                            if (isAdded()) {
+//                                getActivity().finish();
+//                            }
+//                        }
+//                    });
+//
+//            if (errorDialog != null)
+//                errorDialog.show();
+//        }
 
         return isValid;
     }

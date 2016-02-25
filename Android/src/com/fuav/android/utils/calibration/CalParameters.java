@@ -110,8 +110,8 @@ public class CalParameters {
 //				drone.writeParameters(new Parameters(calParameterItems));
 				for (Parameter param : calParameterItems) {
 					myDrone.getParameters().sendParameter(param);
-					Toast.makeText(context," "+param.getValue()+"  "+param.name, Toast.LENGTH_SHORT).show();
 				}
+				Toast.makeText(context,"校准完成", Toast.LENGTH_SHORT).show();
 			}
 	}
 

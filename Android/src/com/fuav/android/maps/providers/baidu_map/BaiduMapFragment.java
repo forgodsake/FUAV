@@ -236,7 +236,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
-        updateCamera(new LatLong(30.3250427246094,120.063011169434), GO_TO_MY_LOCATION_ZOOM);
         Log.v("123", "clientstart");
 
         int count = mMapView.getChildCount();
@@ -271,7 +270,7 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
     @Override
     public void onDestroy() {
         // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
-//        mLocClient.stop();
+        mLocClient.stop();
 
         super.onDestroy();
     }
@@ -785,22 +784,34 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
 
     @Override
     public void updateRealTimeFootprint(FootPrint footprint) {
-        if (footprintPoly == null) {
-            PolygonOptions pathOptions = new PolygonOptions();
-            pathOptions.stroke(new Stroke(FOOTPRINT_DEFAULT_WIDTH,FOOTPRINT_DEFAULT_COLOR));
-            pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
-            final List<LatLng> pathPoints = new ArrayList<LatLng>();
+
+        List<LatLng> pathPoints =  new ArrayList<LatLng>();
+        if(footprint != null){
             for (LatLong vertex : footprint.getVertexInGlobalFrame()) {
                 pathPoints.add(DroneHelper.CoordToBaiduLatLang(vertex));
             }
-            pathOptions.points(pathPoints);
-            footprintPoly = (Polygon)getBaiduMap().addOverlay(pathOptions);
-        } else {
-            List<LatLng> list = new ArrayList<LatLng>();
-            for (LatLong vertex : footprint.getVertexInGlobalFrame()) {
-                list.add(DroneHelper.CoordToBaiduLatLang(vertex));
+        }
+
+        if (pathPoints.isEmpty()) {
+            if (footprintPoly != null) {
+                footprintPoly.remove();
+                footprintPoly = null;
             }
-            footprintPoly.setPoints(list);
+        } else {
+            if (footprintPoly == null) {
+                PolygonOptions pathOptions = new PolygonOptions();
+                pathOptions.stroke(new Stroke(FOOTPRINT_DEFAULT_WIDTH,FOOTPRINT_DEFAULT_COLOR));
+                pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
+                pathOptions.points(pathPoints);
+
+                footprintPoly = (Polygon)getBaiduMap().addOverlay(pathOptions);
+            } else {
+                List<LatLng> list = new ArrayList<LatLng>();
+                for (LatLong vertex : footprint.getVertexInGlobalFrame()) {
+                    list.add(DroneHelper.CoordToBaiduLatLang(vertex));
+                }
+                footprintPoly.setPoints(list);
+            }
         }
 
     }

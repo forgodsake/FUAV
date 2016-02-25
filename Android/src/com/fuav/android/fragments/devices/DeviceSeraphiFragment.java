@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.fuav.android.R;
 import com.fuav.android.activities.FlightActivity;
 import com.fuav.android.activities.helpers.SuperUI;
+import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 
 
@@ -40,7 +41,7 @@ public class DeviceSeraphiFragment extends ApiListenerFragment implements View.O
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.imageViewLogo:
-                if(null==getDrone()){
+                if(DroneManager.getDrone()==null){
                     ((SuperUI) getActivity()).toggleDroneConnection();
                 }
                 startActivity(new Intent(getActivity(), FlightActivity.class));

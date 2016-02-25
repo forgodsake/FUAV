@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.fuav.android.R;
 import com.fuav.android.fragments.calibration.imu.FragmentSetupIMU;
 import com.fuav.android.fragments.calibration.mag.FragmentSetupMAG;
+import com.fuav.android.fragments.calibration.rc.FragmentSetupRC;
 import com.fuav.android.view.viewPager.TabPageIndicator;
 
 /**
@@ -55,6 +56,8 @@ public class SensorSetupFragment extends Fragment {
                     return new FragmentSetupIMU();
                 case 1:
                     return new FragmentSetupMAG();
+                case 2:
+                    return new SetupRadioFragment();
                 default:
                     return new FragmentSetupIMU();
             }
@@ -62,7 +65,7 @@ public class SensorSetupFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -72,6 +75,8 @@ public class SensorSetupFragment extends Fragment {
                     return FragmentSetupIMU.getTitle(context);
                 case 1:
                     return FragmentSetupMAG.getTitle(context);
+                case 2:
+                    return FragmentSetupRC.getTitle(context);
                 default:
                     return FragmentSetupIMU.getTitle(context);
             }

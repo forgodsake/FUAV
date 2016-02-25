@@ -36,7 +36,7 @@ public class DroidPlannerPrefs {
     public static final boolean DEFAULT_USAGE_STATISTICS = true;
 
     public static final String PREF_CONNECTION_TYPE = "pref_connection_param_type";
-    public static final String DEFAULT_CONNECTION_TYPE = String.valueOf(ConnectionType.TYPE_USB);
+    public static final String DEFAULT_CONNECTION_TYPE = String.valueOf(ConnectionType.TYPE_TCP);
 
     private static final String PREF_KEEP_SCREEN_ON = "pref_keep_screen_bright";
     private static final boolean DEFAULT_KEEP_SCREEN_ON = false;
@@ -70,10 +70,10 @@ public class DroidPlannerPrefs {
     private static final String DEFAULT_USB_BAUD_RATE = "57600";
 
     public static final String PREF_TCP_SERVER_IP = "pref_server_ip";
-    private static final String DEFAULT_TCP_SERVER_IP = "192.168.40.100";
+    private static final String DEFAULT_TCP_SERVER_IP = "192.168.0.99";
 
     public static final String PREF_TCP_SERVER_PORT = "pref_server_port";
-    private static final String DEFAULT_TCP_SERVER_PORT = "5763";
+    private static final String DEFAULT_TCP_SERVER_PORT = "6789";
 
     public static final String PREF_UDP_PING_RECEIVER_IP = "pref_udp_ping_receiver_ip";
     public static final String PREF_UDP_PING_RECEIVER_PORT = "pref_udp_ping_receiver_port";

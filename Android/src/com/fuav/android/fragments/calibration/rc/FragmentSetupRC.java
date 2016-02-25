@@ -37,6 +37,10 @@ public class FragmentSetupRC extends SuperSetupMainPanel {
 	private static final String[] RCStr = { "CH 1 ", "CH 2 ", "CH 3 ", "CH 4 ", "CH 5", "CH 6",
 			"CH 7", "CH 8" };
 
+	public static CharSequence getTitle(Context context) {
+		return context.getText(R.string.setup_radio_title);
+	}
+
 	private int calibrationStep = 0;
 
 	private FillBar bar1;

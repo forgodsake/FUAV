@@ -3,7 +3,6 @@ package com.fuav.android.maps.providers.google_map;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -25,8 +24,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.fuav.android.DroidPlannerApp;
+import com.fuav.android.R;
+import com.fuav.android.fragments.SettingsFragment;
+import com.fuav.android.graphic.map.GraphicHome;
+import com.fuav.android.maps.DPMap;
+import com.fuav.android.maps.MarkerInfo;
+import com.fuav.android.maps.providers.DPMapProvider;
+import com.fuav.android.maps.providers.google_map.tiles.mapbox.MapboxTileProvider;
+import com.fuav.android.maps.providers.google_map.tiles.mapbox.MapboxUtils;
+import com.fuav.android.maps.providers.google_map.tiles.mapbox.OfflineTileProvider;
+import com.fuav.android.utils.DroneHelper;
+import com.fuav.android.utils.collection.HashBiMap;
+import com.fuav.android.utils.prefs.AutoPanMode;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -63,21 +75,6 @@ import com.o3dr.services.android.lib.drone.property.FootPrint;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager.GoogleApiClientTask;
-
-import com.fuav.android.DroidPlannerApp;
-import com.fuav.android.R;
-import com.fuav.android.fragments.SettingsFragment;
-import com.fuav.android.graphic.map.GraphicHome;
-import com.fuav.android.maps.DPMap;
-import com.fuav.android.maps.MarkerInfo;
-import com.fuav.android.maps.providers.DPMapProvider;
-import com.fuav.android.maps.providers.google_map.tiles.mapbox.MapboxTileProvider;
-import com.fuav.android.maps.providers.google_map.tiles.mapbox.MapboxUtils;
-import com.fuav.android.maps.providers.google_map.tiles.mapbox.OfflineTileProvider;
-import com.fuav.android.utils.DroneHelper;
-import com.fuav.android.utils.collection.HashBiMap;
-import com.fuav.android.utils.prefs.AutoPanMode;
-import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -1132,12 +1129,12 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Goog
     public void onUnavailableGooglePlayServices(int i) {
         final Activity activity = getActivity();
         if (activity != null) {
-            GooglePlayServicesUtil.showErrorDialogFragment(i, getActivity(), 0, new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    activity.finish();
-                }
-            });
+//            GooglePlayServicesUtil.showErrorDialogFragment(i, getActivity(), 0, new DialogInterface.OnCancelListener() {
+//                @Override
+//                public void onCancel(DialogInterface dialog) {
+//                    activity.finish();
+//                }
+//            });
         }
     }
 
