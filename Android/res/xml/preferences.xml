@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/pref_connection">
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="2"
             android:entries="@array/TelemetryConnectionTypes"
             android:entryValues="@array/TelemetryConnectionTypesValues"
             android:key="pref_connection_param_type"
@@ -31,12 +31,12 @@
                 android:key="pref_server"
                 android:title="@string/pref_server">
                 <EditTextPreference
-                    android:defaultValue="192.168.40.100"
+                    android:defaultValue="192.168.0.99"
                     android:gravity="center"
                     android:key="pref_server_ip"
                     android:title="@string/pref_server_ip" />
                 <EditTextPreference
-                    android:defaultValue="9761"
+                    android:defaultValue="6789"
                     android:gravity="center"
                     android:inputType="number"
                     android:key="pref_server_port"

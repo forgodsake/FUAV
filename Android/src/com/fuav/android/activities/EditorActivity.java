@@ -169,7 +169,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         itemDetailFragment = (MissionDetailFragment) fragmentManager.findFragmentByTag(ITEM_DETAIL_TAG);
 
         gestureMapFragment.setOnPathFinishedListener(this);
-//        openActionDrawer();
+        openActionDrawer();
     }
 
     @Override

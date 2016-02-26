@@ -37,6 +37,8 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
      */
     private DrawerLayout mDrawerLayout;
 
+    private SlidingDrawer actionDrawer;
+
     /**
      * Container for the activity content.
      */
@@ -79,6 +81,10 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        actionDrawer = (SlidingDrawer) mDrawerLayout.findViewById(R.id.action_drawer_container);
+        actionDrawer.setOnDrawerCloseListener(this);
+        actionDrawer.setOnDrawerOpenListener(this);
     }
 
     @Override
@@ -239,6 +245,16 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
     @Override
     public void onDrawerClosed() {
 
+    }
+
+    public void openActionDrawer() {
+        actionDrawer.animateOpen();
+        actionDrawer.lock();
+    }
+
+    public void closeActionDrawer() {
+        actionDrawer.animateClose();
+        actionDrawer.lock();
     }
 
     protected abstract int getNavigationDrawerMenuItemId();
