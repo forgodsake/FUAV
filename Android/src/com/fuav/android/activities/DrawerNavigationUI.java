@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.fuav.android.R;
@@ -36,6 +37,8 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
      * Navigation drawer used to access the different sections of the app.
      */
     private DrawerLayout mDrawerLayout;
+
+    private SlidingDrawer actionDrawer;
 
     /**
      * Container for the activity content.
@@ -79,6 +82,14 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        actionDrawer = (SlidingDrawer) mDrawerLayout.findViewById(R.id.action_drawer_container);
+        actionDrawer.setOnDrawerCloseListener(this);
+        actionDrawer.setOnDrawerOpenListener(this);
+    }
+
+    protected View getActionDrawer() {
+        return actionDrawer;
     }
 
     @Override
@@ -121,7 +132,14 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
         toolbar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                final float topMargin = getActionDrawerTopMargin();
+                final int fullTopMargin = (int) (topMargin + (bottom - top));
 
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) actionDrawer.getLayoutParams();
+                if (lp.topMargin != fullTopMargin) {
+                    lp.topMargin = fullTopMargin;
+                    actionDrawer.requestLayout();
+                }
 
                 onToolbarLayoutChange(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom);
             }
@@ -239,6 +257,16 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
     @Override
     public void onDrawerClosed() {
 
+    }
+
+    public void openActionDrawer() {
+        actionDrawer.animateOpen();
+        actionDrawer.lock();
+    }
+
+    public void closeActionDrawer() {
+        actionDrawer.animateClose();
+        actionDrawer.lock();
     }
 
     protected abstract int getNavigationDrawerMenuItemId();

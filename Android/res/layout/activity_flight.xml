@@ -40,8 +40,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 
-
-
-
-
 </RelativeLayout>

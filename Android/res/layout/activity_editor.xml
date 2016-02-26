@@ -8,10 +8,30 @@
     >
 
     <FrameLayout
+        android:id="@+id/video_view2"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_gesture_map"/>
+
+    <FrameLayout
+        android:id="@+id/video_view"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+    <FrameLayout
+        android:id="@+id/controlview"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
 
     <com.fuav.android.view.FitsSystemWindowsRelativeLayout
         android:layout_width="match_parent"
@@ -19,11 +39,12 @@
         android:fitsSystemWindows="true"
         >
 
+
         <include
             layout="@layout/actionbar_toolbar"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:id="@+id/actionbar_container"
             />
 
@@ -45,21 +66,23 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             layout="@layout/button_my_location"
-            android:layout_alignLeft="@+id/actionbar_container"
-            android:layout_alignStart="@+id/actionbar_container"
+            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_alignEnd="@+id/actionbar_container"
             android:layout_below="@+id/editorInfoWindow"
             android:layout_alignWithParentIfMissing="true"/>
 
         <fragment
-            android:id="@+id/mission_list_fragment"
-            android:name="com.fuav.android.fragments.EditorListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/editor_mission_fragment_height"
-            tools:layout="@layout/fragment_editor_list"
-            android:layout_alignParentBottom="true"
-            />
+            android:id="@+id/test"
+            android:name="com.fuav.android.fragments.account.editor.tool.ToolsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/editorInfoWindow">
+        </fragment>
     </com.fuav.android.view.FitsSystemWindowsRelativeLayout>
 
 </RelativeLayout>

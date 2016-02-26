@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -27,13 +27,14 @@ import com.fuav.android.activities.interfaces.OnEditorInteraction;
 import com.fuav.android.dialogs.SupportEditInputDialog;
 import com.fuav.android.dialogs.openfile.OpenFileDialog;
 import com.fuav.android.dialogs.openfile.OpenMissionDialog;
-import com.fuav.android.fragments.EditorListFragment;
 import com.fuav.android.fragments.EditorMapFragment;
-import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment;
-import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment.EditorTools;
-import com.fuav.android.fragments.account.editor.tool.EditorToolsImpl;
+import com.fuav.android.fragments.account.editor.tool.ToolsFragment;
+import com.fuav.android.fragments.account.editor.tool.ToolsFragment.EditorTools;
+import com.fuav.android.fragments.account.editor.tool.ToolsImpl;
+import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
 import com.fuav.android.fragments.helpers.GestureMapFragment;
 import com.fuav.android.fragments.helpers.GestureMapFragment.OnPathFinishedListener;
+import com.fuav.android.fragments.widget.video.VideoFragment;
 import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.proxy.mission.MissionSelection;
 import com.fuav.android.proxy.mission.item.MissionItemProxy;
@@ -42,6 +43,7 @@ import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.file.FileStream;
 import com.fuav.android.utils.file.IO.MissionReader;
 import com.fuav.android.utils.prefs.AutoPanMode;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
@@ -56,9 +58,9 @@ import java.util.List;
  * user to create and/or modify autonomous missions for the drone.
  */
 public class EditorActivity extends DrawerNavigationUI implements OnPathFinishedListener,
-        EditorToolsFragment.EditorToolListener, MissionDetailFragment.OnMissionDetailListener,
+        MissionDetailFragment.OnMissionDetailListener,
         OnEditorInteraction, MissionSelection.OnSelectionUpdateListener, OnClickListener,
-        OnLongClickListener, SupportEditInputDialog.Listener {
+        OnLongClickListener, SupportEditInputDialog.Listener, ToolsFragment.ToolListener{
 
     private static final double DEFAULT_SPEED = 5; //meters per second.
 
@@ -110,7 +112,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * View widgets.
      */
     private GestureMapFragment gestureMapFragment;
-    private EditorToolsFragment editorToolsFragment;
+    private ToolsFragment toolsFragment;
     private MissionDetailFragment itemDetailFragment;
     private FragmentManager fragmentManager;
 
@@ -121,7 +123,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      */
     private String openedMissionFilename;
 
-    private EditorListFragment editorListFragment;
+    private Button itemDetailToggle;
+//    private EditorListFragment editorListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,18 +139,19 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
 
         setContentView(R.layout.activity_editor);
+        toolsFragment = (ToolsFragment) fragmentManager.findFragmentById(R.id.test);
 
-        gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
+//        gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
         if (gestureMapFragment == null) {
             gestureMapFragment = new GestureMapFragment();
             fragmentManager.beginTransaction().add(R.id.editor_map_fragment, gestureMapFragment).commit();
         }
 
-        editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
+//        editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
 
         infoView = (TextView) findViewById(R.id.editorInfoWindow);
 
-        final FloatingActionButton zoomToFit = (FloatingActionButton) findViewById(R.id.zoom_to_fit_button);
+        final Button zoomToFit = (Button) findViewById(R.id.zoom_to_fit_button);
         zoomToFit.setVisibility(View.VISIBLE);
         zoomToFit.setOnClickListener(this);
 
@@ -159,7 +163,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         mGoToDroneLocation.setOnClickListener(this);
         mGoToDroneLocation.setOnLongClickListener(this);
 
-
+        itemDetailToggle = (Button) findViewById(R.id.toggle_action_drawer);
+        itemDetailToggle.setOnClickListener(this);
 
         if (savedInstanceState != null) {
             openedMissionFilename = savedInstanceState.getString(EXTRA_OPENED_MISSION_FILENAME);
@@ -169,7 +174,34 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         itemDetailFragment = (MissionDetailFragment) fragmentManager.findFragmentByTag(ITEM_DETAIL_TAG);
 
         gestureMapFragment.setOnPathFinishedListener(this);
-//        openActionDrawer();
+        openActionDrawer();
+
+        setVisible();
+        if (findViewById(R.id.video_view2).getVisibility()==View.VISIBLE){
+            fragmentManager.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+        }
+    }
+
+    public void setVisible(){
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view2).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.video_view2).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view).setVisibility(View.GONE);
+        }
+    }
+
+    public int getVideoView(){
+        int i ;
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            i = R.id.video_view;
+        }else{
+            i = R.id.video_view2;
+        }
+        return i;
     }
 
     @Override
@@ -182,10 +214,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-//        final View actionDrawer = getActionDrawer();
-//        if (actionDrawer == null)
-//            return;
+        final View actionDrawer = getActionDrawer();
+        if (actionDrawer == null)
+            return;
 
+        itemDetailToggle.setActivated(isOpened);
     }
 
     @Override
@@ -195,7 +228,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         missionProxy = dpApp.getMissionProxy();
         if (missionProxy != null) {
             missionProxy.selection.addSelectionUpdateListener(this);
-
+            itemDetailToggle.setVisibility(missionProxy.selection.getSelected().isEmpty() ? View.GONE : View.VISIBLE);
         }
 
         updateMissionLength();
@@ -210,6 +243,17 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             missionProxy.selection.removeSelectionUpdateListener(this);
 
         getBroadcastManager().unregisterReceiver(eventReceiver);
+    }
+
+    @Override
+    protected void addToolbarFragment() {
+        final int toolbarId = getToolbarId();
+        final FragmentManager fm = getSupportFragmentManager();
+        Fragment actionBarTelem = fm.findFragmentById(toolbarId);
+        if (actionBarTelem == null) {
+            actionBarTelem = new ActionBarTelemFragment();
+            fm.beginTransaction().add(toolbarId, actionBarTelem).commit();
+        }
     }
 
     @Override
@@ -254,8 +298,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     public void onResume() {
         super.onResume();
-        editorToolsFragment.setToolAndUpdateView(getTool());
+        toolsFragment.setToolAndUpdateView(getTool());
         setupTool();
+        findViewById(R.id.controlview).setOnClickListener(this);
+        setVisible();
+//        if (showVideo){
+            if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
+                getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+            }
+//        }
     }
 
     @Override
@@ -383,21 +434,21 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     @Override
     public void onMapClick(LatLong point) {
-        EditorToolsImpl toolImpl = getToolImpl();
+        ToolsImpl toolImpl = getToolImpl();
         toolImpl.onMapClick(point);
     }
 
     public EditorTools getTool() {
-        return editorToolsFragment.getTool();
+        return toolsFragment.getTool();
     }
 
-    public EditorToolsImpl getToolImpl() {
-        return editorToolsFragment.getToolImpl();
+    public ToolsImpl getToolImpl() {
+        return toolsFragment.getToolImpl();
     }
 
     @Override
     public void editorToolChanged(EditorTools tools) {
-        setupTool();
+
     }
 
     @Override
@@ -422,25 +473,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     private void setupTool() {
-        final EditorToolsImpl toolImpl = getToolImpl();
+        final ToolsImpl toolImpl = getToolImpl();
         toolImpl.setup();
-        editorListFragment.enableDeleteMode(toolImpl.getEditorTools() == EditorTools.TRASH);
+//        editorListFragment.enableDeleteMode(toolImpl.getEditorTools() == EditorTools.TRASH);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         updateLocationButtonsMargin(itemDetailFragment != null);
-    }
-
-    @Override
-    protected void addToolbarFragment(){
-        final int toolbarId = getToolbarId();
-        editorToolsFragment = (EditorToolsFragment) fragmentManager.findFragmentById(toolbarId);
-        if (editorToolsFragment == null) {
-            editorToolsFragment = new EditorToolsFragment();
-            fragmentManager.beginTransaction().add(toolbarId, editorToolsFragment).commit();
-        }
     }
 
     private void showItemDetail(MissionDetailFragment itemDetail) {
@@ -450,7 +491,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             switchItemDetail(itemDetail);
         }
 
-        editorToolsFragment.setToolAndUpdateView(EditorTools.NONE);
+        toolsFragment.setToolAndUpdateView(EditorTools.NONE);
     }
 
     private void addItemDetail(MissionDetailFragment itemDetail) {
@@ -482,7 +523,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public void onPathFinished(List<LatLong> path) {
         final EditorMapFragment planningMapFragment = gestureMapFragment.getMapFragment();
         List<LatLong> points = planningMapFragment.projectPathIntoMap(path);
-        EditorToolsImpl toolImpl = getToolImpl();
+        ToolsImpl toolImpl = getToolImpl();
         toolImpl.onPathFinished(points);
     }
 
@@ -520,7 +561,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public void onItemClick(MissionItemProxy item, boolean zoomToFit) {
         if (missionProxy == null) return;
 
-        EditorToolsImpl toolImpl = getToolImpl();
+        ToolsImpl toolImpl = getToolImpl();
         toolImpl.onListItemClick(item);
 
         if (zoomToFit) {
@@ -550,14 +591,16 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     @Override
     public void onSelectionUpdate(List<MissionItemProxy> selected) {
-        EditorToolsImpl toolImpl = getToolImpl();
+        ToolsImpl toolImpl = getToolImpl();
         toolImpl.onSelectionUpdate(selected);
 
         final boolean isEmpty = selected.isEmpty();
 
         if (isEmpty) {
+            itemDetailToggle.setVisibility(View.GONE);
             removeItemDetail();
         } else {
+            itemDetailToggle.setVisibility(View.VISIBLE);
             if (getTool() == EditorTools.SELECTOR)
                 removeItemDetail();
             else {
