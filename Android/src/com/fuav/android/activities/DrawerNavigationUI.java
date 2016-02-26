@@ -90,6 +90,7 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
 
     protected View getActionDrawer() {
         return actionDrawer;
+
     }
 
     @Override

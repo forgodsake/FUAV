@@ -202,6 +202,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             i = R.id.video_view2;
         }
         return i;
+
     }
 
     @Override
