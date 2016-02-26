@@ -1,6 +1,5 @@
 package com.fuav.android.activities;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +23,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
     private FlightDataFragment flightData;
     private FragmentManager fm;
     private int index = 0;
+    private boolean showVideo;
 
     @Override
     public void onDrawerClosed() {
@@ -54,6 +54,8 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
 
         setContentView(R.layout.activity_flight);
 
+        showVideo = true;
+
         fm = getSupportFragmentManager();
 
         //Add the flight data fragment
@@ -75,18 +77,16 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         findViewById(R.id.controlview).setOnClickListener(this);
         setVisible();
-        if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
-            fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+        if(showVideo){
+            if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
+                fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+            }
         }
+
     }
 
     @Override
@@ -199,6 +199,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
                     fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
                     fm.beginTransaction().replace(R.id.flight_data_container,new FlightDataFragment()).commit();
                 }
+                showVideo = false;
                 index++;
                 break;
             default:
