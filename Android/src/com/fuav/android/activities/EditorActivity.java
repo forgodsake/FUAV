@@ -169,7 +169,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         itemDetailFragment = (MissionDetailFragment) fragmentManager.findFragmentByTag(ITEM_DETAIL_TAG);
 
         gestureMapFragment.setOnPathFinishedListener(this);
-//        openActionDrawer();
+        openActionDrawer();
     }
 
     @Override
@@ -182,9 +182,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-//        final View actionDrawer = getActionDrawer();
-//        if (actionDrawer == null)
-//            return;
+        final View actionDrawer = getActionDrawer();
+        if (actionDrawer == null)
+            return;
 
     }
 
