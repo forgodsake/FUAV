@@ -20,13 +20,24 @@
         android:layout_below="@id/my_location_button"
         android:background="@drawable/button_plane_direction" />
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/zoom_to_fit_button"
-        style="@style/Fab.MyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/drone_location_button"
-        android:src="@drawable/ic_expand"
+        android:background="@drawable/ic_expand"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/toggle_action_drawer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/zoom_to_fit_button"
+        android:background="@drawable/ic_flip"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </RelativeLayout>

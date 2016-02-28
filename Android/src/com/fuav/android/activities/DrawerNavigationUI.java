@@ -40,6 +40,8 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
     private SlidingDrawer actionDrawer;
 
 
+    private SlidingDrawer actionDrawer;
+
     /**
      * Container for the activity content.
      */
