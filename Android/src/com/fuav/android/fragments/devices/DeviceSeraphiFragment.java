@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fuav.android.R;
-import com.fuav.android.activities.FlightActivity;
+import com.fuav.android.activities.EditorActivity;
 import com.fuav.android.activities.helpers.SuperUI;
 import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
@@ -44,7 +44,7 @@ public class DeviceSeraphiFragment extends ApiListenerFragment implements View.O
                 if(DroneManager.getDrone()==null){
                     ((SuperUI) getActivity()).toggleDroneConnection();
                 }
-                startActivity(new Intent(getActivity(), FlightActivity.class));
+                startActivity(new Intent(getActivity(), EditorActivity.class));
                 break;
         }
     }

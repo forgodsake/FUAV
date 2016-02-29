@@ -1,7 +1,6 @@
 package com.fuav.android.fragments.helpers;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.core.drone.DroneInterfaces;
@@ -50,8 +49,6 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 		super.onResume();
 		if(drone!=null){
 			drone.addDroneListener(this);
-		}else{
-			Toast.makeText(getActivity(),"无人机未连接",Toast.LENGTH_SHORT).show();
 		}
 	}
 

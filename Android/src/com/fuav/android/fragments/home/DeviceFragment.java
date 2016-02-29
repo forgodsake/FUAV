@@ -35,7 +35,7 @@ public class DeviceFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_device, container, false);
 
-        viewpager = (ViewPager) view.findViewById(R.id.content);
+        viewpager = (ViewPager) view.findViewById(R.id.device_content);
 
         fragments = new ArrayList<>();
         initViews();

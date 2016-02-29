@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -23,16 +24,21 @@ import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.interfaces.OnEditorInteraction;
+import com.fuav.android.core.drone.DroneManager;
+import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.dialogs.SupportEditInputDialog;
 import com.fuav.android.dialogs.openfile.OpenFileDialog;
 import com.fuav.android.dialogs.openfile.OpenMissionDialog;
-import com.fuav.android.fragments.EditorListFragment;
 import com.fuav.android.fragments.EditorMapFragment;
+import com.fuav.android.fragments.FlightMapFragment;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment.EditorTools;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsImpl;
+import com.fuav.android.fragments.actionbar.ActionBarTelemFragment;
 import com.fuav.android.fragments.helpers.GestureMapFragment;
 import com.fuav.android.fragments.helpers.GestureMapFragment.OnPathFinishedListener;
+import com.fuav.android.fragments.widget.video.VideoControlFragment;
+import com.fuav.android.fragments.widget.video.VideoFragment;
 import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.proxy.mission.MissionSelection;
 import com.fuav.android.proxy.mission.item.MissionItemProxy;
@@ -41,10 +47,15 @@ import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.file.FileStream;
 import com.fuav.android.utils.file.IO.MissionReader;
 import com.fuav.android.utils.prefs.AutoPanMode;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.analytics.HitBuilders;
+import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
+import com.o3dr.services.android.lib.drone.property.VehicleMode;
+import com.o3dr.services.android.lib.gcs.follow.FollowState;
 
 import org.beyene.sius.unit.length.LengthUnit;
 
@@ -71,6 +82,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     private static final IntentFilter eventFilter = new IntentFilter();
     private static final String MISSION_FILENAME_DIALOG_TAG = "Mission filename";
+    private int index = 0;
+    private boolean showVideo;
 
     static {
         eventFilter.addAction(MissionProxy.ACTION_MISSION_PROXY_UPDATE);
@@ -112,6 +125,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private EditorToolsFragment editorToolsFragment;
     private MissionDetailFragment itemDetailFragment;
     private FragmentManager fragmentManager;
+    private Button button_take_off;
+    private Button button_go_home;
+    private Button button_hover;
+    private Button button_write;
 
     private TextView infoView;
 
@@ -120,7 +137,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      */
     private String openedMissionFilename;
 
-    private EditorListFragment editorListFragment;
+//    private EditorListFragment editorListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,13 +153,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         setContentView(R.layout.activity_editor);
 
-        gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
+        showVideo = true;
+
+        editorToolsFragment = new EditorToolsFragment();
+        fragmentManager.beginTransaction().replace(R.id.editortools,editorToolsFragment).commit();
+
+//        gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
         if (gestureMapFragment == null) {
             gestureMapFragment = new GestureMapFragment();
             fragmentManager.beginTransaction().add(R.id.editor_map_fragment, gestureMapFragment).commit();
         }
 
-        editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
+//        editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
 
         infoView = (TextView) findViewById(R.id.editorInfoWindow);
 
@@ -169,6 +191,47 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         gestureMapFragment.setOnPathFinishedListener(this);
         openActionDrawer();
+
+        setVisible();
+        if (findViewById(R.id.video_view2).getVisibility()==View.VISIBLE){
+            fragmentManager.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+        }
+
+        button_take_off= (Button) findViewById(R.id.button_take_off);
+        button_take_off.setOnClickListener(this);
+        button_go_home= (Button) findViewById(R.id.button_go_home);
+        button_go_home.setOnClickListener(this);
+        button_hover= (Button) findViewById(R.id.button_hover);
+        button_hover.setOnClickListener(this);
+        button_write= (Button) findViewById(R.id.button_write);
+        button_write.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    public void setVisible(){
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view2).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.video_view2).setVisibility(View.VISIBLE);
+            findViewById(R.id.video_view).setVisibility(View.GONE);
+        }
+    }
+
+    public int getVideoView(){
+        int i ;
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            i = R.id.video_view;
+        }else{
+            i = R.id.video_view2;
+        }
+        return i;
     }
 
     @Override
@@ -181,9 +244,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-//        final View actionDrawer = getActionDrawer();
-//        if (actionDrawer == null)
-//            return;
+        final View actionDrawer = getActionDrawer();
+        if (actionDrawer == null)
+            return;
 
     }
 
@@ -222,15 +285,73 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     planningMapFragment.zoomToFit();
                 }
                 break;
-
             case R.id.drone_location_button:
                 planningMapFragment.goToDroneLocation();
                 break;
             case R.id.my_location_button:
                 planningMapFragment.goToMyLocation();
                 break;
+            case R.id.button_take_off:
+                confirmConnect(R.id.button_take_off);
+                break;
+            case R.id.button_go_home:
+                confirmConnect(R.id.button_go_home);
+                break;
+            case R.id.button_hover:
+                confirmConnect(R.id.button_hover);
+                break;
+            case R.id.button_write:
+                confirmConnect(R.id.button_write);
+                break;
+            case R.id.video_control_view:
+                if (index%2==0){
+                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
+                    setGone(R.id.location_button_container);
+                    setGone(R.id.editortools);
+                    setGone(R.id.plane_control_view);
+                    showVideo = false;
+                }else{
+                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
+                    setVisible(R.id.location_button_container);
+                    setVisible(R.id.editortools);
+                    setVisible(R.id.plane_control_view);
+                    showVideo = true;
+                }
+                showVideo = false;
+                index++;
+                break;
             default:
                 break;
+        }
+
+    }
+
+    void confirmConnect(int id){
+        if(DroneManager.getDrone()!=null){
+            switch (id){
+                case R.id.button_take_off:
+                    if(index%2==0){
+                        getArmingConfirmation();
+                    }else{
+                        getLandConfirmation();
+                    }
+                    break;
+                case R.id.button_go_home:
+                    getGoHomeConfirmation();
+                    break;
+                case R.id.button_hover:
+                    getHoverConfirmation();
+                    break;
+                case R.id.button_write:
+                    initBackground();
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            Toast.makeText(this,"无人机未连接",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -250,11 +371,27 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
     }
 
+    void setGone(int id){
+        findViewById(id).setVisibility(View.GONE);
+    }
+
+    void setVisible(int id){
+        findViewById(id).setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         editorToolsFragment.setToolAndUpdateView(getTool());
         setupTool();
+
+        findViewById(R.id.video_control_view).setOnClickListener(this);
+        setVisible();
+        if (showVideo){
+            if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
+                getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+            }
+        }
     }
 
     @Override
@@ -423,7 +560,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private void setupTool() {
         final EditorToolsImpl toolImpl = getToolImpl();
         toolImpl.setup();
-        editorListFragment.enableDeleteMode(toolImpl.getEditorTools() == EditorTools.TRASH);
+//        editorListFragment.enableDeleteMode(toolImpl.getEditorTools() == EditorTools.TRASH);
     }
 
     @Override
@@ -435,10 +572,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     protected void addToolbarFragment(){
         final int toolbarId = getToolbarId();
-        editorToolsFragment = (EditorToolsFragment) fragmentManager.findFragmentById(toolbarId);
-        if (editorToolsFragment == null) {
-            editorToolsFragment = new EditorToolsFragment();
-            fragmentManager.beginTransaction().add(toolbarId, editorToolsFragment).commit();
+        final FragmentManager fm = getSupportFragmentManager();
+        Fragment actionBarTelem = fm.findFragmentById(toolbarId);
+        if (actionBarTelem == null) {
+            actionBarTelem = new ActionBarTelemFragment();
+            fm.beginTransaction().add(toolbarId, actionBarTelem).commit();
         }
     }
 
@@ -567,6 +705,69 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final EditorMapFragment planningMapFragment = gestureMapFragment.getMapFragment();
         if (planningMapFragment != null)
             planningMapFragment.postUpdate();
+    }
+
+    private void getArmingConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
+            @Override
+            public void run() {
+                getDrone().arm(true);
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                getDrone().doGuidedTakeoff(takeOffAltitude);
+                initBackground();
+                button_take_off.setBackgroundResource(R.drawable.button_land);
+                index++;
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");
+    }
+
+    private void getGoHomeConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("GoHome", new Runnable() {
+            @Override
+            public void run() {
+                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
+                initBackground();
+                button_go_home.setBackgroundResource(R.drawable.go_home_on);
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide To GoHome");
+    }
+
+    private void getHoverConfirmation() {
+        SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Hover", new Runnable() {
+            @Override
+            public void run() {
+                final Drone drone = getDrone();
+                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+                if (followState.isEnabled()) {
+                    drone.disableFollowMe();
+                }
+
+                drone.pauseAtCurrentLocation();
+                initBackground();
+                button_hover.setBackgroundResource(R.drawable.hover_on);
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide To Hover");
+    }
+
+    private void getLandConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Land off", new Runnable() {
+            @Override
+            public void run() {
+                getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
+                initBackground();
+                button_take_off.setBackgroundResource(R.drawable.button_take_off);
+                index++;
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
+    }
+
+    private void initBackground() {
+        button_go_home.setBackgroundResource(R.drawable.button_go_home);
+        button_hover.setBackgroundResource(R.drawable.button_hover);
     }
 
 }

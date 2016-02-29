@@ -8,10 +8,78 @@
     >
 
     <FrameLayout
+        android:id="@+id/video_view2"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_gesture_map"/>
+
+    <FrameLayout
+        android:id="@+id/editortools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="20dp">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/video_view"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+
+    <FrameLayout
+        android:id="@+id/video_control_view"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+
+    <LinearLayout
+        android:id="@+id/plane_control_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="60dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_take_off"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_take_off" />
+
+        <Button
+            android:id="@+id/button_go_home"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_go_home" />
+
+        <Button
+            android:id="@+id/button_hover"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_hover" />
+
+        <Button
+            android:id="@+id/button_write"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_write" />
+    </LinearLayout>
 
     <com.fuav.android.view.FitsSystemWindowsRelativeLayout
         android:layout_width="match_parent"
@@ -23,7 +91,7 @@
             layout="@layout/actionbar_toolbar"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:id="@+id/actionbar_container"
             />
 
@@ -33,7 +101,7 @@
             android:layout_height="24dp"
             tools:text="@string/editor_info_window"
             style="@style/editorMissionOverviewText"
-            android:visibility="visible"
+            android:visibility="gone"
             android:gravity="end"
             android:layout_below="@+id/actionbar_container"
             android:layout_alignLeft="@+id/actionbar_container"
@@ -45,21 +113,13 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="80dp"
             layout="@layout/button_my_location"
-            android:layout_alignLeft="@+id/actionbar_container"
-            android:layout_alignStart="@+id/actionbar_container"
-            android:layout_below="@+id/editorInfoWindow"
+            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_alignEnd="@+id/actionbar_container"
             android:layout_alignWithParentIfMissing="true"/>
 
-        <fragment
-            android:id="@+id/mission_list_fragment"
-            android:name="com.fuav.android.fragments.EditorListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/editor_mission_fragment_height"
-            tools:layout="@layout/fragment_editor_list"
-            android:layout_alignParentBottom="true"
-            />
     </com.fuav.android.view.FitsSystemWindowsRelativeLayout>
 
 </RelativeLayout>

@@ -5,8 +5,6 @@ import android.widget.Toast;
 
 import com.fuav.android.proxy.mission.item.MissionItemProxy;
 
-import java.util.List;
-
 /**
  * Created by Fredia Huya-Kouadio on 8/25/15.
  */
@@ -56,8 +54,8 @@ class SelectorToolsImpl extends EditorToolsImpl implements View.OnClickListener 
 
         if (missionProxy != null) {
             missionProxy.selection.clearSelection();
-            final List<MissionItemProxy> missionItems = missionProxy.getItems();
-            editorToolsFragment.selectAll.setEnabled(!missionItems.isEmpty());
+//            final List<MissionItemProxy> missionItems = missionProxy.getItems();
+//            editorToolsFragment.selectAll.setEnabled(!missionItems.isEmpty());
         }
     }
 

@@ -44,12 +44,17 @@ public class VideoControlFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final Animation animationl = new TranslateAnimation(0f,200f,0f,0f);
-        animationl.setDuration(800);
-        final Animation animationr = new TranslateAnimation(0f,-200f,0f,0f);
-        animationr.setDuration(800);
+
         shot_switch_left = (ImageView) view.findViewById(R.id.shot_switch_left);
         shot_switch_right = (ImageView) view.findViewById(R.id.shot_switch_right);
+        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        shot_switch_left.measure(w, h);
+        int loc = shot_switch_left.getMeasuredWidth();
+        final Animation animationl = new TranslateAnimation(0f,(1.75f)*loc,0f,0f);
+        animationl.setDuration(800);
+        final Animation animationr = new TranslateAnimation(0f,(-1.75f)*loc,0f,0f);
+        animationr.setDuration(800);
         video = (ImageView) view.findViewById(R.id.video);
         camera = (ImageView) view.findViewById(R.id.camera);
         shot_switch_left.setOnClickListener(new View.OnClickListener() {
@@ -57,13 +62,13 @@ public class VideoControlFragment extends Fragment {
             public void onClick(View v) {
                 if(index%2==0){
                     shot_switch_left.startAnimation(animationl);
-                    video.setImageResource(R.drawable.video_off);
-                    camera.setImageResource(R.drawable.camera_on);
                     shot_switch_left.setVisibility(View.GONE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             shot_switch_right.setVisibility(View.VISIBLE);
+                            video.setImageResource(R.drawable.video_off);
+                            camera.setImageResource(R.drawable.camera_on);
                         }
                     }, 800);//delay 2000ms
                     index++;
@@ -75,13 +80,13 @@ public class VideoControlFragment extends Fragment {
             public void onClick(View v) {
                 if(index%2==1){
                     shot_switch_right.startAnimation(animationr);
-                    video.setImageResource(R.drawable.video_on);
-                    camera.setImageResource(R.drawable.camera_off);
                     shot_switch_right.setVisibility(View.GONE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             shot_switch_left.setVisibility(View.VISIBLE);
+                            video.setImageResource(R.drawable.video_on);
+                            camera.setImageResource(R.drawable.camera_off);
                         }
                     }, 800);//delay 2000ms
                     index++;

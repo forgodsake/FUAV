@@ -10,9 +10,10 @@
     <dimen name="flight_action_width">60dp</dimen>
     <dimen name="flight_action_height">60dp</dimen>
     <!-- Dimension for the editor buttons -->
-    <dimen name="editor_button_width">56dp</dimen>
-    <dimen name="editor_button_height">48dp</dimen>
+    <dimen name="editor_button_width">40dp</dimen>
+    <dimen name="editor_button_height">40dp</dimen>
     <dimen name="editor_button_margin">0dp</dimen>
+    <dimen name="editor_button_marginTop">10dp</dimen>
 
     <!-- Dimension for the editor list items -->
     <dimen name="editor_list_item_text_size">20sp</dimen>

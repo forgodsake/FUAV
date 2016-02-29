@@ -192,6 +192,14 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
         bindService(new Intent(context, AppService.class), this, Context.BIND_AUTO_CREATE);
     }
 
+    public Drone getDrone() {
+        return dpApp.getDrone();
+    }
+
+    protected DroidPlannerPrefs getAppPrefs(){
+        return dpApp.getAppPreferences();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

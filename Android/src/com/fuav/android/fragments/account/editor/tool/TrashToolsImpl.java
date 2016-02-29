@@ -38,7 +38,7 @@ class TrashToolsImpl extends EditorToolsImpl implements View.OnClickListener {
     @Override
     public void onSelectionUpdate(List<MissionItemProxy> selected) {
         super.onSelectionUpdate(selected);
-        editorToolsFragment.clearSelected.setEnabled(!selected.isEmpty());
+//        editorToolsFragment.clearSelected.setEnabled(!selected.isEmpty());
     }
 
     @Override
@@ -55,11 +55,11 @@ class TrashToolsImpl extends EditorToolsImpl implements View.OnClickListener {
         }
 
         if (missionProxy != null) {
-            List<MissionItemProxy> selected = missionProxy.selection.getSelected();
-            editorToolsFragment.clearSelected.setEnabled(!selected.isEmpty());
+//            List<MissionItemProxy> selected = missionProxy.selection.getSelected();
+//            editorToolsFragment.clearSelected.setEnabled(!selected.isEmpty());
 
-            final List<MissionItemProxy> missionItems = missionProxy.getItems();
-            editorToolsFragment.clearMission.setEnabled(!missionItems.isEmpty());
+//            final List<MissionItemProxy> missionItems = missionProxy.getItems();
+//            editorToolsFragment.clearMission.setEnabled(!missionItems.isEmpty());
         }
     }
 

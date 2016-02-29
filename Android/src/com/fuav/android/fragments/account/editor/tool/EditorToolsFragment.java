@@ -10,21 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 
 import com.fuav.android.R;
 import com.fuav.android.dialogs.SupportYesNoDialog;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.proxy.mission.item.MissionItemProxy;
-import com.fuav.android.proxy.mission.item.adapters.AdapterMissionItems;
 import com.fuav.android.view.button.RadioButtonCenter;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 
 
 /**
@@ -92,15 +87,15 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
     private MissionProxy mMissionProxy;
 
     //Sub action views
-    private View editorSubTools;
-    private Spinner drawItemsSpinner;
-    private Spinner markerItemsSpinner;
+//    private View editorSubTools;
+//    private Spinner drawItemsSpinner;
+//    private Spinner markerItemsSpinner;
 
-    private View clearSubOptions;
-    TextView clearMission;
-    TextView clearSelected;
-
-     TextView selectAll;
+//    private View clearSubOptions;
+//    TextView clearMission;
+//    TextView clearSelected;
+//
+//     TextView selectAll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,43 +118,43 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
         final Context context = getContext();
 
         mEditorRadioGroup = (RadioGroup) view.findViewById(R.id.editor_tools_layout);
-        editorSubTools = view.findViewById(R.id.editor_sub_tools);
+//        editorSubTools = view.findViewById(R.id.editor_sub_tools);
 
-        final DrawToolsImpl drawToolImpl = (DrawToolsImpl) editorToolsImpls[EditorTools.DRAW.ordinal()];
-        final RadioButtonCenter buttonDraw = (RadioButtonCenter) view.findViewById(R.id.editor_tools_draw);
-        final AdapterMissionItems drawItemsAdapter = new AdapterMissionItems(context,
-                R.layout.spinner_drop_down_mission_item, DrawToolsImpl.DRAW_ITEMS_TYPE);
-        drawItemsSpinner = (Spinner) view.findViewById(R.id.draw_items_spinner);
-        drawItemsSpinner.setAdapter(drawItemsAdapter);
-        drawItemsSpinner.setSelection(drawItemsAdapter.getPosition(drawToolImpl.getSelected()));
-        drawItemsSpinner.setOnItemSelectedListener(drawToolImpl);
+//        final DrawToolsImpl drawToolImpl = (DrawToolsImpl) editorToolsImpls[EditorTools.DRAW.ordinal()];
+//        final RadioButtonCenter buttonDraw = (RadioButtonCenter) view.findViewById(R.id.editor_tools_draw);
+//        final AdapterMissionItems drawItemsAdapter = new AdapterMissionItems(context,
+//                R.layout.spinner_drop_down_mission_item, DrawToolsImpl.DRAW_ITEMS_TYPE);
+//        drawItemsSpinner = (Spinner) view.findViewById(R.id.draw_items_spinner);
+//        drawItemsSpinner.setAdapter(drawItemsAdapter);
+//        drawItemsSpinner.setSelection(drawItemsAdapter.getPosition(drawToolImpl.getSelected()));
+//        drawItemsSpinner.setOnItemSelectedListener(drawToolImpl);
 
         final MarkerToolsImpl markerToolImpl = (MarkerToolsImpl) editorToolsImpls[EditorTools.MARKER.ordinal()];
         final RadioButtonCenter buttonMarker = (RadioButtonCenter) view.findViewById(R.id.editor_tools_marker);
-        final AdapterMissionItems markerItemsAdapter = new AdapterMissionItems(context,
-                R.layout.spinner_drop_down_mission_item, MarkerToolsImpl.MARKER_ITEMS_TYPE);
-        markerItemsSpinner = (Spinner) view.findViewById(R.id.marker_items_spinner);
-        markerItemsSpinner.setAdapter(markerItemsAdapter);
-        markerItemsSpinner.setSelection(markerItemsAdapter.getPosition(markerToolImpl.getSelected()));
-        markerItemsSpinner.setOnItemSelectedListener(markerToolImpl);
+//        final AdapterMissionItems markerItemsAdapter = new AdapterMissionItems(context,
+//                R.layout.spinner_drop_down_mission_item, MarkerToolsImpl.MARKER_ITEMS_TYPE);
+//        markerItemsSpinner = (Spinner) view.findViewById(R.id.marker_items_spinner);
+//        markerItemsSpinner.setAdapter(markerItemsAdapter);
+//        markerItemsSpinner.setSelection(markerItemsAdapter.getPosition(markerToolImpl.getSelected()));
+//        markerItemsSpinner.setOnItemSelectedListener(markerToolImpl);
 
         final RadioButtonCenter buttonTrash = (RadioButtonCenter) view.findViewById(R.id.editor_tools_trash);
         final TrashToolsImpl trashToolImpl = (TrashToolsImpl) editorToolsImpls[EditorTools.TRASH.ordinal()];
 
-        clearSubOptions = view.findViewById(R.id.clear_sub_options);
+//        clearSubOptions = view.findViewById(R.id.clear_sub_options);
 
-        clearMission = (TextView) view.findViewById(R.id.clear_mission_button);
-        clearMission.setOnClickListener(trashToolImpl);
+//        clearMission = (TextView) view.findViewById(R.id.clear_mission_button);
+//        clearMission.setOnClickListener(trashToolImpl);
+//
+//        clearSelected = (TextView) view.findViewById(R.id.clear_selected_button);
+//        clearSelected.setOnClickListener(trashToolImpl);
 
-        clearSelected = (TextView) view.findViewById(R.id.clear_selected_button);
-        clearSelected.setOnClickListener(trashToolImpl);
+//        final RadioButtonCenter buttonSelector = (RadioButtonCenter) view.findViewById(R.id.editor_tools_selector);
+//        final SelectorToolsImpl selectorToolImpl = (SelectorToolsImpl) editorToolsImpls[EditorTools.SELECTOR.ordinal()];
+//        selectAll = (TextView) view.findViewById(R.id.select_all_button);
+//        selectAll.setOnClickListener(selectorToolImpl);
 
-        final RadioButtonCenter buttonSelector = (RadioButtonCenter) view.findViewById(R.id.editor_tools_selector);
-        final SelectorToolsImpl selectorToolImpl = (SelectorToolsImpl) editorToolsImpls[EditorTools.SELECTOR.ordinal()];
-        selectAll = (TextView) view.findViewById(R.id.select_all_button);
-        selectAll.setOnClickListener(selectorToolImpl);
-
-        for (View vv : new View[]{buttonDraw, buttonMarker, buttonTrash, buttonSelector}) {
+        for (View vv : new View[]{ buttonMarker, buttonTrash}) {
             vv.setOnClickListener(this);
         }
     }
@@ -187,7 +182,7 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
         setToolAndUpdateView(tool);
         getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
 
-        final ImageButton buttonUndo = (ImageButton) getView().findViewById(R.id.editor_tools_undo);
+        final RadioButtonCenter buttonUndo = (RadioButtonCenter) getView().findViewById(R.id.editor_tools_undo);
         buttonUndo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,20 +237,20 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
     }
 
     private void hideSubTools() {
-        if (editorSubTools != null)
-            editorSubTools.setVisibility(View.GONE);
-
-        if (selectAll != null)
-            selectAll.setVisibility(View.GONE);
-
-        if (clearSubOptions != null)
-            clearSubOptions.setVisibility(View.GONE);
-
-        if (markerItemsSpinner != null)
-            markerItemsSpinner.setVisibility(View.GONE);
-
-        if (drawItemsSpinner != null)
-            drawItemsSpinner.setVisibility(View.GONE);
+//        if (editorSubTools != null)
+//            editorSubTools.setVisibility(View.GONE);
+//
+//        if (selectAll != null)
+//            selectAll.setVisibility(View.GONE);
+//
+//        if (clearSubOptions != null)
+//            clearSubOptions.setVisibility(View.GONE);
+//
+//        if (markerItemsSpinner != null)
+//            markerItemsSpinner.setVisibility(View.GONE);
+//
+//        if (drawItemsSpinner != null)
+//            drawItemsSpinner.setVisibility(View.GONE);
     }
 
     public EditorTools getTool() {
@@ -312,31 +307,31 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
 
     private void updateSubToolsVisibility() {
         hideSubTools();
-        switch (tool) {
-            case SELECTOR:
-                editorSubTools.setVisibility(View.VISIBLE);
-                selectAll.setVisibility(View.VISIBLE);
-                break;
-
-            case TRASH:
-                editorSubTools.setVisibility(View.VISIBLE);
-                clearSubOptions.setVisibility(View.VISIBLE);
-                break;
-
-            case DRAW:
-                editorSubTools.setVisibility(View.VISIBLE);
-                drawItemsSpinner.setVisibility(View.VISIBLE);
-                break;
-
-            case MARKER:
-                editorSubTools.setVisibility(View.VISIBLE);
-                markerItemsSpinner.setVisibility(View.VISIBLE);
-                break;
-
-            default:
-                hideSubTools();
-                break;
-        }
+//        switch (tool) {
+//            case SELECTOR:
+//                editorSubTools.setVisibility(View.VISIBLE);
+//                selectAll.setVisibility(View.VISIBLE);
+//                break;
+//
+//            case TRASH:
+//                editorSubTools.setVisibility(View.VISIBLE);
+//                clearSubOptions.setVisibility(View.VISIBLE);
+//                break;
+//
+//            case DRAW:
+//                editorSubTools.setVisibility(View.VISIBLE);
+//                drawItemsSpinner.setVisibility(View.VISIBLE);
+//                break;
+//
+//            case MARKER:
+//                editorSubTools.setVisibility(View.VISIBLE);
+//                markerItemsSpinner.setVisibility(View.VISIBLE);
+//                break;
+//
+//            default:
+//                hideSubTools();
+//                break;
+//        }
     }
 
     /**

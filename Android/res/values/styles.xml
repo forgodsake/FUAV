@@ -107,7 +107,6 @@
 
     <style name="editorButton">
         <item name="android:gravity">center</item>
-        <item name="android:layout_margin">@dimen/editor_button_margin</item>
         <item name="android:layout_width">@dimen/editor_button_width</item>
         <item name="android:layout_height">@dimen/editor_button_height</item>
         <item name="android:background">@drawable/editor_button_bg</item>
@@ -115,7 +114,10 @@
     </style>
 
     <style name="editorButton.Trash">
-        <item name="android:background">@drawable/editor_trash_button_bg</item>
+        <item name="android:layout_marginTop">@dimen/editor_button_marginTop</item>
+    </style>
+    <style name="editorButton.Undo">
+        <item name="android:layout_marginTop">@dimen/editor_button_marginTop</item>
     </style>
 
     <style name="transparentLayout">

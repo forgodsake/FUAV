@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.widget.ZoomControls;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -239,11 +238,11 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
         Log.v("123", "clientstart");
 
         int count = mMapView.getChildCount();
-        for (int i = 0; i < count; i++) {
+        for (int i = 1; i < count; i++) {
             View child = mMapView.getChildAt(i);
-            if (child instanceof ZoomControls ) {
+//            if (child instanceof ZoomControls|| child instanceof ImageView) {
                 child.setVisibility(View.INVISIBLE);
-            }
+//            }
         }
 
         return view;//inflater.inflate(R.layout.fragment_baidu_map, viewGroup, false);
@@ -691,6 +690,10 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
      */
     @Override
     public void saveCameraPosition() {
+        final BaiduMap baiduMap = getBaiduMap();
+        if(baiduMap == null)
+            return;
+
         MapStatus camera = getBaiduMap().getMapStatus();
         mAppPrefs.prefs.edit()
                 .putFloat("BAIDU_LAT", (float) camera.target.latitude)
