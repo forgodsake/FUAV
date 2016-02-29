@@ -318,7 +318,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     /** 设置缩放动画 */
                     final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
                             Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                    animation.setDuration(2000);//设置动画持续时间
+                    animation.setDuration(1000);//设置动画持续时间
                     /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
@@ -333,12 +333,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                             setGone(R.id.plane_control_view);
                             showVideo = false;
                         }
-                    },2000);
+                    },1000);
                 }else{
                     /** 设置缩放动画 */
                     final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
                             Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                    animation.setDuration(2000);//设置动画持续时间
+                    animation.setDuration(1000);//设置动画持续时间
                     /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
@@ -353,7 +353,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                             setVisible(R.id.plane_control_view);
                             showVideo = true;
                         }
-                    },2000);
+                    },1000);
 
                 }
                 showVideo = false;
