@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -18,6 +19,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -304,20 +307,54 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 confirmConnect(R.id.button_write);
                 break;
             case R.id.video_control_view:
+                WindowManager manager = getWindowManager();
+                float xtotal = manager.getDefaultDisplay().getWidth();
+                float ytotal = manager.getDefaultDisplay().getHeight();
+                float x = findViewById(getVideoView()).getWidth();
+                float y = findViewById(getVideoView()).getHeight();
+                float xscale = xtotal/x;
+                float yscale = ytotal/y;
                 if (index%2==0){
-                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
-                    setGone(R.id.location_button_container);
-                    setGone(R.id.editortools);
-                    setGone(R.id.plane_control_view);
-                    showVideo = false;
+                    /** 设置缩放动画 */
+                    final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
+                            Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
+                    animation.setDuration(2000);//设置动画持续时间
+                    /** 常用方法 */
+//                    animation.setRepeatCount(int repeatCount);//设置重复次数
+//                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                    findViewById(getVideoView()).startAnimation(animation);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
+                            setGone(R.id.location_button_container);
+                            setGone(R.id.editortools);
+                            setGone(R.id.plane_control_view);
+                            showVideo = false;
+                        }
+                    },2000);
                 }else{
-                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
-                    setVisible(R.id.location_button_container);
-                    setVisible(R.id.editortools);
-                    setVisible(R.id.plane_control_view);
-                    showVideo = true;
+                    /** 设置缩放动画 */
+                    final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
+                            Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
+                    animation.setDuration(2000);//设置动画持续时间
+                    /** 常用方法 */
+//                    animation.setRepeatCount(int repeatCount);//设置重复次数
+//                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                    findViewById(getVideoView()).startAnimation(animation);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
+                            setVisible(R.id.location_button_container);
+                            setVisible(R.id.editortools);
+                            setVisible(R.id.plane_control_view);
+                            showVideo = true;
+                        }
+                    },2000);
+
                 }
                 showVideo = false;
                 index++;

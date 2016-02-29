@@ -103,6 +103,7 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/settings"
+            android:theme="@style/AppTheme.Transparent"
             android:launchMode="singleTop" />
         <activity
             android:name=".activities.helpers.MapPreferencesActivity"
