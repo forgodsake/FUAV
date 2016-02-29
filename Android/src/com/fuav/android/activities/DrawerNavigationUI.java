@@ -37,6 +37,8 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
      * Navigation drawer used to access the different sections of the app.
      */
     private DrawerLayout mDrawerLayout;
+    private SlidingDrawer actionDrawer;
+
 
     private SlidingDrawer actionDrawer;
 
@@ -86,6 +88,10 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
         actionDrawer = (SlidingDrawer) mDrawerLayout.findViewById(R.id.action_drawer_container);
         actionDrawer.setOnDrawerCloseListener(this);
         actionDrawer.setOnDrawerOpenListener(this);
+    }
+
+    protected View getActionDrawer() {
+        return actionDrawer;
     }
 
     @Override

@@ -2,25 +2,24 @@ package com.fuav.android.fragments.account.editor.tool;
 
 import android.os.Bundle;
 
-import com.o3dr.services.android.lib.coordinate.LatLong;
-
 import com.fuav.android.dialogs.SupportYesNoDialog;
 import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.proxy.mission.MissionSelection;
 import com.fuav.android.proxy.mission.item.MissionItemProxy;
+import com.o3dr.services.android.lib.coordinate.LatLong;
 
 import java.util.List;
 
 /**
  * Created by Fredia Huya-Kouadio on 8/25/15.
  */
-public abstract class EditorToolsImpl implements MissionSelection.OnSelectionUpdateListener, SupportYesNoDialog.Listener {
+public abstract class ToolsImpl implements MissionSelection.OnSelectionUpdateListener, SupportYesNoDialog.Listener {
 
     protected MissionProxy missionProxy;
-    protected final EditorToolsFragment editorToolsFragment;
+    protected final ToolsFragment toolsFragment;
 
-    EditorToolsImpl(EditorToolsFragment fragment) {
-        this.editorToolsFragment = fragment;
+    ToolsImpl(ToolsFragment fragment) {
+        this.toolsFragment = fragment;
     }
 
     void setMissionProxy(MissionProxy missionProxy) {
@@ -47,7 +46,7 @@ public abstract class EditorToolsImpl implements MissionSelection.OnSelectionUpd
         if (missionProxy.selection.selectionContains(item)) {
             missionProxy.selection.clearSelection();
         } else {
-            editorToolsFragment.setTool(EditorToolsFragment.EditorTools.NONE);
+            toolsFragment.setTool(ToolsFragment.EditorTools.NONE);
             missionProxy.selection.setSelectionTo(item);
         }
     }

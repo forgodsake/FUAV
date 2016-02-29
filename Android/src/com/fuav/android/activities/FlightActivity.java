@@ -18,12 +18,13 @@ import com.fuav.android.fragments.widget.video.VideoFragment;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener,View.OnClickListener {
+public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanelLayout.PanelSlideListener,
+        View.OnClickListener {
 
     private FlightDataFragment flightData;
     private FragmentManager fm;
     private int index = 0;
-    private boolean showVideo ;
+    private boolean showVideo;
 
     @Override
     public void onDrawerClosed() {
@@ -75,10 +76,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    
 
     @Override
     public void onResume() {
@@ -90,6 +88,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
                 fm.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
             }
         }
+
     }
 
     @Override
@@ -204,6 +203,7 @@ public class FlightActivity extends DrawerNavigationUI implements SlidingUpPanel
                     fm.beginTransaction().replace(R.id.flight_data_container,new FlightDataFragment()).commit();
                     showVideo = true;
                 }
+                showVideo = false;
                 index++;
                 break;
             default:

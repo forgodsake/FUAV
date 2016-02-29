@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -147,7 +146,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         infoView = (TextView) findViewById(R.id.editorInfoWindow);
 
-        final FloatingActionButton zoomToFit = (FloatingActionButton) findViewById(R.id.zoom_to_fit_button);
+        final Button zoomToFit = (Button) findViewById(R.id.zoom_to_fit_button);
         zoomToFit.setVisibility(View.VISIBLE);
         zoomToFit.setOnClickListener(this);
 
@@ -182,10 +181,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-//        final View actionDrawer = getActionDrawer();
-//        if (actionDrawer == null)
-//            return;
-
+        final View actionDrawer = getActionDrawer();
+        if (actionDrawer == null)
+            return;
     }
 
     @Override
