@@ -181,9 +181,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * remains 'visible'.
      */
     private void updateLocationButtonsMargin(boolean isOpened) {
-        final View actionDrawer = getActionDrawer();
-        if (actionDrawer == null)
-            return;
+//        final View actionDrawer = getActionDrawer();
+//        if (actionDrawer == null)
+//            return;
+
     }
 
     @Override
