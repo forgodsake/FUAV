@@ -127,7 +127,7 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
                 if(shot_switch_left.getVisibility()==View.VISIBLE){
                     Bitmap photo = _player.takePhoto();
                     if (photo == null) {
-                        Toast.makeText(getActivity(),"\"save photo failed, play first.\"",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"拍照失败,请先连接相机.",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     String path = _projectPath.getPath() + "/" + Integer.toString(time) + ".jpeg";
@@ -157,7 +157,7 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
                             _recording = true;
                             Toast.makeText(getActivity(),"开始录像",Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(getActivity(),"record failed, play first.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"录制失败,请先连接相机.",Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

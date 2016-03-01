@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.fuav.android.activities.HomeActivity">
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/menu"
-        >
-
+        android:layout_above="@+id/menu">
 
     </FrameLayout>
 
@@ -18,7 +17,7 @@
         android:id="@+id/menu"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true">
 
 
@@ -29,8 +28,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageViewDevice"
                 android:src="@drawable/device_button"
                 android:layout_gravity="center_horizontal" />
@@ -51,8 +50,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageViewMedia"
                 android:src="@drawable/media_button"
                 android:layout_gravity="center_horizontal" />
@@ -71,8 +70,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageViewStore"
                 android:src="@drawable/store_button"
                 android:layout_gravity="center_horizontal" />
@@ -91,8 +90,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageViewSupport"
                 android:src="@drawable/support_button"
                 android:layout_gravity="center_horizontal" />

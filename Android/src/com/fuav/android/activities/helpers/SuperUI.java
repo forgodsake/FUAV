@@ -351,10 +351,9 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
 
             case R.id.menu_upload_mission: {
                 final MissionProxy missionProxy = dpApp.getMissionProxy();
-//                if (missionProxy.getItems().isEmpty() || missionProxy.hasTakeoffAndLandOrRTL()) {
-//                    missionProxy.sendMissionToAPM(dpApi);
-//                    Toast.makeText(this,"noDialog",Toast.LENGTH_SHORT).show();
-//                } else {
+                if (missionProxy.getItems().isEmpty() || missionProxy.hasTakeoffAndLandOrRTL()) {
+                    missionProxy.sendMissionToAPM(dpApi);
+                } else {
                     SupportYesNoWithPrefsDialog dialog = SupportYesNoWithPrefsDialog.newInstance(
                             getApplicationContext(), MISSION_UPLOAD_CHECK_DIALOG_TAG,
                             getString(R.string.mission_upload_title),
@@ -366,7 +365,7 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
                     if (dialog != null) {
                         dialog.show(getSupportFragmentManager(), MISSION_UPLOAD_CHECK_DIALOG_TAG);
                     }
-//                }
+                }
                 return true;
             }
 
