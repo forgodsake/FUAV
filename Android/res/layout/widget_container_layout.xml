@@ -8,14 +8,7 @@
     <FrameLayout
         android:id="@+id/widget_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!--<FrameLayout-->
-            <!--android:id="@+id/map_view"-->
-            <!--android:layout_width="160dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--android:layout_gravity="bottom|left">-->
-        <!--</FrameLayout>-->
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:layout_width="180dp"
@@ -36,8 +29,9 @@
         <ImageView
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:src="@drawable/shot_key_on"
+            android:src="@drawable/shot_key"
             android:id="@+id/shot_key_on"
+            android:clickable="true"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"

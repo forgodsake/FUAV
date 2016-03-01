@@ -10,7 +10,7 @@ import com.demo.sdk.Player;
 public class VideoThread extends Thread {
 	
 	private Context context;
-	private static Module _module=null;
+	public static Module _module=null;
 	private DisplayView _displayView;
 	private static String _moduleIp = "192.168.100.108";
 	private Player _player;

@@ -8,17 +8,16 @@
     >
 
     <FrameLayout
-        android:id="@+id/video_view2"
-        android:layout_width="160dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
-
-    <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_gesture_map"/>
+        tools:layout="@layout/fragment_gesture_map">
+        <FrameLayout
+            android:id="@+id/video_view2"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom|left"/>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/editortools"
@@ -40,6 +39,15 @@
         android:id="@+id/video_control_view"
         android:layout_width="160dp"
         android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        >
+    </FrameLayout>
+    <ImageView
+        android:id="@+id/show_hide_arrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/arrow_hide"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 
