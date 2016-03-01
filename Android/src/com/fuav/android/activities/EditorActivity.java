@@ -81,6 +81,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * and recreated.
      */
     private static final String ITEM_DETAIL_TAG = "Item Detail Window";
+    private static final String MISSION_UPLOAD_CHECK_DIALOG_TAG = "Mission Upload check.";
 
     private static final String EXTRA_OPENED_MISSION_FILENAME = "extra_opened_mission_filename";
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.fuav.android.fragments.home.LibraryFragment">
-    <in.srain.cube.views.pager.TabPageIndicator
+    <com.fuav.android.view.viewPager.TabPageIndicator
         android:id="@+id/view_pager_tab_indicator"
         android:layout_width="match_parent"
         android:layout_height="36dp"
@@ -12,18 +12,10 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp" />
 
-    <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/view_pager_ptr_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#333333" />
-
-    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
 </FrameLayout>

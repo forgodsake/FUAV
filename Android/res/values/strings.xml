@@ -17,6 +17,8 @@
     <string name="app_connections_default_message">NO ACTIVE APPS</string>
     <string name="label_action_button_open">Open</string>
     <string name="label_learn_more">Learn more</string>
+    <string name="library_pic_title">Pictures</string>
+    <string name="library_video_title">Videos</string>
 
     <!-- Drone Setup tabs -->
     <string name="screen_cal">Calibration</string>
