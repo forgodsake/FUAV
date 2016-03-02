@@ -43,7 +43,6 @@ public class PictureFragment extends Fragment {
     //显示图片的配置
     DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
-    List<String> videolist = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
     private GridAdapter adapter = new GridAdapter();
 

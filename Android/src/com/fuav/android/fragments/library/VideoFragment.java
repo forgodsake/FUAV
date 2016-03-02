@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,9 @@ import com.fuav.android.R;
 import com.fuav.android.activities.VideoPlayActivity;
 import com.fuav.android.utils.LocalDisplay;
 import com.fuav.android.view.header.RentalsSunHeaderView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ public class VideoFragment extends Fragment {
 
     private long mStartLoadingTime = -1;
     private boolean mImageHasLoaded = false;
+    ImageSize mImageSize ;
+    //显示图片的配置
+    DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
     private GridAdapter adapter = new GridAdapter();
@@ -60,6 +65,12 @@ public class VideoFragment extends Fragment {
         });
         //获取sd卡下的图片并显示
         getVideos(Environment.getExternalStorageDirectory() + "/FUAV");
+        mImageSize = new ImageSize(100, 100);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
         gridListView.setAdapter(adapter);
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.material_style_ptr_frame);
@@ -156,7 +167,8 @@ public class VideoFragment extends Fragment {
             viewTag.mName.setText(mNameList.get(position));
 
             // set icon
-            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
+            ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
+//            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
             return convertView;
         }
 
@@ -174,32 +186,7 @@ public class VideoFragment extends Fragment {
 
     }
 
-//    public Bitmap getVideoThumbnail(String filePath) {
-//        Bitmap bitmap = null;
-//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        try {
-//            retriever.setDataSource(filePath);
-//            bitmap = retriever.getFrameAtTime();
-//        }
-//        catch(IllegalArgumentException e) {
-//            e.printStackTrace();
-//        }
-//        catch (RuntimeException e) {
-//            e.printStackTrace();
-//        }
-//        finally {
-//            try {
-//                retriever.release();
-//            }
-//            catch (RuntimeException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return bitmap;
-//    }
-
-    private Bitmap getVideoThumbnail(String videoPath,
-                                     int kind) {
+    private Bitmap getVideoThumbnail(String videoPath, int kind) {
         // 获取视频的缩略图
         return ThumbnailUtils.createVideoThumbnail(videoPath, kind);
     }
