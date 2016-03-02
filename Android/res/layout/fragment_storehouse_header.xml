@@ -16,19 +16,23 @@
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
         cube_ptr:ptr_resistance="1.7">
 
-        <LinearLayout
-            android:id="@+id/store_house_ptr_image_content"
+        <GridView
+            android:id="@+id/rotate_header_grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#333333"
-            android:clickable="true"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/store_house_ptr_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            android:background="#ffffff"
+            android:fadingEdge="none"
+            android:focusable="false"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="2"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"/>
 
     </in.srain.cube.views.ptr.PtrFrameLayout>
 </RelativeLayout>

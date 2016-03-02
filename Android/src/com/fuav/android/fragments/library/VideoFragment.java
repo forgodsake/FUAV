@@ -2,16 +2,29 @@ package com.fuav.android.fragments.library;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fuav.android.R;
+import com.fuav.android.activities.VideoPlayActivity;
 import com.fuav.android.utils.LocalDisplay;
 import com.fuav.android.view.header.RentalsSunHeaderView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -23,16 +36,35 @@ public class VideoFragment extends Fragment {
 
     private long mStartLoadingTime = -1;
     private boolean mImageHasLoaded = false;
+    List<String> list = new ArrayList<String>();
+    private ArrayList<String> mNameList = new ArrayList<String>();
+//    private ArrayList<Bitmap> mBitmapList = new ArrayList<Bitmap>();
+    private GridAdapter adapter = new GridAdapter();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_materail_style, null);
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.material_style_image_view);
+        final GridView gridListView = (GridView) view.findViewById(R.id.video_grid_view);
+
+        gridListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0) {
+                    Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+                    intent.putExtra("path",list.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        //获取sd卡下的图片并显示
+        getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
+
+        gridListView.setAdapter(adapter);
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.material_style_ptr_frame);
-
         // header
         final RentalsSunHeaderView header = new RentalsSunHeaderView(getContext());
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
@@ -64,7 +96,6 @@ public class VideoFragment extends Fragment {
                     frame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            imageView.setImageResource(R.drawable.smargle1);
                             frame.refreshComplete();
                         }
                     }, delay);
@@ -74,6 +105,111 @@ public class VideoFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    // 获取SDCard中某个目录下图片路径集合
+    public List<String> getPictures(final String strPath) {
+        File file = new File(strPath);
+        File[] allfiles = file.listFiles();
+        if (allfiles == null) {
+            return null;
+        }
+        for(int k = 0; k < allfiles.length; k++) {
+            final File fi = allfiles[k];
+            if(fi.isFile()) {
+                int idx = fi.getPath().lastIndexOf(".");
+                int idxname = fi.getPath().lastIndexOf("/");
+                if (idx <= 0) {
+                    continue;
+                }
+                String suffixname = fi.getPath().substring(idxname+1,idx);
+                String suffix = fi.getPath().substring(idx);
+                if (suffix.toLowerCase().equals(".mp4")  ) {
+                    list.add(fi.getPath());
+                    mNameList.add(suffixname);
+                }
+            }
+        }
+        return list;
+    }
+
+    public class GridAdapter extends BaseAdapter {
+
+        public GridAdapter() {
+        }
+
+        public int getCount() {
+            return mNameList.size();
+        }
+
+        public Object getItem(int position) {
+            return mNameList.get(position);
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ItemViewTag viewTag;
+
+            if (convertView == null)
+            {
+                convertView = getLayoutInflater(null).inflate(R.layout.video_gridview_item, null);
+
+                // construct an item tag
+                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_imageview),
+                        (TextView) convertView.findViewById(R.id.grid_name));
+                convertView.setTag(viewTag);
+            } else
+            {
+                viewTag = (ItemViewTag) convertView.getTag();
+            }
+
+            // set name
+            viewTag.mName.setText(mNameList.get(position));
+
+            // set icon
+            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position)));
+            return convertView;
+        }
+
+        class ItemViewTag
+        {
+            protected ImageView mIcon;
+            protected TextView mName;
+
+            public ItemViewTag(ImageView icon, TextView name)
+            {
+                this.mName = name;
+                this.mIcon = icon;
+            }
+        }
+
+    }
+
+    public Bitmap getVideoThumbnail(String filePath) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            bitmap = retriever.getFrameAtTime();
+        }
+        catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                retriever.release();
+            }
+            catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
     }
 
 

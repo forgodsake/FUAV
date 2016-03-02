@@ -76,9 +76,9 @@
 
         <activity
             android:name=".activities.FlightActivity"
-            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme.Transparent"/>
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Transparent" />
         <activity
             android:name=".activities.EditorActivity"
             android:label="@string/editor"
@@ -103,8 +103,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/settings"
-            android:theme="@style/AppTheme.Transparent"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Transparent" />
         <activity
             android:name=".activities.helpers.MapPreferencesActivity"
             android:label="@string/activity_title_map_provider_preferences"
@@ -129,7 +129,7 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".activities.WelcomeActivity" />
-        <activity android:name=".activities.SplashActivity"></activity>
+        <activity android:name=".activities.SplashActivity" />
 
         <service android:name=".AppService" />
 
@@ -198,6 +198,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.VideoPlayActivity"></activity>
     </application>
 
 </manifest>

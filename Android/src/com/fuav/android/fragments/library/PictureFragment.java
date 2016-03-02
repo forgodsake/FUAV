@@ -2,14 +2,28 @@ package com.fuav.android.fragments.library;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fuav.android.R;
+import com.fuav.android.activities.PicPlayActivity;
+import com.fuav.android.utils.LocalDisplay;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -22,20 +36,48 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  */
 public class PictureFragment extends Fragment {
 
-    final String[] mStringList = {"FUCK", "FUAV"};
+    final String[] mStringList = { "FUAV","FUCK"};
+    private static final int sGirdImageSize = (LocalDisplay.SCREEN_WIDTH_PIXELS - LocalDisplay.dp2px(12 + 12 + 10)) / 2;
+//    private ImageLoader mImageLoader;
+    List<String> list = new ArrayList<String>();
+    private ArrayList<String> mNameList = new ArrayList<String>();
+    private ArrayList<Bitmap> mBitmapList = new ArrayList<Bitmap>();
+    private GridAdapter adapter = new GridAdapter();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_storehouse_header, null);
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.store_house_ptr_image);
+        final GridView gridListView = (GridView) view.findViewById(R.id.rotate_header_grid_view);
+
+        gridListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0) {
+                    Intent intent = new Intent(getActivity(), PicPlayActivity.class);
+                    intent.putExtra("path",list.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+        gridListView.setAdapter(adapter);
+
+        //        2.获取sd卡下的图片并显示
+        List<String> list = getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                Bitmap bm = BitmapFactory.decodeFile(list.get(i));
+                mBitmapList.add(bm);
+            }
+        }
+        else {
+
+        }
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.store_house_ptr_frame);
-
         // header
         final StoreHouseHeader header = new StoreHouseHeader(getContext());
-
         /**
          * using a string, support: A-Z 0-9 - .
          * you can add more letters by {@link in.srain.cube.views.ptr.header.StoreHousePath#addChar}
@@ -74,7 +116,7 @@ public class PictureFragment extends Fragment {
             }
         });
 
-        frame.setDurationToCloseHeader(3000);
+        frame.setDurationToCloseHeader(1500);
         frame.setHeaderView(header);
         frame.addPtrUIHandler(header);
         frame.postDelayed(new Runnable() {
@@ -95,13 +137,99 @@ public class PictureFragment extends Fragment {
                 frame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        imageView.setImageResource(R.drawable.smargle);
+                        adapter.notifyDataSetChanged();
                         frame.refreshComplete();
                     }
                 }, 2000);
             }
         });
         return view;
+    }
+
+    //        1.获取SDCard中某个目录下图片路径集合
+    public List<String> getPictures(final String strPath) {
+        File file = new File(strPath);
+        File[] allfiles = file.listFiles();
+        if (allfiles == null) {
+            return null;
+        }
+        for(int k = 0; k < allfiles.length; k++) {
+            final File fi = allfiles[k];
+            if(fi.isFile()) {
+                int idx = fi.getPath().lastIndexOf(".");
+                int idxname = fi.getPath().lastIndexOf("/");
+                if (idx <= 0) {
+                    continue;
+                }
+                String suffixname = fi.getPath().substring(idxname+1,idx);
+                String suffix = fi.getPath().substring(idx);
+                if (suffix.toLowerCase().equals(".jpg") ||
+                        suffix.toLowerCase().equals(".jpeg") ||
+                        suffix.toLowerCase().equals(".bmp") ||
+                        suffix.toLowerCase().equals(".png") ||
+                        suffix.toLowerCase().equals(".gif") ) {
+                    list.add(fi.getPath());
+                    mNameList.add(suffixname);
+                }
+            }
+        }
+        return list;
+    }
+
+    public class GridAdapter extends BaseAdapter {
+
+        public GridAdapter() {
+
+        }
+
+        public int getCount() {
+            return mNameList.size();
+        }
+
+        public Object getItem(int position) {
+            return mNameList.get(position);
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ItemViewTag viewTag;
+
+            if (convertView == null)
+            {
+                convertView = getLayoutInflater(null).inflate(R.layout.pic_gridview_item, null);
+
+                // construct an item tag
+                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_imageview),
+                        (TextView) convertView.findViewById(R.id.grid_name));
+                convertView.setTag(viewTag);
+            } else
+            {
+                viewTag = (ItemViewTag) convertView.getTag();
+            }
+
+            // set name
+            viewTag.mName.setText(mNameList.get(position));
+
+            // set icon
+            viewTag.mIcon.setImageBitmap(mBitmapList.get(position));
+            return convertView;
+        }
+
+        class ItemViewTag
+        {
+            protected ImageView mIcon;
+            protected TextView mName;
+
+            public ItemViewTag(ImageView icon, TextView name)
+            {
+                this.mName = name;
+                this.mIcon = icon;
+            }
+        }
+
     }
 
 
