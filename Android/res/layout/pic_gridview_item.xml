@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,9 +10,10 @@
         android:id="@+id/grid_imageview" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
         android:id="@+id/grid_name"
         android:gravity="center"
-        android:background="#666666"
+        android:background="#BBADFF2F"
         android:text="ok"/>
-</LinearLayout>
+</RelativeLayout>

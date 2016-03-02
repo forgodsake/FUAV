@@ -44,6 +44,8 @@ public class LibraryFragment extends Fragment {
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager_view_pager);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(2);
 
         final TabPageIndicator tabIndicator = (TabPageIndicator) view.findViewById(R.id.view_pager_tab_indicator);
         tabIndicator.setViewPager(viewPager);

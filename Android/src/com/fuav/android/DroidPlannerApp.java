@@ -15,6 +15,16 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.crashlytics.android.Crashlytics;
+import com.fuav.android.activities.helpers.BluetoothDevicesActivity;
+import com.fuav.android.maps.providers.google_map.tiles.mapbox.offline.MapDownloader;
+import com.fuav.android.proxy.mission.MissionProxy;
+import com.fuav.android.utils.LogToFileTree;
+import com.fuav.android.utils.Utils;
+import com.fuav.android.utils.analytics.GAUtils;
+import com.fuav.android.utils.file.IO.ExceptionWriter;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.VehicleApi;
@@ -26,15 +36,6 @@ import com.o3dr.services.android.lib.drone.connection.ConnectionResult;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
 import com.o3dr.services.android.lib.drone.connection.DroneSharePrefs;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
-
-import com.fuav.android.activities.helpers.BluetoothDevicesActivity;
-import com.fuav.android.maps.providers.google_map.tiles.mapbox.offline.MapDownloader;
-import com.fuav.android.proxy.mission.MissionProxy;
-import com.fuav.android.utils.LogToFileTree;
-import com.fuav.android.utils.Utils;
-import com.fuav.android.utils.analytics.GAUtils;
-import com.fuav.android.utils.file.IO.ExceptionWriter;
-import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,6 +150,13 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
         SDKInitializer.initialize(getApplicationContext());
         MultiDex.install(this);
         super.onCreate();
+
+        //创建默认的ImageLoader配置参数
+        ImageLoaderConfiguration configuration = ImageLoaderConfiguration
+                .createDefault(this);
+
+        //Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(configuration);
 
         final Context context = getApplicationContext();
 

@@ -199,6 +199,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.VideoPlayActivity"></activity>
+        <activity android:name=".activities.PicPlayActivity"></activity>
     </application>
 
 </manifest>

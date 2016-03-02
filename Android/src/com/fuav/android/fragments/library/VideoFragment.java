@@ -4,9 +4,10 @@ package com.fuav.android.fragments.library;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,6 @@ public class VideoFragment extends Fragment {
     private boolean mImageHasLoaded = false;
     List<String> list = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
-//    private ArrayList<Bitmap> mBitmapList = new ArrayList<Bitmap>();
     private GridAdapter adapter = new GridAdapter();
 
     @Override
@@ -58,10 +58,8 @@ public class VideoFragment extends Fragment {
                 }
             }
         });
-
         //获取sd卡下的图片并显示
-        getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
-
+        getVideos(Environment.getExternalStorageDirectory() + "/FUAV");
         gridListView.setAdapter(adapter);
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.material_style_ptr_frame);
@@ -75,14 +73,6 @@ public class VideoFragment extends Fragment {
         frame.setDurationToCloseHeader(1500);
         frame.setHeaderView(header);
         frame.addPtrUIHandler(header);
-        // frame.setPullToRefresh(true);
-        frame.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                frame.autoRefresh(true);
-            }
-        }, 100);
-
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
@@ -108,26 +98,22 @@ public class VideoFragment extends Fragment {
     }
 
     // 获取SDCard中某个目录下图片路径集合
-    public List<String> getPictures(final String strPath) {
+    public List<String> getVideos(final String strPath) {
         File file = new File(strPath);
         File[] allfiles = file.listFiles();
         if (allfiles == null) {
             return null;
         }
-        for(int k = 0; k < allfiles.length; k++) {
-            final File fi = allfiles[k];
-            if(fi.isFile()) {
+        for (final File fi : allfiles) {
+            if (fi.getPath().endsWith(".mp4")) {
                 int idx = fi.getPath().lastIndexOf(".");
                 int idxname = fi.getPath().lastIndexOf("/");
                 if (idx <= 0) {
                     continue;
                 }
-                String suffixname = fi.getPath().substring(idxname+1,idx);
-                String suffix = fi.getPath().substring(idx);
-                if (suffix.toLowerCase().equals(".mp4")  ) {
-                    list.add(fi.getPath());
-                    mNameList.add(suffixname);
-                }
+                String suffixname = fi.getPath().substring(idxname + 1, idx);
+                list.add(fi.getPath());
+                mNameList.add(suffixname);
             }
         }
         return list;
@@ -170,7 +156,7 @@ public class VideoFragment extends Fragment {
             viewTag.mName.setText(mNameList.get(position));
 
             // set icon
-            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position)));
+            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
             return convertView;
         }
 
@@ -188,28 +174,34 @@ public class VideoFragment extends Fragment {
 
     }
 
-    public Bitmap getVideoThumbnail(String filePath) {
-        Bitmap bitmap = null;
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            retriever.setDataSource(filePath);
-            bitmap = retriever.getFrameAtTime();
-        }
-        catch(IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                retriever.release();
-            }
-            catch (RuntimeException e) {
-                e.printStackTrace();
-            }
-        }
-        return bitmap;
+//    public Bitmap getVideoThumbnail(String filePath) {
+//        Bitmap bitmap = null;
+//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        try {
+//            retriever.setDataSource(filePath);
+//            bitmap = retriever.getFrameAtTime();
+//        }
+//        catch(IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+//        catch (RuntimeException e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//            try {
+//                retriever.release();
+//            }
+//            catch (RuntimeException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return bitmap;
+//    }
+
+    private Bitmap getVideoThumbnail(String videoPath,
+                                     int kind) {
+        // 获取视频的缩略图
+        return ThumbnailUtils.createVideoThumbnail(videoPath, kind);
     }
 
 

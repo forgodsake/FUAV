@@ -4,7 +4,6 @@ package com.fuav.android.fragments.library;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,9 @@ import android.widget.TextView;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.PicPlayActivity;
-import com.fuav.android.utils.LocalDisplay;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,12 +37,14 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  */
 public class PictureFragment extends Fragment {
 
-    final String[] mStringList = { "FUAV","FUCK"};
-    private static final int sGirdImageSize = (LocalDisplay.SCREEN_WIDTH_PIXELS - LocalDisplay.dp2px(12 + 12 + 10)) / 2;
-//    private ImageLoader mImageLoader;
+    final String[] mStringList = { "FUAV"};
+
+    ImageSize mImageSize ;
+    //显示图片的配置
+    DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
+    List<String> videolist = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
-    private ArrayList<Bitmap> mBitmapList = new ArrayList<Bitmap>();
     private GridAdapter adapter = new GridAdapter();
 
     @Override
@@ -61,19 +64,16 @@ public class PictureFragment extends Fragment {
                 }
             }
         });
+
+        //获取sd卡下的图片并显示
+        getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
+        mImageSize = new ImageSize(100, 100);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
         gridListView.setAdapter(adapter);
-
-        //        2.获取sd卡下的图片并显示
-        List<String> list = getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                Bitmap bm = BitmapFactory.decodeFile(list.get(i));
-                mBitmapList.add(bm);
-            }
-        }
-        else {
-
-        }
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.store_house_ptr_frame);
         // header
@@ -140,13 +140,13 @@ public class PictureFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                         frame.refreshComplete();
                     }
-                }, 2000);
+                }, 1000);
             }
         });
         return view;
     }
 
-    //        1.获取SDCard中某个目录下图片路径集合
+    //获取SDCard中某个目录下图片路径集合
     public List<String> getPictures(final String strPath) {
         File file = new File(strPath);
         File[] allfiles = file.listFiles();
@@ -175,6 +175,7 @@ public class PictureFragment extends Fragment {
         }
         return list;
     }
+
 
     public class GridAdapter extends BaseAdapter {
 
@@ -214,7 +215,7 @@ public class PictureFragment extends Fragment {
             viewTag.mName.setText(mNameList.get(position));
 
             // set icon
-            viewTag.mIcon.setImageBitmap(mBitmapList.get(position));
+            ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
             return convertView;
         }
 
