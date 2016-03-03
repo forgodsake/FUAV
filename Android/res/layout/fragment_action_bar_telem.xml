@@ -36,7 +36,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5">
+        android:layout_weight="1.8">
 
         <ImageView
             android:layout_width="30dp"
@@ -112,7 +112,7 @@
         <TextView
             android:id="@+id/bar_warning"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:singleLine="true"
@@ -120,7 +120,6 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:text="No GPS signal,please check"
             android:textSize="@dimen/info_bar_text_size"
             tools:text="No GPS signal,please check" />
     </FrameLayout>
@@ -143,27 +142,23 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1.4">
 
         <ImageView
             android:id="@+id/bar_battery"
-            android:layout_width="30dp"
-            android:layout_height="26dp"
-            android:layout_gravity="center"
+            android:layout_width="28dp"
+            android:layout_height="22dp"
+            android:layout_gravity="start|center_vertical"
+            android:scaleType="fitXY"
             android:src="@drawable/power_full"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.8">
 
         <ImageView
             android:id="@+id/bar_signal"
             android:layout_width="26dp"
             android:layout_height="16dp"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="26dp"
+            android:scaleType="fitEnd"
             android:src="@drawable/wifi_100"/>
     </FrameLayout>
 

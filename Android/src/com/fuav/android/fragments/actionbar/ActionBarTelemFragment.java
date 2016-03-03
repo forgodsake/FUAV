@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,9 @@ import com.fuav.android.utils.Utils;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.attribute.error.ErrorType;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Battery;
 import com.o3dr.services.android.lib.drone.property.Gps;
@@ -46,6 +50,8 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         eventFilter.addAction(AttributeEvent.BATTERY_UPDATED);
         eventFilter.addAction(AttributeEvent.STATE_CONNECTED);
         eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_MESSAGE);
         eventFilter.addAction(AttributeEvent.GPS_POSITION);
         eventFilter.addAction(AttributeEvent.GPS_COUNT);
         eventFilter.addAction(AttributeEvent.GPS_FIX);
@@ -69,6 +75,18 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
                 return;
 
             switch (intent.getAction()) {
+                case AttributeEvent.AUTOPILOT_ERROR:
+                    String errorName = intent.getStringExtra(AttributeEventExtra.EXTRA_AUTOPILOT_ERROR_ID);
+                    final ErrorType errorType = ErrorType.getErrorById(errorName);
+                    onAutopilotError(errorType);
+                    break;
+
+                case AttributeEvent.AUTOPILOT_MESSAGE:
+                    final int logLevel = intent.getIntExtra(AttributeEventExtra.EXTRA_AUTOPILOT_MESSAGE_LEVEL, Log.VERBOSE);
+                    final String message = intent.getStringExtra(AttributeEventExtra.EXTRA_AUTOPILOT_MESSAGE);
+                    onAutopilotError(logLevel, message);
+                    break;
+
                 case AttributeEvent.BATTERY_UPDATED:
                     updateBatteryTelem();
                     break;
@@ -135,6 +153,8 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
     private PopupWindow signalPopup;
 
     private TextView flightModeTelem;
+
+    private TextView warningView;
 
     private String emptyString;
 
@@ -213,7 +233,39 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
             }
         });
 
+        warningView = (TextView) view.findViewById(R.id.bar_warning);
+
         appPrefs = new DroidPlannerPrefs(context);
+    }
+
+    private void onAutopilotError(ErrorType errorType) {
+        if (errorType == null)
+            return;
+
+        final CharSequence errorLabel;
+        switch (errorType) {
+            case NO_ERROR:
+                errorLabel = null;
+                break;
+
+            default:
+                errorLabel = errorType.getLabel(getContext());
+                break;
+        }
+
+        onAutopilotError(Log.ERROR, errorLabel);
+    }
+
+    private void onAutopilotError(int logLevel, CharSequence errorMsg) {
+        if (TextUtils.isEmpty(errorMsg))
+            return;
+
+        switch (logLevel) {
+            case Log.ERROR:
+            case Log.WARN:
+                warningView.setText(errorMsg);
+                break;
+        }
     }
 
 

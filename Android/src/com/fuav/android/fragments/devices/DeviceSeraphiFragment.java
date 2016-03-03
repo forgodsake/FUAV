@@ -41,10 +41,11 @@ public class DeviceSeraphiFragment extends ApiListenerFragment implements View.O
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.imageViewLogo:
+                Intent intent = new Intent(getActivity(), EditorActivity.class);
                 if(DroneManager.getDrone()==null){
-                    ((SuperUI) getActivity()).toggleDroneConnection();
+                    ((SuperUI)getActivity()).toggleDroneConnection();
                 }
-                startActivity(new Intent(getActivity(), EditorActivity.class));
+                startActivity(intent);
                 break;
         }
     }

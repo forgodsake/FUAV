@@ -5,14 +5,14 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="108dp"
         android:id="@+id/grid_imageview" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="16dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/grid_name"
         android:gravity="center"
-        android:background="#BBADFF2F"
-        android:text="ok"/>
+        android:textSize="12sp"
+        android:background="#BBADFF2F"/>
 </RelativeLayout>

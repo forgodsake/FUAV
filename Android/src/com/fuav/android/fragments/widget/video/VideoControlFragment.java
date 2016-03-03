@@ -24,7 +24,8 @@ import com.fuav.android.utils.VideoThread;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class VideoControlFragment extends Fragment implements View.OnClickListener{
 
@@ -121,8 +122,8 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.shot_key_on:
-                Calendar c = Calendar.getInstance();
-                int time = c.get(Calendar.MILLISECOND);
+                SimpleDateFormat sDateFormat = new  SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String date = sDateFormat.format(new Date());
                 Player _player = VideoThread._module.getPlayer();
                 if(shot_switch_left.getVisibility()==View.VISIBLE){
                     Bitmap photo = _player.takePhoto();
@@ -130,7 +131,7 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
                         Toast.makeText(getActivity(),"拍照失败,请先连接相机.",Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String path = _projectPath.getPath() + "/" + Integer.toString(time) + ".jpeg";
+                    String path = _projectPath.getPath() + "/" + date + ".jpeg";
                     FileOutputStream out = null;
                     try {
                         out = new FileOutputStream(path);
@@ -153,7 +154,7 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
                         Toast.makeText(getActivity(),"结束录像",Toast.LENGTH_SHORT).show();
                     } else {
                         // file extension is mkv (default)
-                        if (_player.beginRecord(_projectPath.getPath(), Integer.toString(time))) {
+                        if (_player.beginRecord(_projectPath.getPath(), date)) {
                             _recording = true;
                             Toast.makeText(getActivity(),"开始录像",Toast.LENGTH_SHORT).show();
                         }else{

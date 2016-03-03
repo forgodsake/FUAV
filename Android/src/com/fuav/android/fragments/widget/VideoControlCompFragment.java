@@ -20,6 +20,7 @@ import com.fuav.android.fragments.control.FlightControlManagerFragment;
 import com.fuav.android.utils.analytics.GAUtils;
 import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.android.client.Drone;
+import com.o3dr.android.client.apis.ControlApi;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
@@ -241,7 +242,7 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
             public void run() {
                 getDrone().arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                getDrone().doGuidedTakeoff(takeOffAltitude);
+                ControlApi.getApi(getDrone()).takeoff(takeOffAltitude, null);
                 initBackground();
                 button_take_off.setBackgroundResource(R.drawable.button_land);
                 index++;

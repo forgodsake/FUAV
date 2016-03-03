@@ -1,12 +1,15 @@
 package com.fuav.android.activities;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.helpers.SuperUI;
@@ -17,7 +20,9 @@ import com.fuav.android.fragments.home.SupportFragment;
 
 public class HomeActivity extends SuperUI implements View.OnClickListener{
 
+    private LinearLayout Device,Media,Store,Support;
     private ImageView imDevice,imMedia,imStore,imSupport;
+    private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
     private MallFragment mallFragment;
     private int index=0;
@@ -39,40 +44,80 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     }
 
     private void initViews() {
+        Device = (LinearLayout) findViewById(R.id.ViewDevice);
+        Device.setOnClickListener(this);
+        Media = (LinearLayout) findViewById(R.id.ViewMedia);
+        Media.setOnClickListener(this);
+        Store = (LinearLayout) findViewById(R.id.ViewStore);
+        Store.setOnClickListener(this);
+        Support = (LinearLayout) findViewById(R.id.ViewSupport);
+        Support.setOnClickListener(this);
         imDevice = (ImageView) findViewById(R.id.imageViewDevice);
-        imDevice.setOnClickListener(this);
         imMedia = (ImageView) findViewById(R.id.imageViewMedia);
-        imMedia.setOnClickListener(this);
         imStore = (ImageView) findViewById(R.id.imageViewStore);
-        imStore.setOnClickListener(this);
         imSupport = (ImageView) findViewById(R.id.imageViewSupport);
-        imSupport.setOnClickListener(this);
+        txDevice = (TextView) findViewById(R.id.textViewDevice);
+        txMedia = (TextView) findViewById(R.id.textViewMedia);
+        txStore = (TextView) findViewById(R.id.textViewStore);
+        txSupport = (TextView) findViewById(R.id.textViewSupport);
+        setDefault();
+        imDevice.setEnabled(true);
+        txDevice.setTextColor(Color.BLUE);
+        Device.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
     }
 
 
     @Override
     public void onClick(View v) {
+        setDefault();
         switch (v.getId()){
-            case R.id.imageViewDevice:
+            case R.id.ViewDevice:
+                imDevice.setEnabled(true);
+                txDevice.setTextColor(Color.BLUE);
+                Device.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
                 index = 1;
                 break;
-            case R.id.imageViewMedia:
+            case R.id.ViewMedia:
+                imMedia.setEnabled(true);
+                txMedia.setTextColor(Color.BLUE);
+                Media.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new LibraryFragment()).commit();
                 index = 2;
                 break;
-            case R.id.imageViewStore:
+            case R.id.ViewStore:
+                imStore.setEnabled(true);
                 mallFragment = new MallFragment();
+                txStore.setTextColor(Color.BLUE);
+                Store.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,mallFragment).commit();
                 index = 3;
                 break;
-            case R.id.imageViewSupport:
+            case R.id.ViewSupport:
+                imSupport.setEnabled(true);
+                txSupport.setTextColor(Color.BLUE);
+                Support.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new SupportFragment()).commit();
                 index = 4;
                 break;
             default:
                 break;
         }
+    }
+
+    void setDefault(){
+        imDevice.setEnabled(false);
+        imMedia.setEnabled(false);
+        imStore.setEnabled(false);
+        imSupport.setEnabled(false);
+        txDevice.setTextColor(Color.BLACK);
+        txMedia.setTextColor(Color.BLACK);
+        txStore.setTextColor(Color.BLACK);
+        txSupport.setTextColor(Color.BLACK);
+        Device.setBackgroundColor(Color.WHITE);
+        Media.setBackgroundColor(Color.WHITE);
+        Store.setBackgroundColor(Color.WHITE);
+        Support.setBackgroundColor(Color.WHITE);
     }
 
     @Override

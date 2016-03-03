@@ -22,14 +22,17 @@
 
 
         <LinearLayout
+            android:id="@+id/ViewDevice"
             android:orientation="vertical"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:id="@+id/imageViewDevice"
                 android:src="@drawable/device_button"
                 android:layout_gravity="center_horizontal" />
@@ -38,20 +41,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Device"
+                android:textSize="12sp"
                 android:id="@+id/textViewDevice"
                 android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ViewMedia"
             android:orientation="vertical"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:id="@+id/imageViewMedia"
                 android:src="@drawable/media_button"
                 android:layout_gravity="center_horizontal" />
@@ -60,18 +67,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Media"
+                android:textSize="12sp"
                 android:id="@+id/textViewMedia"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ViewStore"
             android:orientation="vertical"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:id="@+id/imageViewStore"
                 android:src="@drawable/store_button"
                 android:layout_gravity="center_horizontal" />
@@ -80,18 +91,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Store"
+                android:textSize="12sp"
                 android:id="@+id/textViewStore"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ViewSupport"
             android:orientation="vertical"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:id="@+id/imageViewSupport"
                 android:src="@drawable/support_button"
                 android:layout_gravity="center_horizontal" />
@@ -100,6 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Support"
+                android:textSize="12sp"
                 android:id="@+id/textViewSupport"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>

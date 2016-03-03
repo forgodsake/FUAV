@@ -45,10 +45,9 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_drawer_container"
-        android:layout_marginTop="@dimen/action_bar_telem_height"
-        android:layout_width="180dp"
+        android:layout_width="158dp"
         android:layout_height="240dp"
-        android:layout_gravity="start"
+        android:layout_gravity="start|center_vertical"
         android:fitsSystemWindows="true"
         android:background="#DFFF"
         app:menu="@menu/navigation_drawer_items" />

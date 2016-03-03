@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.MAVLink.ardupilotmega.msg_mag_cal_progress;
-import com.MAVLink.ardupilotmega.msg_mag_cal_report;
 import com.fuav.android.R;
-import com.fuav.android.core.drone.variables.calibration.MagnetometerCalibrationImpl;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 import com.fuav.android.notifications.TTSNotificationProvider;
 import com.o3dr.android.client.Drone;
@@ -26,15 +23,16 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.State;
 
 
-public class FragmentSetupMAG extends ApiListenerFragment implements MagnetometerCalibrationImpl.OnMagnetometerCalibrationListener {
+public class FragmentSetupMAG extends ApiListenerFragment  {
 
 	private final static long UPDATE_TIMEOUT_PERIOD = 100l; //ms
 	private static final String EXTRA_UPDATE_TIMESTAMP = "extra_update_timestamp";
 
 	private static final IntentFilter intentFilter = new IntentFilter();
 	static {
-		intentFilter.addAction(AttributeEvent.CALIBRATION_IMU);
-		intentFilter.addAction(AttributeEvent.CALIBRATION_IMU_TIMEOUT);
+		intentFilter.addAction(AttributeEvent.CALIBRATION_MAG_CANCELLED);
+		intentFilter.addAction(AttributeEvent.CALIBRATION_MAG_COMPLETED);
+		intentFilter.addAction(AttributeEvent.CALIBRATION_MAG_PROGRESS);
 		intentFilter.addAction(AttributeEvent.STATE_CONNECTED);
 		intentFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
 	}
@@ -47,8 +45,10 @@ public class FragmentSetupMAG extends ApiListenerFragment implements Magnetomete
 				case AttributeEvent.CALIBRATION_MAG_PROGRESS: {
 					if (getDrone().isConnected()) {
 						String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_MAG_PROGRESS);
-						if (message != null)
+						if (message != null){
+							Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
 							relayInstructions(message);
+							}
 					}
 					break;
 				}
@@ -234,18 +234,4 @@ public class FragmentSetupMAG extends ApiListenerFragment implements Magnetomete
 		getBroadcastManager().unregisterReceiver(broadcastReceiver);
 	}
 
-	@Override
-	public void onCalibrationCancelled() {
-
-	}
-
-	@Override
-	public void onCalibrationProgress(msg_mag_cal_progress progress) {
-		Toast.makeText(getActivity(),""+progress.completion_pct,Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void onCalibrationCompleted(msg_mag_cal_report result) {
-
-	}
 }

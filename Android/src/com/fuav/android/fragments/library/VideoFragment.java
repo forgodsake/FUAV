@@ -23,12 +23,12 @@ import com.fuav.android.utils.LocalDisplay;
 import com.fuav.android.view.header.RentalsSunHeaderView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
@@ -39,7 +39,6 @@ public class VideoFragment extends Fragment {
 
     private long mStartLoadingTime = -1;
     private boolean mImageHasLoaded = false;
-    ImageSize mImageSize ;
     //显示图片的配置
     DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
@@ -65,7 +64,6 @@ public class VideoFragment extends Fragment {
         });
         //获取sd卡下的图片并显示
         getVideos(Environment.getExternalStorageDirectory() + "/FUAV");
-        mImageSize = new ImageSize(100, 100);
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -87,17 +85,18 @@ public class VideoFragment extends Fragment {
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return true;
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
             }
 
             @Override
             public void onRefreshBegin(final PtrFrameLayout frame) {
-                if (true) {
+                if (mImageHasLoaded) {
                     long delay = 1500;
                     frame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             frame.refreshComplete();
+                            adapter.notifyDataSetChanged();
                         }
                     }, delay);
                 } else {
@@ -169,6 +168,7 @@ public class VideoFragment extends Fragment {
             // set icon
             ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
 //            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
+            mImageHasLoaded = true;
             return convertView;
         }
 

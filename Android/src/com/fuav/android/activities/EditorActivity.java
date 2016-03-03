@@ -54,8 +54,10 @@ import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.android.client.Drone;
+import com.o3dr.android.client.apis.ControlApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
@@ -83,6 +85,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private static final String ITEM_DETAIL_TAG = "Item Detail Window";
     private static final String MISSION_UPLOAD_CHECK_DIALOG_TAG = "Mission Upload check.";
 
+    /**
+     * Determines how long the failsafe view is visible for.
+     */
+    private static final long WARNING_VIEW_DISPLAY_TIMEOUT = 10000l; //ms
+
+    private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
+
     private static final String EXTRA_OPENED_MISSION_FILENAME = "extra_opened_mission_filename";
 
     private static final IntentFilter eventFilter = new IntentFilter();
@@ -95,6 +104,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         eventFilter.addAction(MissionProxy.ACTION_MISSION_PROXY_UPDATE);
         eventFilter.addAction(AttributeEvent.MISSION_RECEIVED);
         eventFilter.addAction(AttributeEvent.PARAMETERS_REFRESH_COMPLETED);
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
+        eventFilter.addAction(AttributeEvent.AUTOPILOT_MESSAGE);
+        eventFilter.addAction(AttributeEvent.STATE_ARMING);
+        eventFilter.addAction(AttributeEvent.STATE_CONNECTED);
+        eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
+        eventFilter.addAction(AttributeEvent.STATE_UPDATED);
+        eventFilter.addAction(AttributeEvent.TYPE_UPDATED);
+        eventFilter.addAction(AttributeEvent.STATE_VEHICLE_MODE);
+        eventFilter.addAction(AttributeEvent.FOLLOW_START);
+        eventFilter.addAction(AttributeEvent.FOLLOW_STOP);
+        eventFilter.addAction(AttributeEvent.FOLLOW_UPDATE);
+        eventFilter.addAction(AttributeEvent.MISSION_DRONIE_CREATED);
     }
 
     private final BroadcastReceiver eventReceiver = new BroadcastReceiver() {
@@ -111,6 +132,78 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     final EditorMapFragment planningMapFragment = gestureMapFragment.getMapFragment();
                     if (planningMapFragment != null) {
                         planningMapFragment.zoomToFit();
+                    }
+                    break;
+                case AttributeEvent.AUTOPILOT_ERROR:
+                    break;
+
+                case AttributeEvent.AUTOPILOT_MESSAGE:
+                    break;
+
+                case AttributeEvent.STATE_ARMING:
+                case AttributeEvent.STATE_CONNECTED:
+                case AttributeEvent.STATE_DISCONNECTED:
+                case AttributeEvent.STATE_UPDATED:
+                    break;
+                case AttributeEvent.TYPE_UPDATED:
+                    break;
+                case AttributeEvent.STATE_VEHICLE_MODE:
+                    break;
+
+                case AttributeEvent.FOLLOW_START:
+                case AttributeEvent.FOLLOW_STOP:
+                    final FollowState followState = getDrone().getAttribute(AttributeType.FOLLOW_STATE);
+                    if (followState != null) {
+                        String eventLabel = null;
+                        switch (followState.getState()) {
+                            case FollowState.STATE_START:
+                                eventLabel = "FollowMe enabled";
+                                break;
+
+                            case FollowState.STATE_RUNNING:
+                                eventLabel = "FollowMe running";
+                                break;
+
+                            case FollowState.STATE_END:
+                                eventLabel = "FollowMe disabled";
+                                break;
+
+                            case FollowState.STATE_INVALID:
+                                eventLabel = "FollowMe error: invalid state";
+                                break;
+
+                            case FollowState.STATE_DRONE_DISCONNECTED:
+                                eventLabel = "FollowMe error: drone not connected";
+                                break;
+
+                            case FollowState.STATE_DRONE_NOT_ARMED:
+                                eventLabel = "FollowMe error: drone not armed";
+                                break;
+                        }
+
+                        if (eventLabel != null) {
+                            HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder()
+                                    .setCategory(GAUtils.Category.FLIGHT)
+                                    .setAction(ACTION_FLIGHT_ACTION_BUTTON)
+                                    .setLabel(eventLabel);
+                            GAUtils.sendEvent(eventBuilder);
+
+                            Toast.makeText(EditorActivity.this, eventLabel, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                 /* FALL - THROUGH */
+                case AttributeEvent.FOLLOW_UPDATE:
+                    break;
+
+                case AttributeEvent.MISSION_DRONIE_CREATED:
+                    //Get the bearing of the dronie mission.
+                    float bearing = intent.getFloatExtra(AttributeEventExtra.EXTRA_MISSION_DRONIE_BEARING, -1);
+                    if (bearing >= 0) {
+//                        final FlightControlManagerFragment parent = (FlightControlManagerFragment) getParentFragment();
+//                        if (parent != null) {
+//                            parent.updateMapBearing(bearing);
+//                        }
                     }
                     break;
             }
@@ -139,6 +232,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     private TextView infoView;
 
+    private final Handler handler = new Handler();
+
     /**
      * If the mission was loaded from a file, the filename is stored here.
      */
@@ -162,16 +257,17 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         showVideo = true;
 
-        editorToolsFragment = new EditorToolsFragment();
-        fragmentManager.beginTransaction().replace(R.id.editortools,editorToolsFragment).commit();
+        if (editorToolsFragment == null) {
+            editorToolsFragment = new EditorToolsFragment();
+            fragmentManager.beginTransaction().replace(R.id.editortools,editorToolsFragment).commit();
+        }
 
-//        gestureMapFragment = ((GestureMapFragment) fragmentManager.findFragmentById(R.id.editor_map_fragment));
         if (gestureMapFragment == null) {
             gestureMapFragment = new GestureMapFragment();
             fragmentManager.beginTransaction().add(R.id.editor_map_fragment, gestureMapFragment).commit();
         }
 
-//        editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
+//      editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
 
         infoView = (TextView) findViewById(R.id.editorInfoWindow);
 
@@ -452,6 +548,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     public void onResume() {
         super.onResume();
+
         editorToolsFragment.setToolAndUpdateView(getTool());
         setupTool();
 
@@ -783,7 +880,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             public void run() {
                 getDrone().arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                getDrone().doGuidedTakeoff(takeOffAltitude);
+                ControlApi.getApi(getDrone()).takeoff(takeOffAltitude, null);
                 initBackground();
                 button_take_off.setBackgroundResource(R.drawable.button_land);
                 index++;

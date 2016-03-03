@@ -18,28 +18,24 @@ import android.widget.TextView;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.PicPlayActivity;
+import com.fuav.android.utils.LocalDisplay;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.header.StoreHouseHeader;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PictureFragment extends Fragment {
 
-    final String[] mStringList = { "FUAV"};
-
-    ImageSize mImageSize ;
     //显示图片的配置
     DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
@@ -66,7 +62,6 @@ public class PictureFragment extends Fragment {
 
         //获取sd卡下的图片并显示
         getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
-        mImageSize = new ImageSize(100, 100);
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -77,44 +72,15 @@ public class PictureFragment extends Fragment {
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.store_house_ptr_frame);
         // header
         final StoreHouseHeader header = new StoreHouseHeader(getContext());
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
         /**
          * using a string, support: A-Z 0-9 - .
          * you can add more letters by {@link in.srain.cube.views.ptr.header.StoreHousePath#addChar}
          */
-        header.initWithString(mStringList[0]);
+        header.initWithString("FUAV");
 
-        // for changing string
-        frame.addPtrUIHandler(new PtrUIHandler() {
-
-            private int mLoadTime = 0;
-
-            @Override
-            public void onUIReset(PtrFrameLayout frame) {
-                mLoadTime++;
-                String string = mStringList[mLoadTime % mStringList.length];
-                header.initWithString(string);
-            }
-
-            @Override
-            public void onUIRefreshPrepare(PtrFrameLayout frame) {
-            }
-
-            @Override
-            public void onUIRefreshBegin(PtrFrameLayout frame) {
-
-            }
-
-            @Override
-            public void onUIRefreshComplete(PtrFrameLayout frame) {
-
-            }
-
-            @Override
-            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-
-            }
-        });
-
+        frame.setLoadingMinTime(1000);
         frame.setDurationToCloseHeader(1500);
         frame.setHeaderView(header);
         frame.addPtrUIHandler(header);
@@ -128,7 +94,7 @@ public class PictureFragment extends Fragment {
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return true;
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
             }
 
             @Override
@@ -136,7 +102,6 @@ public class PictureFragment extends Fragment {
                 frame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.notifyDataSetChanged();
                         frame.refreshComplete();
                     }
                 }, 1000);
