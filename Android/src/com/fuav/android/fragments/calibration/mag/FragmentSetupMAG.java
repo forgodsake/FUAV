@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fuav.android.R;
+import com.fuav.android.core.drone.DroneManager;
+import com.fuav.android.core.drone.variables.calibration.MagnetometerCalibrationImpl;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 import com.fuav.android.notifications.TTSNotificationProvider;
 import com.o3dr.android.client.Drone;
@@ -21,6 +25,11 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.property.State;
+
+import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class FragmentSetupMAG extends ApiListenerFragment  {
@@ -46,7 +55,6 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 					if (getDrone().isConnected()) {
 						String message = intent.getStringExtra(AttributeEventExtra.EXTRA_CALIBRATION_MAG_PROGRESS);
 						if (message != null){
-							Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
 							relayInstructions(message);
 							}
 					}
@@ -82,7 +90,8 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 	private final Handler handler = new Handler();
 
 	private Button btnStep;
-	private Button btnSend;
+	private ProgressBar progress_bar;
+	private int index = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,21 +107,19 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 		btnStep.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startCalibration();
-			}
-		});
-
-		btnSend = (Button) view.findViewById(R.id.buttonSend);
-		btnSend.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				sendCalibration();
+				if(index==0){
+					startCalibration();
+				}else if(index==1){
+					sendCalibration();
+				}
 			}
 		});
 
 		if(savedInstanceState != null){
 			updateTimestamp = savedInstanceState.getLong(EXTRA_UPDATE_TIMESTAMP);
 		}
+
+		progress_bar = (ProgressBar) view.findViewById(R.id.calibration_progress_bar);
 	}
 
 	@Override
@@ -134,7 +141,56 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 		}
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+		scheduledExecutorService.scheduleAtFixedRate(
+				new EchoServer(),
+				0,
+				100,
+				TimeUnit.MILLISECONDS);
+	}
 
+	public class EchoServer implements Runnable{
+		@Override
+		public void run() {
+			if(null!=DroneManager.getDrone()){
+				MagnetometerCalibrationImpl magCalImpl = DroneManager.getDrone().getMagnetometerCalibration();
+				Collection<MagnetometerCalibrationImpl.Info> calibrationInfo = magCalImpl.getMagCalibrationTracker().values();
+				for (MagnetometerCalibrationImpl.Info info : calibrationInfo){
+					Message message = Message.obtain();
+					Bundle bundle = new Bundle();
+					bundle.putInt("percent",info.getCalProgress().completion_pct);
+					message.setData(bundle);
+					message.what = 1;
+					newhandler.sendMessage(message);
+				}
+			}
+		}
+	}
+
+	private Handler newhandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what){
+				case 1:
+					int percent = msg.getData().getInt("percent");
+					if(percent>50&&percent<100){
+						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_warning));
+					}else if(percent==100){
+						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_good));
+						btnStep.setText(R.string.button_setup_send);
+						index = 1;
+					}
+					if(percent%10==0){
+						Toast.makeText(getActivity(),percent+"",Toast.LENGTH_SHORT).show();
+					}
+					break;
+			}
+		}
+	};
 
 	private void processMAVMessage(String message, boolean updateTime) {
 		if (message.contains("Place") || message.contains("Calibration")) {

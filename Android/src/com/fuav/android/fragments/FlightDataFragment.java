@@ -424,7 +424,7 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
         // Check for the google play services is available
 //        final int playStatus = GooglePlayServicesUtil
 //                .isGooglePlayServicesAvailable(getContext());
-        final boolean isValid = true;
+//        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
 //
 //        if (!isValid && showErrorDialog) {
 //            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(playStatus, getActivity(),
@@ -441,7 +441,7 @@ public class FlightDataFragment extends BaseFlightControlFragment implements Sli
 //                errorDialog.show();
 //        }
 
-        return isValid;
+        return true;
     }
 
     public void setGuidedClickListener(FlightMapFragment.OnGuidedClickListener listener) {

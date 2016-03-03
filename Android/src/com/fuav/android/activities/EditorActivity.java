@@ -33,6 +33,7 @@ import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.dialogs.SupportEditInputDialog;
 import com.fuav.android.dialogs.openfile.OpenFileDialog;
 import com.fuav.android.dialogs.openfile.OpenMissionDialog;
+import com.fuav.android.fragments.BlankFragment;
 import com.fuav.android.fragments.EditorMapFragment;
 import com.fuav.android.fragments.FlightMapFragment;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment;
@@ -53,6 +54,8 @@ import com.fuav.android.utils.file.IO.MissionReader;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
@@ -104,8 +107,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         eventFilter.addAction(MissionProxy.ACTION_MISSION_PROXY_UPDATE);
         eventFilter.addAction(AttributeEvent.MISSION_RECEIVED);
         eventFilter.addAction(AttributeEvent.PARAMETERS_REFRESH_COMPLETED);
-        eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
-        eventFilter.addAction(AttributeEvent.AUTOPILOT_MESSAGE);
         eventFilter.addAction(AttributeEvent.STATE_ARMING);
         eventFilter.addAction(AttributeEvent.STATE_CONNECTED);
         eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
@@ -133,11 +134,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     if (planningMapFragment != null) {
                         planningMapFragment.zoomToFit();
                     }
-                    break;
-                case AttributeEvent.AUTOPILOT_ERROR:
-                    break;
-
-                case AttributeEvent.AUTOPILOT_MESSAGE:
                     break;
 
                 case AttributeEvent.STATE_ARMING:
@@ -317,9 +313,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         super.onStart();
     }
 
-    public void setVisible(){
+    public String getMapName(){
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+        return pre.getMapProviderName();
+    }
+
+    public void setVisible(){
+        if(getMapName().equals("GOOGLE_MAP")){
             findViewById(R.id.video_view).setVisibility(View.VISIBLE);
             findViewById(R.id.video_view2).setVisibility(View.GONE);
             findViewById(R.id.show_hide_arrow).setVisibility(View.VISIBLE);
@@ -332,13 +332,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     public int getVideoView(){
         int i ;
-        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+        if(getMapName().equals("GOOGLE_MAP")){
             i = R.id.video_view;
         }else{
             i = R.id.video_view2;
         }
         return i;
+    }
+
+    public boolean isSupportGooglePlay(){
+        final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(EditorActivity.this);
+        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
+        return  isValid;
     }
 
     @Override
@@ -446,7 +451,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setGone(R.id.location_button_container);
                                 setGone(R.id.editortools);
                                 setGone(R.id.plane_control_view);
-                                getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+
+                                if(isSupportGooglePlay()) {
+                                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+                                }else {
+                                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new BlankFragment()).commit();
+                                }
+                                findViewById(R.id.editor_map_fragment).setVisibility(View.VISIBLE);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
                                 showVideo = false;
                             }
@@ -470,6 +481,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                             @Override
                             public void run() {
                                 getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+                                if(!isSupportGooglePlay()) {
+                                    findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
+                                }
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
                                 setVisible(R.id.location_button_container);
                                 setVisible(R.id.editortools);
@@ -557,6 +571,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         if (showVideo){
             if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
                 getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
+            }
+        }
+
+        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
+        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
+            //Check if google play services is available.
+            final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            final boolean isValid = playStatus == ConnectionResult.SUCCESS;
+            if(!isValid){
+                if(showVideo){
+                    findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
+                }
             }
         }
     }

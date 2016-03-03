@@ -121,6 +121,7 @@
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:textSize="@dimen/info_bar_text_size"
+            android:background="#66008B8B"
             tools:text="No GPS signal,please check" />
     </FrameLayout>
 
@@ -133,6 +134,7 @@
             android:id="@+id/text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:layout_gravity="center"
             android:textSize="@dimen/info_bar_text_size"
             android:textColor="#FFFFFF"

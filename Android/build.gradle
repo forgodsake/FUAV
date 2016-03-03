@@ -39,6 +39,7 @@ dependencies {
     compile files('libs/baidumapapi_v3_2_0.jar')
     compile files('libs/locSDK_3.1.jar')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile files('libs/universal-image-loader-1.9.5.jar')
     compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.sothree.slidinguppanel:library:2.0.2'
@@ -48,7 +49,7 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.5@aar'
     compile 'com.github.zafarkhaja:java-semver:0.9.0'
     compile 'com.jcraft:jsch:0.1.51'
-    compile files('libs/universal-image-loader-1.9.5.jar')
+    compile 'com.android.support:support-v4:23.2.0'
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)
