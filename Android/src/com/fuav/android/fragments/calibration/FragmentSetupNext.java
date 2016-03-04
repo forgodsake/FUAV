@@ -70,4 +70,14 @@ public class FragmentSetupNext extends SetupSidePanel {
 		if (textTitle != null)
 			textTitle.setText(titleId);
 	}
+
+	@Override
+	public void onApiConnected() {
+
+	}
+
+	@Override
+	public void onApiDisconnected() {
+
+	}
 }

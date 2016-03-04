@@ -325,7 +325,7 @@ public class FragmentSetupIMU extends ApiListenerFragment  {
 
         getBroadcastManager()
                 .sendBroadcast(new Intent(TTSNotificationProvider.ACTION_SPEAK_MESSAGE)
-                        .putExtra(TTSNotificationProvider.EXTRA_MESSAGE_TO_SPEAK, instructions));
+                        .putExtra(TTSNotificationProvider.EXTRA_MESSAGE_TO_SPEAK, ""));
 
         Toast.makeText(context, instructions, Toast.LENGTH_LONG).show();
     }

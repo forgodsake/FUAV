@@ -86,4 +86,14 @@ public class FragmentSetupSummary extends SetupSidePanel {
 		if (textSummary != null)
 			textSummary.setText(summary);
 	}
+
+	@Override
+	public void onApiConnected() {
+
+	}
+
+	@Override
+	public void onApiDisconnected() {
+
+	}
 }

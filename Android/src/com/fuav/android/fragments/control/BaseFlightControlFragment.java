@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
 import com.o3dr.android.client.Drone;
+import com.o3dr.android.client.apis.FollowApi;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
 import com.o3dr.services.android.lib.gcs.follow.FollowType;
@@ -74,7 +75,7 @@ public abstract class BaseFlightControlFragment extends ApiListenerFragment impl
 
         final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
         if (followState.isEnabled()) {
-            drone.disableFollowMe();
+            FollowApi.getApi(drone).disableFollowMe();
         } else {
             enableFollowMe(drone);
         }

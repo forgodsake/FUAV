@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -161,8 +163,15 @@ public class BluetoothDevicesActivity extends AppCompatActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+
 		super.onCreate(savedInstanceState);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
+
         setContentView(R.layout.activity_bluetooth_device_list);
 
         // Get the local bluetooth adapter

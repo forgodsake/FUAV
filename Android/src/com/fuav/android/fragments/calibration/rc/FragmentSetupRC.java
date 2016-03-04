@@ -24,6 +24,7 @@ import com.o3dr.services.android.lib.drone.property.Parameter;
 
 public class FragmentSetupRC extends SuperSetupMainPanel {
 
+
 	/**
 	 * Minimum threshold for the RC value.
 	 */

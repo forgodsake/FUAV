@@ -34,9 +34,6 @@ import java.util.concurrent.TimeUnit;
 
 public class FragmentSetupMAG extends ApiListenerFragment  {
 
-	private final static long UPDATE_TIMEOUT_PERIOD = 100l; //ms
-	private static final String EXTRA_UPDATE_TIMESTAMP = "extra_update_timestamp";
-
 	private static final IntentFilter intentFilter = new IntentFilter();
 	static {
 		intentFilter.addAction(AttributeEvent.CALIBRATION_MAG_CANCELLED);
@@ -83,15 +80,10 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 		}
 	};
 
-	private long updateTimestamp;
-
 	private int calibration_step = 0;
-
-	private final Handler handler = new Handler();
 
 	private Button btnStep;
 	private ProgressBar progress_bar;
-	private int index = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,17 +99,9 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 		btnStep.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(index==0){
-					startCalibration();
-				}else if(index==1){
-					sendCalibration();
-				}
+				processCalibrationStep(calibration_step);
 			}
 		});
-
-		if(savedInstanceState != null){
-			updateTimestamp = savedInstanceState.getLong(EXTRA_UPDATE_TIMESTAMP);
-		}
 
 		progress_bar = (ProgressBar) view.findViewById(R.id.calibration_progress_bar);
 	}
@@ -125,7 +109,6 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 	@Override
 	public void onSaveInstanceState(Bundle outState){
 		super.onSaveInstanceState(outState);
-		outState.putLong(EXTRA_UPDATE_TIMESTAMP, updateTimestamp);
 	}
 
 	private void resetCalibration(){
@@ -177,16 +160,15 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 			switch (msg.what){
 				case 1:
 					int percent = msg.getData().getInt("percent");
-					if(percent>50&&percent<100){
+					if(percent>30&&percent<60){
 						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_warning));
-					}else if(percent==100){
+					}else if(percent>=60&&percent<99){
 						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_good));
-						btnStep.setText(R.string.button_setup_send);
-						index = 1;
+					}else if(percent==99){
+						calibration_step = 1;
+						updateDescription(calibration_step);
 					}
-					if(percent%10==0){
-						Toast.makeText(getActivity(),percent+"",Toast.LENGTH_SHORT).show();
-					}
+					progress_bar.setProgress(percent);
 					break;
 			}
 		}
@@ -194,11 +176,7 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 
 	private void processMAVMessage(String message, boolean updateTime) {
 		if (message.contains("Place") || message.contains("Calibration")) {
-			if(updateTime) {
-				updateTimestamp = System.currentTimeMillis();
-			}
 
-			processOrientation(message);
 		}
 	}
 
@@ -207,39 +185,11 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 		if (btnStep != null) {
 			if (calibration_step == 0)
 				btnStep.setText(R.string.button_setup_calibrate);
-			else if (calibration_step == 2)
-				btnStep.setText(R.string.button_setup_done);
-			else
-				btnStep.setText(R.string.button_setup_next);
-		}
-
-		if (calibration_step == 2 || calibration_step == 0) {
-			handler.removeCallbacks(runnable);
-		} else {
-			handler.removeCallbacks(runnable);
-			handler.postDelayed(runnable, UPDATE_TIMEOUT_PERIOD);
+			else if (calibration_step == 1)
+				btnStep.setText(R.string.button_setup_send);
 		}
 	}
 
-	private void processOrientation(String message) {
-		if (message.contains("level"))
-			calibration_step = 1;
-		else if (message.contains("LEFT"))
-			calibration_step = 2;
-
-		String msg = message.replace("any key.", "'Next'");
-		relayInstructions(msg);
-
-		updateDescription(calibration_step);
-	}
-
-	private Runnable runnable = new Runnable() {
-		@Override
-		public void run() {
-			handler.removeCallbacks(this);
-			handler.postDelayed(this, UPDATE_TIMEOUT_PERIOD);
-		}
-	};
 
 	private void relayInstructions(String instructions){
 		final Activity activity = getActivity();
@@ -251,7 +201,18 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 				.sendBroadcast(new Intent(TTSNotificationProvider.ACTION_SPEAK_MESSAGE)
 						.putExtra(TTSNotificationProvider.EXTRA_MESSAGE_TO_SPEAK, instructions));
 
-		Toast.makeText(context, instructions, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, instructions, Toast.LENGTH_SHORT).show();
+	}
+
+	private void processCalibrationStep(int step) {
+		if (step == 0) {
+			startCalibration();
+		} else if (step == 1) {
+			sendCalibration();
+			Toast.makeText(getActivity(),"校准完成",Toast.LENGTH_SHORT).show();
+			calibration_step = 0;
+			updateDescription(calibration_step);
+		}
 	}
 
 	private void sendCalibration() {

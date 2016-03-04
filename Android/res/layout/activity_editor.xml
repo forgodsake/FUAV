@@ -49,7 +49,7 @@
         android:id="@+id/show_hide_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/arrow_hide"
+        android:src="@drawable/btn_contraction_n"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 
@@ -68,6 +68,13 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/button_take_off" />
+
+        <Button
+            android:id="@+id/button_land"
+            android:visibility="gone"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_land" />
 
         <Button
             android:id="@+id/button_go_home"

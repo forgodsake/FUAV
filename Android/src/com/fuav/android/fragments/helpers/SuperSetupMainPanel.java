@@ -111,15 +111,8 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 	}
 
 	protected SetupSidePanel getInitialPanel() {
-
-		if (parameters != null && !parameters.isParameterDownloaded()
-				&& drone.getMavClient().isConnected()) {
-			downloadCalibrationData();
-		} else {
-			sidePanel = getDefaultPanel();
-			((SetupRadioFragment) getParentFragment()).changeSidePanel(sidePanel);
-
-		}
+		sidePanel = getDefaultPanel();
+		((SetupRadioFragment) getParentFragment()).changeSidePanel(sidePanel);
 		return sidePanel;
 	}
 
@@ -145,15 +138,8 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements CalP
 		sidePanel = getProgressPanel(true);
 
 		updateCalibrationData();
-//		parameters.sendCalibrationParameters();
 	}
 
-	private void downloadCalibrationData() {
-		if (parameters == null || !drone.getMavClient().isConnected())
-			return;
-		sidePanel = getProgressPanel(false);
-		parameters.getCalibrationParameters(drone);
-	}
 
 	protected int getSpinnerIndexFromValue(int value, int[] valueList) {
 		for (int i = 0; i < valueList.length; i++) {

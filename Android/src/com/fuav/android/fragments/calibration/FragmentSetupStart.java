@@ -1,5 +1,9 @@
 package com.fuav.android.fragments.calibration;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +14,38 @@ import android.widget.TextView;
 
 import com.fuav.android.R;
 import com.fuav.android.fragments.SetupRadioFragment;
+import com.o3dr.android.client.Drone;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.property.State;
 
 public class FragmentSetupStart extends SetupSidePanel {
 
+	private static final IntentFilter intentFilter = new IntentFilter();
+	static {
+		intentFilter.addAction(AttributeEvent.STATE_CONNECTED);
+		intentFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
+	}
+
+	private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			final String action = intent.getAction();
+			switch (action) {
+				case AttributeEvent.STATE_CONNECTED:
+						btnStep.setEnabled(true);
+					break;
+				case AttributeEvent.STATE_DISCONNECTED:
+					//Reset the screen, and disable the calibration button
+					btnStep.setEnabled(false);
+					break;
+			}
+		}
+	};
+
 	private TextView textTitle;
 	private TextView textDesc;
+	private Button btnStep;
 	private int titleId;
 	private int descId;
 
@@ -33,8 +64,8 @@ public class FragmentSetupStart extends SetupSidePanel {
 		if (descId != 0)
 			textDesc.setText(descId);
 
-		final Button btnStart = (Button) view.findViewById(R.id.buttonStart);
-		btnStart.setOnClickListener(new OnClickListener() {
+		btnStep = (Button) view.findViewById(R.id.buttonStart);
+		btnStep.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (setupFragment != null) {
@@ -60,4 +91,20 @@ public class FragmentSetupStart extends SetupSidePanel {
 			textTitle.setText(idTitle);
 	}
 
+	@Override
+	public void onApiConnected() {
+		Drone drone = getDrone();
+		State droneState = drone.getAttribute(AttributeType.STATE);
+		if (drone.isConnected() && !droneState.isFlying()) {
+			btnStep.setEnabled(true);
+		} else {
+			btnStep.setEnabled(false);
+		}
+		getBroadcastManager().registerReceiver(broadcastReceiver, intentFilter);
+	}
+
+	@Override
+	public void onApiDisconnected() {
+		getBroadcastManager().unregisterReceiver(broadcastReceiver);
+	}
 }

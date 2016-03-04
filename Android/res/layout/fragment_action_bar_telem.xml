@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_weight="2.2">
 
         <ImageView
             android:layout_width="30dp"
@@ -36,7 +36,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.8">
+        android:layout_weight="1.6">
 
         <ImageView
             android:layout_width="30dp"
@@ -53,7 +53,7 @@
             android:text="@string/empty_content"
             android:textSize="@dimen/info_bar_text_size"
             android:textColor="#FFFFFF"
-            tools:text="3D" />
+            tools:text="NOFIX" />
     </FrameLayout>
 
     <FrameLayout
@@ -113,7 +113,7 @@
             android:id="@+id/bar_warning"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:singleLine="true"
             android:ellipsize="marquee"
@@ -121,7 +121,7 @@
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:textSize="@dimen/info_bar_text_size"
-            android:background="#66008B8B"
+            android:background="#00C5CD"
             tools:text="No GPS signal,please check" />
     </FrameLayout>
 

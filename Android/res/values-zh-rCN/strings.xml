@@ -186,7 +186,9 @@
     <string name="setup_radio_cal_title">开始校准</string>
     <string name="setup_radio_cal_desc">点击校准开始遥控校准。确保遥控发射机开关已\'开\'并在发送数据。</string>
     <string name="setup_radio_title_minmax">设定最小&amp;最大值</string>
+    <string name="setup_radio_title_middle">设定中间值</string>
     <string name="setup_radio_title_complete">校准完成</string>
+    <string name="setup_radio_desc_middle">将油门摇杆拨至最低位置，保持其他拨动开关、控制杆、旋钮至默认位置。</string>
     <string name="setup_radio_desc_minmax">将摇杆在整个行程范围内移动数次，并拨动开关、控制杆、旋钮至全部可能的位置。</string>
     <string name="setup_radio_desc_complete">遥控校准完成。按\'保存\'上传数据至模型。</string>
 

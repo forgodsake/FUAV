@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.fuav.android.R;
 import com.fuav.android.dialogs.EditInputDialog;
@@ -29,9 +31,17 @@ public class MapPreferencesActivity extends FragmentActivity implements EditInpu
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+
 		super.onCreate(savedInstanceState);
+
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
+
 		setContentView(R.layout.activity_map_preferences);
+
 		handleIntent(getIntent());
 	}
 

@@ -21,9 +21,13 @@ import com.fuav.android.utils.analytics.GAUtils;
 import com.google.android.gms.analytics.HitBuilders;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
+import com.o3dr.android.client.apis.FollowApi;
+import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.property.GuidedState;
+import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
 
@@ -32,16 +36,6 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
     private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
 
     private static final IntentFilter eventFilter = new IntentFilter();
-
-    private void updateFlightModeButtons() {
-    }
-
-    private void setupButtonsByFlightState() {
-    }
-
-    private void updateFollowButton() {
-    }
-
 
     static {
         eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
@@ -145,13 +139,92 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         }
     };
 
+    private void setupButtonsForArmed() {
+        button_take_off.setVisibility(View.GONE);
+        button_land.setVisibility(View.VISIBLE);
+    }
 
+    private void setupButtonsForDisarmed() {
+        button_take_off.setVisibility(View.VISIBLE);
+        button_land.setVisibility(View.GONE);
+    }
+
+    private void updateFlightModeButtons() {
+        initBackground();
+
+        State droneState = getDrone().getAttribute(AttributeType.STATE);
+        if (droneState == null)
+            return;
+
+        final VehicleMode flightMode = droneState.getVehicleMode();
+        if (flightMode == null)
+            return;
+
+        switch (flightMode) {
+
+            case COPTER_GUIDED:
+                final Drone drone = getDrone();
+                final GuidedState guidedState = drone.getAttribute(AttributeType.GUIDED_STATE);
+                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+                if (guidedState.isInitialized() && !followState.isEnabled()) {
+                    button_hover.setActivated(true);
+                }
+                break;
+
+            case COPTER_BRAKE:
+                button_hover.setActivated(true);
+                break;
+
+            case COPTER_RTL:
+                button_go_home.setActivated(true);
+                break;
+
+            case COPTER_LAND:
+                button_land.setActivated(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setupButtonsByFlightState() {
+        final State droneState = getDrone().getAttribute(AttributeType.STATE);
+        if (droneState.isArmed()) {
+            setupButtonsForArmed();
+            if (droneState.isFlying()) {
+//                    setupButtonsForFlying();
+            } else {
+
+            }
+        } else {
+            setupButtonsForDisarmed();
+        }
+    }
+
+    private void updateFollowButton() {
+        FollowState followState = getDrone().getAttribute(AttributeType.FOLLOW_STATE);
+        if (followState == null)
+            return;
+
+        switch (followState.getState()) {
+            case FollowState.STATE_START:
+                break;
+
+            case FollowState.STATE_RUNNING:
+                button_follow_me.setActivated(true);
+                break;
+
+            default:
+                button_follow_me.setActivated(false);
+                break;
+        }
+    }
 
     private Button button_take_off;
+    private Button button_land;
     private Button button_go_home;
     private Button button_hover;
     private Button button_follow_me;
-    private int index= 0;
 
 
     public VideoControlCompFragment() {
@@ -172,6 +245,8 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
 
         button_take_off= (Button) view.findViewById(R.id.button_take_off);
         button_take_off.setOnClickListener(this);
+        button_land= (Button) view.findViewById(R.id.button_land);
+        button_land.setOnClickListener(this);
         button_go_home= (Button) view.findViewById(R.id.button_go_home);
         button_go_home.setOnClickListener(this);
         button_hover= (Button) view.findViewById(R.id.button_hover);
@@ -186,11 +261,10 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         if(DroneManager.getDrone()!=null){
             switch (v.getId()){
                 case R.id.button_take_off:
-                    if(index%2==0){
-                        getArmingConfirmation();
-                    }else{
-                        getLandConfirmation();
-                    }
+                    getArmingConfirmation();
+                    break;
+                case R.id.button_land:
+                    getLandConfirmation();
                     break;
                 case R.id.button_go_home:
                     getGoHomeConfirmation();
@@ -231,11 +305,6 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         return false;
     }
 
-    private void initBackground() {
-        button_go_home.setBackgroundResource(R.drawable.button_go_home);
-        button_hover.setBackgroundResource(R.drawable.button_hover);
-    }
-
     private void getArmingConfirmation() {
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
             @Override
@@ -243,9 +312,6 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
                 getDrone().arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
                 ControlApi.getApi(getDrone()).takeoff(takeOffAltitude, null);
-                initBackground();
-                button_take_off.setBackgroundResource(R.drawable.button_land);
-                index++;
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide To Arm");
@@ -255,9 +321,7 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("GoHome", new Runnable() {
             @Override
             public void run() {
-                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
-                initBackground();
-                button_go_home.setBackgroundResource(R.drawable.go_home_on);
+                VehicleApi.getApi(getDrone()).setVehicleMode(VehicleMode.COPTER_RTL);
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide To GoHome");
@@ -270,12 +334,9 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
                 final Drone drone = getDrone();
                 final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
                 if (followState.isEnabled()) {
-                    drone.disableFollowMe();
+                    FollowApi.getApi(drone).disableFollowMe();
                 }
-
-                drone.pauseAtCurrentLocation();
-                initBackground();
-                button_hover.setBackgroundResource(R.drawable.hover_on);
+                ControlApi.getApi(drone).pauseAtCurrentLocation(null);
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide To Hover");
@@ -285,10 +346,7 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Land off", new Runnable() {
             @Override
             public void run() {
-                getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
-                initBackground();
-                button_take_off.setBackgroundResource(R.drawable.button_take_off);
-                index++;
+                VehicleApi.getApi(getDrone()).setVehicleMode(VehicleMode.COPTER_LAND);
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide to Land off");
@@ -298,12 +356,15 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Folloe Me", new Runnable() {
             @Override
             public void run() {
-                button_follow_me.setBackgroundResource(R.drawable.follow_me_on);
                 toggleFollowMe();
-                initBackground();
-                index++;
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide to Folloe Me");
+    }
+
+    private void initBackground() {
+        button_go_home.setActivated(false);
+        button_land.setActivated(false);
+        button_hover.setActivated(false);
     }
 }

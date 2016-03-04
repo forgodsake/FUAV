@@ -10,6 +10,12 @@
             android:layout_height="50dp"
             android:background="@drawable/button_take_off"/>
         <Button
+            android:id="@+id/button_land"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:background="@drawable/button_land"/>
+        <Button
             android:id="@+id/button_go_home"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -58,11 +58,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
+import com.o3dr.android.client.apis.FollowApi;
+import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
+import com.o3dr.services.android.lib.drone.property.GuidedState;
+import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
 
@@ -140,10 +144,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 case AttributeEvent.STATE_CONNECTED:
                 case AttributeEvent.STATE_DISCONNECTED:
                 case AttributeEvent.STATE_UPDATED:
+                    setupButtonsByFlightState();
                     break;
                 case AttributeEvent.TYPE_UPDATED:
                     break;
                 case AttributeEvent.STATE_VEHICLE_MODE:
+                    updateFlightModeButtons();
                     break;
 
                 case AttributeEvent.FOLLOW_START:
@@ -206,6 +212,71 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
     };
 
+    private void updateFlightModeButtons() {
+        initBackground();
+
+        State droneState = getDrone().getAttribute(AttributeType.STATE);
+        if (droneState == null)
+            return;
+
+        final VehicleMode flightMode = droneState.getVehicleMode();
+        if (flightMode == null)
+            return;
+
+        switch (flightMode) {
+            case COPTER_AUTO:
+                button_write.setActivated(true);
+                break;
+
+            case COPTER_GUIDED:
+                final Drone drone = getDrone();
+                final GuidedState guidedState = drone.getAttribute(AttributeType.GUIDED_STATE);
+                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+                if (guidedState.isInitialized() && !followState.isEnabled()) {
+                    button_hover.setActivated(true);
+                }
+                break;
+
+            case COPTER_BRAKE:
+                button_hover.setActivated(true);
+                break;
+
+            case COPTER_RTL:
+                button_go_home.setActivated(true);
+                break;
+
+            case COPTER_LAND:
+                button_land.setActivated(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setupButtonsByFlightState() {
+        final State droneState = getDrone().getAttribute(AttributeType.STATE);
+            if (droneState.isArmed()) {
+                setupButtonsForArmed();
+                if (droneState.isFlying()) {
+//                    setupButtonsForFlying();
+                } else {
+
+                }
+            } else {
+                setupButtonsForDisarmed();
+            }
+    }
+
+    private void setupButtonsForArmed() {
+        button_take_off.setVisibility(View.GONE);
+        button_land.setVisibility(View.VISIBLE);
+    }
+
+    private void setupButtonsForDisarmed() {
+        button_take_off.setVisibility(View.VISIBLE);
+        button_land.setVisibility(View.GONE);
+    }
+
     /**
      * Used to provide access and interact with the
      * {@link com.fuav.android.proxy.mission.MissionProxy} object on the Android
@@ -222,6 +293,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private FragmentManager fragmentManager;
     private ImageView showhide;
     private Button button_take_off;
+    private Button button_land;
     private Button button_go_home;
     private Button button_hover;
     private Button button_write;
@@ -300,6 +372,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         showhide.setOnClickListener(this);
         button_take_off= (Button) findViewById(R.id.button_take_off);
         button_take_off.setOnClickListener(this);
+        button_land= (Button) findViewById(R.id.button_land);
+        button_land.setOnClickListener(this);
         button_go_home= (Button) findViewById(R.id.button_go_home);
         button_go_home.setOnClickListener(this);
         button_hover= (Button) findViewById(R.id.button_hover);
@@ -369,9 +443,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         missionProxy = dpApp.getMissionProxy();
         if (missionProxy != null) {
             missionProxy.selection.addSelectionUpdateListener(this);
-
         }
 
+        setupButtonsByFlightState();
+        updateFlightModeButtons();
         updateMissionLength();
         getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
     }
@@ -407,16 +482,17 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 if(showhidearrow%2==0){
                     setGone(getVideoView());
                     setGone(R.id.video_control_view);
-                    showhide.setImageResource(R.drawable.arrow_show);
                 }else{
                     setVisible(getVideoView());
                     setVisible(R.id.video_control_view);
-                    showhide.setImageResource(R.drawable.arrow_hide);
                 }
                 showhidearrow++;
                 break;
             case R.id.button_take_off:
                 confirmConnect(R.id.button_take_off);
+                break;
+            case R.id.button_land:
+                confirmConnect(R.id.button_land);
                 break;
             case R.id.button_go_home:
                 confirmConnect(R.id.button_go_home);
@@ -512,11 +588,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         if(DroneManager.getDrone()!=null){
             switch (id){
                 case R.id.button_take_off:
-                    if(index%2==0){
-                        getArmingConfirmation();
-                    }else{
-                        getLandConfirmation();
-                    }
+                    getArmingConfirmation();
+                    break;
+                case R.id.button_land:
+                    getLandConfirmation();
                     break;
                 case R.id.button_go_home:
                     getGoHomeConfirmation();
@@ -525,7 +600,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     getHoverConfirmation();
                     break;
                 case R.id.button_write:
-                    initBackground();
+                    getAutoFlyConfirmation();
                     break;
                 default:
                     break;
@@ -907,9 +982,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 getDrone().arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
                 ControlApi.getApi(getDrone()).takeoff(takeOffAltitude, null);
-                initBackground();
-                button_take_off.setBackgroundResource(R.drawable.button_land);
-                index++;
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");
@@ -919,9 +991,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("GoHome", new Runnable() {
             @Override
             public void run() {
-                getDrone().changeVehicleMode(VehicleMode.COPTER_RTL);
-                initBackground();
-                button_go_home.setBackgroundResource(R.drawable.go_home_on);
+                VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_RTL);
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To GoHome");
@@ -934,12 +1004,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 final Drone drone = getDrone();
                 final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
                 if (followState.isEnabled()) {
-                    drone.disableFollowMe();
+                    FollowApi.getApi(drone).disableFollowMe();
                 }
-
-                drone.pauseAtCurrentLocation();
-                initBackground();
-                button_hover.setBackgroundResource(R.drawable.hover_on);
+                ControlApi.getApi(drone).pauseAtCurrentLocation(null);
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Hover");
@@ -949,18 +1016,26 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Land off", new Runnable() {
             @Override
             public void run() {
-                getDrone().changeVehicleMode(VehicleMode.COPTER_LAND);
-                initBackground();
-                button_take_off.setBackgroundResource(R.drawable.button_take_off);
-                index++;
+                VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_LAND);
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
+    }
+
+    private void getAutoFlyConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Auto Fly", new Runnable() {
+            @Override
+            public void run() {
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
     }
 
     private void initBackground() {
-        button_go_home.setBackgroundResource(R.drawable.button_go_home);
-        button_hover.setBackgroundResource(R.drawable.button_hover);
+        button_go_home.setActivated(false);
+        button_land.setActivated(false);
+        button_hover.setActivated(false);
+        button_write.setActivated(false);
     }
 
 }

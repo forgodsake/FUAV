@@ -89,4 +89,13 @@ public class FragmentSetupProgress extends SetupSidePanel {
 			textTitle.setText(idTitle);
 	}
 
+	@Override
+	public void onApiConnected() {
+
+	}
+
+	@Override
+	public void onApiDisconnected() {
+
+	}
 }
