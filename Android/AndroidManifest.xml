@@ -198,8 +198,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.VideoPlayActivity"></activity>
-        <activity android:name=".activities.PicPlayActivity"></activity>
+        <activity android:name=".activities.VideoPlayActivity"/>
+        <activity android:name=".activities.PicPlayActivity"/>
     </application>
 
 </manifest>

@@ -121,7 +121,7 @@
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:textSize="@dimen/info_bar_text_size"
-            android:background="#00C5CD"
+            android:background="#008B8B"
             tools:text="No GPS signal,please check" />
     </FrameLayout>
 

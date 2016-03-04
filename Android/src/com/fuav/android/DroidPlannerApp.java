@@ -11,7 +11,6 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.crashlytics.android.Crashlytics;
@@ -354,9 +353,9 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 
     @Override
     public void onDroneConnectionFailed(ConnectionResult result) {
-        String errorMsg = result.getErrorMessage();
-        Toast.makeText(getApplicationContext(), "Connection failed: " + errorMsg,
-                Toast.LENGTH_LONG).show();
+//        String errorMsg = result.getErrorMessage();
+//        Toast.makeText(getApplicationContext(), "Connection failed: " + errorMsg,
+//                Toast.LENGTH_LONG).show();
 
         lbm.sendBroadcast(new Intent(ACTION_DRONE_CONNECTION_FAILED)
                 .putExtra(EXTRA_CONNECTION_FAILED_ERROR_CODE, result.getErrorCode())

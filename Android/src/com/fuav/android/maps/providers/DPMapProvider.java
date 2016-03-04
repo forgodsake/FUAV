@@ -2,11 +2,10 @@ package com.fuav.android.maps.providers;
 
 
 import com.fuav.android.maps.DPMap;
+import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
 import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
-import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapPrefFragment;
-import com.google.android.gms.maps.GoogleMap;
 
 /**
  * Contains a listing of the various map providers supported, and implemented in
@@ -17,6 +16,18 @@ public enum DPMapProvider {
 	 * Provide access to google map v2. Requires the google play services.
 	 */
 	GOOGLE_MAP {
+		@Override
+		public DPMap getMapFragment() {
+			return new GoogleMapFragment();
+		}
+
+		@Override
+		public MapProviderPreferences getMapProviderPreferences() {
+			return new GoogleMapPrefFragment();
+		}
+	},
+
+	高德地图 {
 		@Override
 		public DPMap getMapFragment() {
 			return new GoogleMapFragment();

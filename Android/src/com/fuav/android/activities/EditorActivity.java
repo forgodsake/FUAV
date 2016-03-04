@@ -512,11 +512,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 float xscale = xtotal/x;
                 float yscale = ytotal/y;
                 if (index%2==0){
-                    if(getVideoView()==R.id.video_view){
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(800);//设置动画持续时间
+                        animation.setDuration(500);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
@@ -528,7 +527,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setGone(R.id.editortools);
                                 setGone(R.id.plane_control_view);
 
-                                if(isSupportGooglePlay()) {
+                                if(getVideoView()==R.id.video_view2||(isSupportGooglePlay())){
                                     getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
                                 }else {
                                     getSupportFragmentManager().beginTransaction().replace(getVideoView(),new BlankFragment()).commit();
@@ -537,27 +536,19 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
                                 showVideo = false;
                             }
-                        },800);
-                    }else{
-                        setGone(R.id.location_button_container);
-                        setGone(R.id.editortools);
-                        setGone(R.id.plane_control_view);
-                        getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
-                        showVideo = false;
-                    }
+                        },500);
                 }else{
-                    if(getVideoView()==R.id.video_view){
+
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(800);//设置动画持续时间
+                        animation.setDuration(500);//设置动画持续时间
                         findViewById(getVideoView()).startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-                                if(!isSupportGooglePlay()) {
+                                if((getVideoView()==R.id.video_view&&!isSupportGooglePlay())) {
                                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
                                 }
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
@@ -566,15 +557,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setVisible(R.id.plane_control_view);
                                 showVideo = true;
                             }
-                        },800);
-                    }else{
-                        getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
-                        setVisible(R.id.location_button_container);
-                        setVisible(R.id.editortools);
-                        setVisible(R.id.plane_control_view);
-                        showVideo = true;
-                    }
+                        },500);
                 }
                 index++;
                 break;
