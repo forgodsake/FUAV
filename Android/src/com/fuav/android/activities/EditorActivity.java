@@ -300,8 +300,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     private TextView infoView;
 
-    private final Handler handler = new Handler();
-
     /**
      * If the mission was loaded from a file, the filename is stored here.
      */
@@ -363,11 +361,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         gestureMapFragment.setOnPathFinishedListener(this);
         openActionDrawer();
 
-        setVisible();
-        if (findViewById(R.id.video_view2).getVisibility()==View.VISIBLE){
-            fragmentManager.beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-        }
-
         showhide= (ImageView) findViewById(R.id.show_hide_arrow);
         showhide.setOnClickListener(this);
         button_take_off= (Button) findViewById(R.id.button_take_off);
@@ -390,28 +383,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public String getMapName(){
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
         return pre.getMapProviderName();
-    }
-
-    public void setVisible(){
-        if(getMapName().equals("GOOGLE_MAP")){
-            findViewById(R.id.video_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.video_view2).setVisibility(View.GONE);
-            findViewById(R.id.show_hide_arrow).setVisibility(View.VISIBLE);
-        }else{
-            findViewById(R.id.video_view2).setVisibility(View.VISIBLE);
-            findViewById(R.id.video_view).setVisibility(View.GONE);
-            findViewById(R.id.show_hide_arrow).setVisibility(View.GONE);
-        }
-    }
-
-    public int getVideoView(){
-        int i ;
-        if(getMapName().equals("GOOGLE_MAP")){
-            i = R.id.video_view;
-        }else{
-            i = R.id.video_view2;
-        }
-        return i;
     }
 
     public boolean isSupportGooglePlay(){
@@ -480,10 +451,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 break;
             case R.id.show_hide_arrow:
                 if(showhidearrow%2==0){
-                    setGone(getVideoView());
+                    setGone(R.id.video_view);
                     setGone(R.id.video_control_view);
                 }else{
-                    setVisible(getVideoView());
+                    setVisible(R.id.video_view);
                     setVisible(R.id.video_control_view);
                 }
                 showhidearrow++;
@@ -507,8 +478,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 WindowManager manager = getWindowManager();
                 float xtotal = manager.getDefaultDisplay().getWidth();
                 float ytotal = manager.getDefaultDisplay().getHeight();
-                float x = findViewById(getVideoView()).getWidth();
-                float y = findViewById(getVideoView()).getHeight();
+                float x = findViewById(R.id.video_view).getWidth();
+                float y = findViewById(R.id.video_view).getHeight();
                 float xscale = xtotal/x;
                 float yscale = ytotal/y;
                 if (index%2==0){
@@ -519,7 +490,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-                        findViewById(getVideoView()).startAnimation(animation);
+                        findViewById(R.id.video_view).startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -527,12 +498,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setGone(R.id.editortools);
                                 setGone(R.id.plane_control_view);
 
-                                if(getVideoView()==R.id.video_view2||(isSupportGooglePlay())){
-                                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new FlightMapFragment()).commit();
+                                if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new FlightMapFragment()).commit();
                                 }else {
-                                    getSupportFragmentManager().beginTransaction().replace(getVideoView(),new BlankFragment()).commit();
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
                                 }
-                                findViewById(R.id.editor_map_fragment).setVisibility(View.VISIBLE);
+
+                                if(findViewById(R.id.editor_map_fragment).getVisibility()==View.GONE) {
+                                    setVisible(R.id.editor_map_fragment);
+                                }
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
                                 showVideo = false;
                             }
@@ -543,12 +517,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
                         animation.setDuration(500);//设置动画持续时间
-                        findViewById(getVideoView()).startAnimation(animation);
+                        findViewById(R.id.video_view).startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-                                if((getVideoView()==R.id.video_view&&!isSupportGooglePlay())) {
+                                getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new VideoFragment()).commit();
+                                if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
                                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
                                 }
                                 getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
@@ -625,11 +599,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         setupTool();
 
         findViewById(R.id.video_control_view).setOnClickListener(this);
-        setVisible();
+
         if (showVideo){
-            if (findViewById(R.id.video_view).getVisibility()==View.VISIBLE){
-                getSupportFragmentManager().beginTransaction().replace(getVideoView(),new VideoFragment()).commit();
-            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new VideoFragment()).commit();
         }
 
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);

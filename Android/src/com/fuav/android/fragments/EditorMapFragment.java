@@ -5,12 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.o3dr.services.android.lib.coordinate.LatLong;
-import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
-import com.o3dr.services.android.lib.drone.property.Home;
 
 import com.fuav.android.activities.interfaces.OnEditorInteraction;
 import com.fuav.android.maps.DPMap;
@@ -18,6 +12,10 @@ import com.fuav.android.maps.MarkerInfo;
 import com.fuav.android.proxy.mission.item.markers.MissionItemMarkerInfo;
 import com.fuav.android.proxy.mission.item.markers.PolygonMarkerInfo;
 import com.fuav.android.utils.prefs.AutoPanMode;
+import com.o3dr.services.android.lib.coordinate.LatLong;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
+import com.o3dr.services.android.lib.drone.property.Home;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,12 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 		DPMap.OnMarkerDragListener, DPMap.OnMapClickListener, DPMap.OnMarkerClickListener {
 
 	private OnEditorInteraction editorListener;
+
+	/**
+	 * The map should zoom on the user location the first time it's acquired. This flag helps
+	 * enable the behavior.
+	 */
+	private static boolean didZoomOnUserLocation = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
@@ -37,6 +41,22 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 		mMapFragment.setOnMapLongClickListener(this);
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mMapFragment.selectAutoPanMode(mAppPrefs.getAutoPanMode());
+		if (!didZoomOnUserLocation) {
+			super.goToMyLocation();
+			didZoomOnUserLocation = true;
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mMapFragment.selectAutoPanMode(AutoPanMode.DISABLED);
 	}
 
 	@Override
@@ -107,12 +127,13 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public boolean setAutoPanMode(AutoPanMode target) {
-		if (target == AutoPanMode.DISABLED)
-			return true;
+		// Update the map panning preferences.
+		if (mAppPrefs != null)
+			mAppPrefs.setAutoPanMode(target);
 
-		Toast.makeText(getActivity(), "Auto pan is not supported on this map.", Toast.LENGTH_LONG)
-				.show();
-		return false;
+		if (mMapFragment != null)
+			mMapFragment.selectAutoPanMode(target);
+		return true;
 	}
 
 	@Override

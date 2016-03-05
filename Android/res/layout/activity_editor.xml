@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     >
-
-    <FrameLayout
-        android:id="@+id/video_view2"
-        android:layout_width="160dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"/>
     <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"

@@ -48,7 +48,6 @@ public class DeviceFragment extends Fragment {
         fragments.add(new DeviceSeraphiFragment());
         fragments.add(new DeviceSmargleFragment());
         fragments.add(new DeviceGimbalFragment());
-
     }
 
 

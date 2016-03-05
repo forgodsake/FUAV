@@ -52,6 +52,21 @@ public class DroneHelper {
 		return new LatLong(d[0],d[1]);
 	}
 
+	public static com.amap.api.maps2d.model.LatLng CoordToGaodeLatLang(LatLong coord)
+	{
+		double d[] = new double[2];
+		transform(coord.getLatitude(),coord.getLongitude(),d);
+		return new com.amap.api.maps2d.model.LatLng(d[0],d[1]);
+	}
+
+	public static LatLong GaodeLatLngToCoord(com.amap.api.maps2d.model.LatLng point)
+	{
+		double d[] = new double[2];
+		untransform(point.latitude, point.longitude, d);
+		return new LatLong(d[0],d[1]);
+	}
+
+
 	public static void transformBaidu(double wgLat, double wgLon, double[] latlng)
 	{
 		double d[] = new double[2];

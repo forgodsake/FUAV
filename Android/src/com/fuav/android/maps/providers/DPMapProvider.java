@@ -2,6 +2,7 @@ package com.fuav.android.maps.providers;
 
 
 import com.fuav.android.maps.DPMap;
+import com.fuav.android.maps.providers.amap.AMapFragment;
 import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
 import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
@@ -30,7 +31,7 @@ public enum DPMapProvider {
 	高德地图 {
 		@Override
 		public DPMap getMapFragment() {
-			return new GoogleMapFragment();
+			return new AMapFragment();
 		}
 
 		@Override

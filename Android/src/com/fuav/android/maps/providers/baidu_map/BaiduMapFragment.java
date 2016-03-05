@@ -124,7 +124,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
     private DPMap.OnMapLongClickListener mMapLongClickListener;
     private DPMap.OnMarkerClickListener mMarkerClickListener;
     private DPMap.OnMarkerDragListener mMarkerDragListener;
-    private LocationListener mLocationListener;
 
     protected boolean useMarkerClickAsMapClick = false;
 
@@ -342,7 +341,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
                     LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
                             .unregisterReceiver(eventReceiver);
                     break;
-
                 case USER:
 
                     break;
@@ -477,7 +475,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
         marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
         marker.setPosition(position);
         marker.setRotate(-(markerInfo.getRotation()));
-        Log.v("123",String.format("%f",markerInfo.getRotation()));
         marker.setTitle(markerInfo.getSnippet());
         marker.setTitle(markerInfo.getTitle());
         marker.setDraggable(isDraggable);
@@ -560,8 +557,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
 
     @Override
     public void setLocationListener(LocationListener listener) {
-        mLocationListener = listener;
-
 
     }
 
@@ -694,7 +689,7 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
         if(baiduMap == null)
             return;
 
-        MapStatus camera = getBaiduMap().getMapStatus();
+        MapStatus camera = baiduMap.getMapStatus();
         mAppPrefs.prefs.edit()
                 .putFloat("BAIDU_LAT", (float) camera.target.latitude)
                 .putFloat("BAIDU_LNG", (float) camera.target.longitude)

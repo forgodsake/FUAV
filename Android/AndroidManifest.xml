@@ -74,6 +74,10 @@
             android:name="io.fabric.ApiKey"
             android:value="5ee4471ba6e8cd8858006c8166469bba33d64b2f" />
 
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="6f5388bc1fd6d88e2cf23c8922c86f46"/>
+
         <activity
             android:name=".activities.FlightActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -109,6 +113,7 @@
             android:name=".activities.helpers.MapPreferencesActivity"
             android:label="@string/activity_title_map_provider_preferences"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Transparent"
             android:parentActivityName=".activities.SettingsActivity">
 
             <!-- Parent activity meta-data to support API level 7+ -->
@@ -130,6 +135,15 @@
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".activities.WelcomeActivity" />
         <activity android:name=".activities.SplashActivity" />
+        <activity android:name=".activities.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.VideoPlayActivity"/>
+        <activity android:name=".activities.PicPlayActivity"/>
 
         <service android:name=".AppService" />
 
@@ -169,7 +183,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
+        <service android:name="com.amap.api.location.APSService"></service>
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -190,16 +204,6 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="s7uqBA4MvUs5BiZEFmKAT2V0" />
-
-        <activity android:name=".activities.HomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.VideoPlayActivity"/>
-        <activity android:name=".activities.PicPlayActivity"/>
     </application>
 
 </manifest>
