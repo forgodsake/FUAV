@@ -404,7 +404,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final View actionDrawer = getActionDrawer();
         if (actionDrawer == null)
             return;
-
     }
 
     @Override
@@ -484,9 +483,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 float yscale = ytotal/y;
                 if (index%2==0){
                         /** 设置缩放动画 */
-                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
+                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(500);//设置动画持续时间
+                        animation.setDuration(510);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
@@ -514,9 +513,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 }else{
 
                         /** 设置缩放动画 */
-                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale, 1f, yscale,
+                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(500);//设置动画持续时间
+                        animation.setDuration(510);//设置动画持续时间
                         findViewById(R.id.video_view).startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -709,12 +708,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 getString(R.string.label_enter_filename), defaultFilename, true);
 
         dialog.show(getSupportFragmentManager(), MISSION_FILENAME_DIALOG_TAG);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        gestureMapFragment.getMapFragment().saveCameraPosition();
     }
 
     private void updateMissionLength() {

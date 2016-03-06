@@ -39,6 +39,7 @@ import com.amap.api.maps2d.model.Polygon;
 import com.amap.api.maps2d.model.PolygonOptions;
 import com.amap.api.maps2d.model.Polyline;
 import com.amap.api.maps2d.model.PolylineOptions;
+import com.amap.api.maps2d.model.VisibleRegion;
 import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
 import com.fuav.android.maps.DPMap;
@@ -98,29 +99,28 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     private int maxFlightPathSize;
     private LatLng latLng;
 
-    // TODO: update the interval based on the user's current activity.
-    private static final long USER_LOCATION_UPDATE_INTERVAL = 30000; // ms
-    private static final long USER_LOCATION_UPDATE_FASTEST_INTERVAL = 10000; // ms
-    private static final float USER_LOCATION_UPDATE_MIN_DISPLACEMENT = 15; // m
-
-    private static final float GO_TO_MY_LOCATION_ZOOM = 18f;
+    private static final float GO_TO_MY_LOCATION_ZOOM = 18.6f;
 
     private static final IntentFilter eventFilter = new IntentFilter(AttributeEvent.GPS_POSITION);
 
     private final BroadcastReceiver eventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final Drone drone = getDroneApi();
-            if (!drone.isConnected())
-                return;
+            final String action = intent.getAction();
+            switch (action) {
+                case AttributeEvent.GPS_POSITION:
+                    if (mPanMode.get() == AutoPanMode.DRONE) {
+                        final Drone drone = getDroneApi();
+                        if (!drone.isConnected())
+                            return;
 
-            final Gps droneGps = drone.getAttribute(AttributeType.GPS);
-            if (droneGps == null)
-                return;
-
-            if (mPanMode.get() == AutoPanMode.DRONE && droneGps.isValid()) {
-                final LatLong droneLocation = droneGps.getPosition();
-                updateCamera(droneLocation);
+                        final Gps droneGps = drone.getAttribute(AttributeType.GPS);
+                        if (droneGps != null && droneGps.isValid()) {
+                            final LatLong droneLocation = droneGps.getPosition();
+                            updateCamera(droneLocation);
+                        }
+                    }
+                    break;
             }
         }
     };
@@ -373,7 +373,15 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
     @Override
     public VisibleMapArea getVisibleMapArea() {
-        return null;
+        final AMap map = getMap();
+        if (map == null)
+            return null;
+
+        final VisibleRegion mapRegion = map.getProjection().getVisibleRegion();
+        return new VisibleMapArea(DroneHelper.GaodeLatLngToCoord(mapRegion.farLeft),
+                DroneHelper.GaodeLatLngToCoord(mapRegion.nearLeft),
+                DroneHelper.GaodeLatLngToCoord(mapRegion.nearRight),
+                DroneHelper.GaodeLatLngToCoord(mapRegion.farRight));
     }
 
     @Override
@@ -459,7 +467,6 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
         final AutoPanMode currentMode = mPanMode.get();
         if (currentMode == target)
             return;
-
         setAutoPanMode(currentMode, target);
     }
 
@@ -573,7 +580,6 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     @Override
     public void updateMarker(MarkerInfo markerInfo, boolean isDraggable) {
         // if the drone hasn't received a gps signal yet
-        // if the drone hasn't received a gps signal yet
         final LatLong coord = markerInfo.getPosition();
         if (coord == null) {
             return;
@@ -616,7 +622,6 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
 
         marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
-
         marker.setPosition(position);
         marker.setRotateAngle(markerInfo.getRotation());
         marker.setSnippet(markerInfo.getSnippet());
@@ -737,6 +742,10 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             if (aLocation.getErrorCode() == 0) {
                 latLng = new LatLng(aLocation.getLatitude(), aLocation.getLongitude());
                 mListener.onLocationChanged(aLocation);//
+            }
+            LatLong latlong = DroneHelper.GaodeLatLngToCoord(latLng);
+            if (mPanMode.get() == AutoPanMode.USER) {
+                updateCamera(latlong, (float) (getMap().getMaxZoomLevel() - 0.4));
             }
         }
     }

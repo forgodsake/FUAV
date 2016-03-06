@@ -835,9 +835,6 @@ public class BaiduMapFragment extends SupportMapFragment implements DPMap {
                 updateCamera(latlong, (int) getBaiduMap().getMapStatus().zoom);
             }
 
-
-
-
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
