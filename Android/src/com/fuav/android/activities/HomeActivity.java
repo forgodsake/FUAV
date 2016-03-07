@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +29,6 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     private MallFragment mallFragment;
     private int index=0;
 
-
     @Override
     protected int getToolbarId() {
         return 0;
@@ -35,6 +36,11 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 横屏
         setContentView(R.layout.activity_home);

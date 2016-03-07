@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +58,12 @@ public class VideoFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position >= 0) {
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    getActivity(), view.findViewById(R.id.grid_videoview),"VIDEO");
                     Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
                     intent.putExtra("path",list.get(position));
-                    startActivity(intent);
+                    ActivityCompat.startActivity( getActivity(),intent, options.toBundle());
                 }
             }
         });
@@ -154,7 +159,7 @@ public class VideoFragment extends Fragment {
                 convertView = getLayoutInflater(null).inflate(R.layout.video_gridview_item, null);
 
                 // construct an item tag
-                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_imageview),
+                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_videoview),
                         (TextView) convertView.findViewById(R.id.grid_name));
                 convertView.setTag(viewTag);
             } else

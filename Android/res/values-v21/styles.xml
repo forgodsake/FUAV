@@ -17,4 +17,36 @@
         <item name="backgroundTint">@android:color/white</item>
     </style>
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowReenterTransition">@transition/slowexplode</item>
+        <item name="android:windowExitTransition">@transition/slowexplode</item>
+        <item name="android:windowReturnTransition">@transition/slowfade</item>
+        <item name="android:windowEnterTransition">@transition/slowfade</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/slowmove</item>
+        <item name="android:windowSharedElementExitTransition">@transition/slowmove</item>
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionMenuTextAppearance">@style/CustomActionBarTheme.ActionBar.Text</item>
+        <item name="actionMenuTextAppearance">@style/CustomActionBarTheme.ActionBar.Text</item>
+
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/DropDownItem</item>
+        <item name="spinnerDropDownItemStyle">@style/DropDownItem</item>
+
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="popupMenuStyle">@style/MyPopupMenu</item>
+
+        <item name="android:gravity">left</item>
+
+        <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
+    </style>
+
 </resources>

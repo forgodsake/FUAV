@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="108dp"
-        android:id="@+id/grid_imageview" />
+        android:id="@+id/grid_videoview" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="16dp"

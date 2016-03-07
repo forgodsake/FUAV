@@ -122,7 +122,7 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.shot_key_on:
-                SimpleDateFormat sDateFormat = new  SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                SimpleDateFormat sDateFormat = new  SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
                 String date = sDateFormat.format(new Date());
                 Player _player = VideoThread._module.getPlayer();
                 if(shot_switch_left.getVisibility()==View.VISIBLE){

@@ -3,8 +3,6 @@ package com.fuav.android.maps.providers;
 
 import com.fuav.android.maps.DPMap;
 import com.fuav.android.maps.providers.amap.AMapFragment;
-import com.fuav.android.maps.providers.baidu_map.BaiduMapFragment;
-import com.fuav.android.maps.providers.google_map.BaiduMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapPrefFragment;
 
@@ -38,17 +36,18 @@ public enum DPMapProvider {
 		public MapProviderPreferences getMapProviderPreferences() {
 			return new GoogleMapPrefFragment();
 		}
-	},
+	}
 
-	百度地图{
-		@Override
-		public DPMap getMapFragment() { return new BaiduMapFragment(); }
-
-		@Override
-		public MapProviderPreferences getMapProviderPreferences() {
-			return new BaiduMapPrefFragment();
-		}
-	};
+//	百度地图 {
+//		@Override
+//		public DPMap getMapFragment() { return new BaiduMapFragment(); }
+//
+//		@Override
+//		public MapProviderPreferences getMapProviderPreferences() {
+//			return new BaiduMapPrefFragment();
+//		}
+//	}
+ ;
 
 	/**
 	 * @return the fragment implementing the map.

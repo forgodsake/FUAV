@@ -154,9 +154,9 @@ public abstract class DrawerNavigationUI extends SuperUI implements SlidingDrawe
         int id = menuItem.getItemId();
 
         switch (id) {
-            case R.id.navigation_flight_data:
-                mNavigationIntent = new Intent(this, FlightActivity.class);
-                break;
+//            case R.id.navigation_flight_data:
+//                mNavigationIntent = new Intent(this, FlightActivity.class);
+//                break;
 
             case R.id.navigation_editor:
                 mNavigationIntent = new Intent(this, EditorActivity.class);

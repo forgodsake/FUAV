@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,17 +51,6 @@ public class PictureFragment extends Fragment {
 
         final GridView gridListView = (GridView) view.findViewById(R.id.rotate_header_grid_view);
 
-        gridListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= 0) {
-                    Intent intent = new Intent(getActivity(), PicPlayActivity.class);
-                    intent.putExtra("path",list.get(position));
-                    startActivity(intent);
-                }
-            }
-        });
-
         //获取sd卡下的图片并显示
         getPictures(Environment.getExternalStorageDirectory() + "/FUAV");
         options = new DisplayImageOptions.Builder()
@@ -68,6 +59,20 @@ public class PictureFragment extends Fragment {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
         gridListView.setAdapter(adapter);
+
+        gridListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0) {
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    getActivity(), view.findViewById(R.id.grid_imageview),"TEST");
+                    Intent intent = new Intent(getActivity(), PicPlayActivity.class);
+                    intent.putExtra("path",list.get(position));
+                    ActivityCompat.startActivity( getActivity(),intent, options.toBundle());
+                }
+            }
+        });
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.store_house_ptr_frame);
         // header
@@ -164,11 +169,12 @@ public class PictureFragment extends Fragment {
 
             if (convertView == null)
             {
-                convertView = getLayoutInflater(null).inflate(R.layout.pic_gridview_item, null);
-
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.pic_gridview_item, parent, false);
                 // construct an item tag
-                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_imageview),
-                        (TextView) convertView.findViewById(R.id.grid_name));
+                viewTag = new ItemViewTag();
+                viewTag.mIcon = (ImageView) convertView.findViewById(R.id.grid_imageview);
+                viewTag.mName = (TextView) convertView.findViewById(R.id.grid_name);
                 convertView.setTag(viewTag);
             } else
             {
@@ -187,12 +193,6 @@ public class PictureFragment extends Fragment {
         {
             protected ImageView mIcon;
             protected TextView mName;
-
-            public ItemViewTag(ImageView icon, TextView name)
-            {
-                this.mName = name;
-                this.mIcon = icon;
-            }
         }
 
     }

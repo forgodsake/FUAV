@@ -2,7 +2,6 @@ package com.fuav.android.fragments;
 
 import android.os.Bundle;
 
-import com.fuav.android.R;
 import com.fuav.android.core.MAVLink.MavLinkStreamRates;
 import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.core.drone.autopilot.MavLinkDrone;
@@ -50,15 +49,10 @@ public class SetupRadioFragment extends SuperSetupFragment {
 		return new FragmentSetupRC();
 	}
 
-	@Override
-	public int getSpinnerItems() {
-		return R.array.Setup_Radio_Menu;
-	}
-
-	@Override
-	public SetupMainPanel getMainPanel(int index) {
-		SetupMainPanel setupPanel;
-		switch (index) {
+//	@Override
+//	public SetupMainPanel getMainPanel(int index) {
+//		SetupMainPanel setupPanel;
+//		switch (index) {
 //		case 1:
 //			setupPanel = new FragmentSetupFM();
 //			break;
@@ -68,13 +62,13 @@ public class SetupRadioFragment extends SuperSetupFragment {
 //		case 3:
 //			setupPanel = new FragmentSetupSF();
 //			break;
-		case 0:
-		default:
-			setupPanel = new FragmentSetupRC();
-		}
-
-		return setupPanel;
-	}
+//		case 0:
+//		default:
+//			setupPanel = new FragmentSetupRC();
+//		}
+//
+//		return setupPanel;
+//	}
 
 	public void setupDataStreamingForRcSetup() {
 		if(drone!=null){

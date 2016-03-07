@@ -8,10 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.ConfigurationActivity;
@@ -25,8 +21,7 @@ import com.fuav.android.fragments.calibration.SetupSidePanel;
 /**
  * This fragment is used to calibrate the drone's compass, and accelerometer.
  */
-public abstract class SuperSetupFragment extends Fragment implements DroneInterfaces.OnDroneListener,
-		OnItemSelectedListener {
+public abstract class SuperSetupFragment extends Fragment implements DroneInterfaces.OnDroneListener {
 
 	private MavLinkDrone drone;
 
@@ -36,9 +31,9 @@ public abstract class SuperSetupFragment extends Fragment implements DroneInterf
 	private SetupMainPanel setupPanel;
 	private SetupSidePanel sidePanel;
 
-	public abstract int getSpinnerItems();
+//	public abstract int getSpinnerItems();
 
-	public abstract SetupMainPanel getMainPanel(int index);
+//	public abstract SetupMainPanel getMainPanel(int index);
 
 	public abstract SetupMainPanel initMainPanel();
 
@@ -64,7 +59,7 @@ public abstract class SuperSetupFragment extends Fragment implements DroneInterf
 
 		final View view = inflater.inflate(R.layout.fragment_setup, container, false);
 
-		setupLocalViews(view);
+//		setupLocalViews(view);
 
 		fragmentManager = getChildFragmentManager();
 		setupPanel = (SetupMainPanel) fragmentManager
@@ -113,47 +108,26 @@ public abstract class SuperSetupFragment extends Fragment implements DroneInterf
 	}
 
 	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		changeMainPanel(arg2);
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, MavLinkDrone drone) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void setupLocalViews(View view) {
-		Spinner spinnerSetup = (Spinner) view.findViewById(R.id.spinnerSetupType);
-		spinnerSetup.setOnItemSelectedListener(this);
-
-		final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(parentActivity,
-				getSpinnerItems(), R.layout.spinner_setup);
-
-		spinnerSetup.setAdapter(adapter);
-	}
-
-	public void changeMainPanel(int step) {
-		setupPanel = getMainPanel(step);
-		sidePanel = setupPanel.getSidePanel();
-
-		final FragmentTransaction ft = fragmentManager.beginTransaction();
-		if (setupPanel != null) {
-			ft.replace(R.id.fragment_setup_mainpanel, setupPanel);
-		}
-
-		if (sidePanel != null) {
-			ft.replace(R.id.fragment_setup_sidepanel, sidePanel);
-		}
-
-		ft.commit();
-	}
+//	public void changeMainPanel(int step) {
+//		setupPanel = getMainPanel(step);
+//		sidePanel = setupPanel.getSidePanel();
+//
+//		final FragmentTransaction ft = fragmentManager.beginTransaction();
+//		if (setupPanel != null) {
+//			ft.replace(R.id.fragment_setup_mainpanel, setupPanel);
+//		}
+//
+//		if (sidePanel != null) {
+//			ft.replace(R.id.fragment_setup_sidepanel, sidePanel);
+//		}
+//
+//		ft.commit();
+//	}
 
 	public SetupSidePanel changeSidePanel(SetupSidePanel sPanel) {
 		sidePanel = sPanel;

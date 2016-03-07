@@ -44,6 +44,7 @@
     <style name="AppTheme.Transparent">
     </style>
 
+
     <!--  Actionbar text-->
     <style name="CustomActionBarTheme.ActionBar.Text" parent="@android:style/TextAppearance">
         <item name="android:textSize">16sp</item>
