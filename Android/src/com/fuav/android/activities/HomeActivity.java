@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +25,6 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     private ImageView imDevice,imMedia,imStore,imSupport;
     private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
-    private MallFragment mallFragment;
-    private int index=0;
 
     @Override
     protected int getToolbarId() {
@@ -82,29 +79,24 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                 txDevice.setTextColor(Color.BLUE);
                 Device.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
-                index = 1;
                 break;
             case R.id.ViewMedia:
                 imMedia.setEnabled(true);
                 txMedia.setTextColor(Color.BLUE);
                 Media.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new LibraryFragment()).commit();
-                index = 2;
                 break;
             case R.id.ViewStore:
                 imStore.setEnabled(true);
-                mallFragment = new MallFragment();
                 txStore.setTextColor(Color.BLUE);
                 Store.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
-                manager.beginTransaction().replace(R.id.content,mallFragment).commit();
-                index = 3;
+                manager.beginTransaction().replace(R.id.content,new MallFragment()).commit();
                 break;
             case R.id.ViewSupport:
                 imSupport.setEnabled(true);
                 txSupport.setTextColor(Color.BLUE);
                 Support.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
                 manager.beginTransaction().replace(R.id.content,new SupportFragment()).commit();
-                index = 4;
                 break;
             default:
                 break;
@@ -129,18 +121,10 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode==KeyEvent.KEYCODE_BACK)
-        {
-            if (null!=mallFragment&&index==3){
-                WebView webView = (WebView)mallFragment.getView().findViewById(R.id.webView);
-                if(webView.canGoBack())
-                {
-                    webView.goBack();//返回上一页面
-                    return true;
-                }
-            }
-
-        }
+//        if(keyCode==KeyEvent.KEYCODE_BACK)
+//        {
+//                    return true;
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }
