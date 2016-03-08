@@ -39,7 +39,7 @@ public class VideoManager implements IpConnectionListener {
     protected static final long RECONNECT_COUNTDOWN = 1000l; //ms
 
     public static final int ARTOO_UDP_PORT = 5600;
-    private static final int UDP_BUFFER_SIZE = 1048576;
+    private static final int UDP_BUFFER_SIZE = 1500;
 
     public interface LinkListener {
         void onLinkConnected();
@@ -71,7 +71,6 @@ public class VideoManager implements IpConnectionListener {
     private final StreamRecorder streamRecorder;
 
     private int linkPort = -1;
-    boolean stopsocket = false;
 
     public VideoManager(Context context, Handler handler) {
         this.streamRecorder = new StreamRecorder(context);
@@ -89,7 +88,7 @@ public class VideoManager implements IpConnectionListener {
     }
 
     public void startDecoding(final int udpPort, final Surface surface, final DecoderListener listener) {
-//        start(udpPort, null);
+        start(udpPort, null);
 
         final Surface currentSurface = mediaCodecManager.getSurface();
         if (surface == currentSurface) {
@@ -144,7 +143,7 @@ public class VideoManager implements IpConnectionListener {
         return this.linkConn != null && this.linkConn.getConnectionStatus() == AbstractIpConnection.STATE_CONNECTED;
     }
 
-    private void start(int udpPort, LinkListener listener)  {
+    private void start(int udpPort, LinkListener listener) {
         if(this.linkConn == null || udpPort != this.linkPort){
             if(isStarted.get()){
                 stop();
@@ -162,7 +161,6 @@ public class VideoManager implements IpConnectionListener {
         this.streamRecorder.startConverterThread();
         this.linkConn.connect();
         this.linkListener = listener;
-
     }
 
     private void stop() {
@@ -172,30 +170,15 @@ public class VideoManager implements IpConnectionListener {
 
         isStarted.set(false);
 
-//        if(this.linkConn != null) {
-//            //Break the link
-//            this.linkConn.disconnect();
-//            this.linkConn = null;
-//        }
-
-//        this.linkPort = -1;
-
-        if(mediaCodecManager.thread != null && mediaCodecManager.thread.isAlive() && !mediaCodecManager.thread.isInterrupted()){
-            mediaCodecManager.thread.interrupt();
+        if(this.linkConn != null) {
+            //Break the link
+            this.linkConn.disconnect();
+            this.linkConn = null;
         }
 
-//        if (mediaCodecManager.dequeueRunner!=null){
-            mediaCodecManager.stopDecoding(mediaCodecManager.decoderListenerRef.get());
-//        }
+        this.linkPort = -1;
 
-
-        if (mediaCodecManager.socket!=null&& stopsocket == true){
-//            mediaCodecManager.socket.disconnect();
-
-            mediaCodecManager.socket.close();
-        }
-
-//        this.streamRecorder.stopConverterThread();
+        this.streamRecorder.stopConverterThread();
     }
 
     @Override
@@ -380,7 +363,7 @@ public class VideoManager implements IpConnectionListener {
         if(NO_VIDEO_OWNER.equals(currentVideoOwner)){
             Timber.d("No video owner set. Nothing to do.");
 
-                disableLocalRecording();
+            disableLocalRecording();
 
             postSuccessEvent(listener);
             return;
@@ -424,8 +407,6 @@ public class VideoManager implements IpConnectionListener {
         if(TextUtils.isEmpty(parentId))
             return;
 
-        stopsocket= true;
-
         final String videoOwner = videoOwnerId.get();
         if(NO_VIDEO_OWNER.equals(videoOwner))
             return;
@@ -434,7 +415,6 @@ public class VideoManager implements IpConnectionListener {
             Timber.d("Stopping video owned by %s", parentId);
             stopVideoStream(parentId, videoTagRef.get(), null);
         }
-
     }
 }
 

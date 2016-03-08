@@ -9,9 +9,6 @@ import android.util.Log;
 import android.view.Surface;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,7 +30,7 @@ public class MediaCodecManager {
         public void run() {
             processInputData.set(false);
             sendCompletionFlag.set(false);
-//            naluChunkAssembler.reset();
+            naluChunkAssembler.reset();
 
             if (dequeueRunner != null && dequeueRunner.isAlive()) {
                 Log.d(TAG, "Interrupting dequeue runner thread.");
@@ -93,17 +90,13 @@ public class MediaCodecManager {
     private final AtomicBoolean sendCompletionFlag = new AtomicBoolean(false);
     private final AtomicReference<Surface> surfaceRef = new AtomicReference<>();
     private final AtomicReference<MediaCodec> mediaCodecRef = new AtomicReference<>();
-    public final AtomicReference<DecoderListener> decoderListenerRef = new AtomicReference<>();
+    private final AtomicReference<DecoderListener> decoderListenerRef = new AtomicReference<>();
     private final NALUChunkAssembler naluChunkAssembler;
-
 
     private final Handler handler;
     private final StreamRecorder streamRecorder;
 
-    public DequeueCodec dequeueRunner;
-    public Thread thread ;
-    public DatagramSocket socket;
-    byte[] heartBeat = { 77, 121, 72, 101, 97, 114, 116 };
+    private DequeueCodec dequeueRunner;
 
     public MediaCodecManager(Handler handler, StreamRecorder recorder) {
         this.handler = handler;
@@ -119,23 +112,13 @@ public class MediaCodecManager {
         if (surface == null)
             throw new IllegalStateException("Surface argument must be non-null.");
 
-        if (socket==null) {
-            socket = new DatagramSocket(8041);
-        }
-
-
         if (isDecoding.compareAndSet(false, true)) {
             Log.i(TAG, "Starting decoding...");
-//            this.naluChunkAssembler.reset();
+            this.naluChunkAssembler.reset();
 
             this.decoderListenerRef.set(listener);
 
             final MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, DEFAULT_VIDEO_WIDTH, DEFAULT_VIDEO_HEIGHT);
-            //添加的定义
-            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 8388608);
-            mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
-            mediaFormat.setInteger(MediaFormat.KEY_DURATION, 20000);
-            mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10);
 
             final MediaCodec mediaCodec = MediaCodec.createDecoderByType(MIME_TYPE);
             mediaCodec.configure(mediaFormat, surface, null, 0);
@@ -143,23 +126,7 @@ public class MediaCodecManager {
 
             surfaceRef.set(surface);
             mediaCodecRef.set(mediaCodec);
-//            processInputData.set(true);
-
-            thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                   for (;;){
-                       try {
-                           DatagramPacket sendPacket = new DatagramPacket(heartBeat,heartBeat.length, InetAddress.getByName("192.168.0.1"),8041);
-                           socket.send(sendPacket);
-                       } catch (Exception e) {
-                           e.printStackTrace();
-                       }
-
-                   }
-                }
-            } );
-            thread.start();
+            processInputData.set(true);
 
             dequeueRunner = new DequeueCodec();
             dequeueRunner.start();
@@ -172,7 +139,7 @@ public class MediaCodecManager {
         this.decoderListenerRef.set(listener);
         if(!isDecoding.get()) {
             if (listener != null) {
-                    notifyDecodingEnded();
+                notifyDecodingEnded();
             }
         }
         else {
@@ -270,77 +237,43 @@ public class MediaCodecManager {
         @Override
         public void run() {
             final MediaCodec mediaCodec = mediaCodecRef.get();
-            byte[] videobytes = new byte[1048576];
-            DatagramPacket receivePacket;
-            long mCount=0;
+            if (mediaCodec == null)
+                throw new IllegalStateException("Start decoding hasn't been called yet.");
 
-                try {
-                    for (;;){
-                    receivePacket = new DatagramPacket(videobytes,videobytes.length,InetAddress.getByName("192.168.0.1"),8041);
-                    socket.receive(receivePacket);
-                    ByteBuffer[] inputBuffers = mediaCodec.getInputBuffers();
-                    byte[] videobyte = receivePacket.getData();
-                    if ((videobyte[0] != 0) || (videobyte[1] != 0) || (videobyte[2] != 0) || (videobyte[3] != 1)) {
-                        continue;
-                    }
-                    int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
-                    if (inputBufferIndex >= 0) {
-                        ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
-                        inputBuffer.clear();
-                        inputBuffer.put(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
-                        mediaCodec.queueInputBuffer(inputBufferIndex, 0, receivePacket.getLength(), mCount * 100000/ 3, 0);
-                        mCount++;
-                    }
-                        MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-                        int outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo,0);
-                        while (outputBufferIndex >= 0) {
-                            mediaCodec.releaseOutputBuffer(outputBufferIndex, true);
-                            outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
+            Log.i(TAG, "Starting dequeue codec runner.");
+
+            final MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+            decodedFirstFrame.set(false);
+            boolean doRender;
+            boolean continueDequeue = true;
+            try {
+                while (continueDequeue) {
+                    final int index = mediaCodec.dequeueOutputBuffer(info, -1);
+                    if (index >= 0) {
+                        doRender = info.size != 0;
+                        mediaCodec.releaseOutputBuffer(index, doRender);
+
+                        if (decodedFirstFrame.compareAndSet(false, true)) {
+                            notifyDecodingStarted();
+                            Log.i(TAG, "Received first decoded frame of size " + info.size);
+                        }
+
+                        continueDequeue = (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) == 0;
+                        if (!continueDequeue) {
+                            Log.i(TAG, "Received end of stream flag.");
                         }
                     }
-                } catch (Exception e) {
-                    notifyDecodingEnded();
                 }
-
-
-
-//            if (mediaCodec == null)
-//                throw new IllegalStateException("Start decoding hasn't been called yet.");
-//
-//            Log.i(TAG, "Starting dequeue codec runner.");
-//
-//            final MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
-//            decodedFirstFrame.set(false);
-//            boolean doRender;
-//            boolean continueDequeue = true;
-//            try {
-//                while (continueDequeue) {
-//                    final int index = mediaCodec.dequeueOutputBuffer(info, -1);
-//                    if (index >= 0) {
-//                        doRender = info.size != 0;
-//                        mediaCodec.releaseOutputBuffer(index, doRender);
-//
-//                        if (decodedFirstFrame.compareAndSet(false, true)) {
-//                            notifyDecodingStarted();
-//                            Log.i(TAG, "Received first decoded frame of size " + info.size);
-//                        }
-//
-//                        continueDequeue = (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) == 0;
-//                        if (!continueDequeue) {
-//                            Log.i(TAG, "Received end of stream flag.");
-//                        }
-//                    }
-//                }
-//            } catch (IllegalStateException e) {
-//                if(!isInterrupted()) {
-//                    Log.e(TAG, "Decoding error!", e);
-//                    notifyDecodingError();
-//                }
-//            } finally {
-//                if (!isInterrupted())
-//                    notifyDecodingEnded();
-//                Log.i(TAG, "Stopping dequeue codec runner.");
-//            }
+            } catch (IllegalStateException e) {
+                if(!isInterrupted()) {
+                    Log.e(TAG, "Decoding error!", e);
+                    notifyDecodingError();
+                }
+            } finally {
+                if (!isInterrupted())
+                    notifyDecodingEnded();
+                Log.i(TAG, "Stopping dequeue codec runner.");
+            }
         }
     }
 }

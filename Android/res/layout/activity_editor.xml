@@ -84,11 +84,20 @@
             android:background="@drawable/button_hover" />
 
         <Button
+            android:id="@+id/button_follow_me"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:visibility="gone"
+            android:background="@drawable/button_follow_me"/>
+
+        <Button
             android:id="@+id/button_write"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/button_write" />
+
     </LinearLayout>
 
     <com.fuav.android.view.FitsSystemWindowsRelativeLayout

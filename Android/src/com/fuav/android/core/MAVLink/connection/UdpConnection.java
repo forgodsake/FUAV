@@ -21,29 +21,14 @@ public abstract class UdpConnection extends MavLinkConnection {
 
 	private void getUdpStream() throws IOException {
 		final DatagramSocket socket = new DatagramSocket(serverPort);
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                DatagramPacket datagramPacket = null;
-                try {
-                    datagramPacket = new DatagramPacket("hello".getBytes(),5, InetAddress.getByName("192.168.0.1"),8045);
-                    socket.send(datagramPacket);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }.start();
-
 		socket.setBroadcast(true);
 		socket.setReuseAddress(true);
-        socketRef.set(socket);
+		socketRef.set(socket);
 	}
 
 	@Override
 	public final void closeConnection() throws IOException {
-        final DatagramSocket socket = socketRef.get();
+		final DatagramSocket socket = socketRef.get();
 		if (socket != null)
 			socket.close();
 	}
@@ -51,25 +36,24 @@ public abstract class UdpConnection extends MavLinkConnection {
 	@Override
 	public final void openConnection() throws IOException {
 		getUdpStream();
-        onConnectionOpened();
+		onConnectionOpened();
 	}
 
 	@Override
 	public final void sendBuffer(byte[] buffer) throws IOException {
-        final DatagramSocket socket = socketRef.get();
-        if(socket == null)
-            return;
-
+		final DatagramSocket socket = socketRef.get();
+		if(socket == null)
+			return;
 
 		try {
 			if (hostAdd != null) { // We can't send to our sister until they
 				// have connected to us
 				if(sendPacket == null)
-					sendPacket  = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("192.168.0.1"),8045);
+					sendPacket  = new DatagramPacket(buffer, buffer.length, hostAdd, hostPort);
 				else{
 					sendPacket.setData(buffer, 0, buffer.length);
-					sendPacket.setAddress(InetAddress.getByName("192.168.0.1"));
-					sendPacket.setPort(8045);
+					sendPacket.setAddress(hostAdd);
+					sendPacket.setPort(hostPort);
 				}
 				socket.send(sendPacket);
 			}
@@ -78,14 +62,14 @@ public abstract class UdpConnection extends MavLinkConnection {
 		}
 	}
 
-    public void sendBuffer(InetAddress targetAddr, int targetPort, byte[] buffer) throws IOException {
-        final DatagramSocket socket = socketRef.get();
-        if(socket == null || targetAddr == null || buffer == null)
-            return;
+	public void sendBuffer(InetAddress targetAddr, int targetPort, byte[] buffer) throws IOException {
+		final DatagramSocket socket = socketRef.get();
+		if(socket == null || targetAddr == null || buffer == null)
+			return;
 
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, targetAddr, targetPort);
-        socket.send(packet);
-    }
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, targetAddr, targetPort);
+		socket.send(packet);
+	}
 
 	@Override
 	public final int readDataBlock(byte[] readData) throws IOException {

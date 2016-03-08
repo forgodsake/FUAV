@@ -13,13 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.o3dr.android.client.Drone;
-import com.o3dr.services.android.lib.coordinate.LatLong;
-import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
-import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.property.CameraProxy;
-import com.o3dr.services.android.lib.drone.property.Gps;
-
 import com.fuav.android.R;
 import com.fuav.android.fragments.helpers.ApiListenerFragment;
 import com.fuav.android.graphic.map.GraphicDrone;
@@ -32,6 +25,14 @@ import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.utils.Utils;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.o3dr.android.client.Drone;
+import com.o3dr.services.android.lib.coordinate.LatLong;
+import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
+import com.o3dr.services.android.lib.drone.attribute.AttributeType;
+import com.o3dr.services.android.lib.drone.property.CameraProxy;
+import com.o3dr.services.android.lib.drone.property.Gps;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,12 +77,14 @@ public abstract class DroneMap extends ApiListenerFragment {
                     break;
 
                 case AttributeEvent.GPS_POSITION: {
-                    mMapFragment.updateMarker(graphicDrone);
-                    mMapFragment.updateDroneLeashPath(guided);
-                    final Gps droneGps = drone.getAttribute(AttributeType.GPS);
-                    if (droneGps != null && droneGps.isValid()) {
-                        mMapFragment.addFlightPathPoint(droneGps.getPosition());
-                    }
+					if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
+						mMapFragment.updateMarker(graphicDrone);
+						mMapFragment.updateDroneLeashPath(guided);
+						final Gps droneGps = drone.getAttribute(AttributeType.GPS);
+						if (droneGps != null && droneGps.isValid()) {
+							mMapFragment.addFlightPathPoint(droneGps.getPosition());
+						}
+					}
                     break;
                 }
 
@@ -235,6 +238,17 @@ public abstract class DroneMap extends ApiListenerFragment {
 		guided = new GraphicGuided(drone);
 
 		postUpdate();
+	}
+
+	public boolean isSupportGooglePlay(){
+		final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		final boolean isValid = playStatus == ConnectionResult.SUCCESS;
+		return  isValid;
+	}
+
+	public String getMapName(){
+		DroidPlannerPrefs pre = new DroidPlannerPrefs(context);
+		return pre.getMapProviderName();
 	}
 
 	@Override

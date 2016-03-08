@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/dark_grey"
-        android:dividerHeight="0.1dp"
-        android:layout_centerInParent="true">
+        android:dividerHeight="0.1dp">
     </ListView>
 </RelativeLayout>

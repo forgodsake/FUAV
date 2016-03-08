@@ -69,7 +69,7 @@ public class EditorToolsFragment extends ApiListenerFragment implements OnClickL
     /**
      * The marker tool should be set by default.
      */
-    private static final EditorTools DEFAULT_TOOL = EditorTools.MARKER;
+    private static final EditorTools DEFAULT_TOOL = EditorTools.NONE;
 
     private final EditorToolsImpl[] editorToolsImpls = new EditorToolsImpl[EditorTools.values().length];
 

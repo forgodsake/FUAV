@@ -31,7 +31,7 @@ import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
 
-public class VideoControlCompFragment extends BaseFlightControlFragment {
+public class BasicControlFragment extends BaseFlightControlFragment {
 
     private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
 
@@ -227,7 +227,7 @@ public class VideoControlCompFragment extends BaseFlightControlFragment {
     private Button button_follow_me;
 
 
-    public VideoControlCompFragment() {
+    public BasicControlFragment() {
         // Required empty public constructor
     }
 

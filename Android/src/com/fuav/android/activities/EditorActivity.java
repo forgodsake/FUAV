@@ -1,5 +1,6 @@
 package com.fuav.android.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import com.fuav.android.dialogs.openfile.OpenMissionDialog;
 import com.fuav.android.fragments.BlankFragment;
 import com.fuav.android.fragments.EditorMapFragment;
 import com.fuav.android.fragments.FlightMapFragment;
+import com.fuav.android.fragments.SettingsFragment;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsFragment.EditorTools;
 import com.fuav.android.fragments.account.editor.tool.EditorToolsImpl;
@@ -51,11 +53,13 @@ import com.fuav.android.proxy.mission.item.fragments.MissionDetailFragment;
 import com.fuav.android.utils.analytics.GAUtils;
 import com.fuav.android.utils.file.FileStream;
 import com.fuav.android.utils.file.IO.MissionReader;
+import com.fuav.android.utils.location.CheckLocationSettings;
 import com.fuav.android.utils.prefs.AutoPanMode;
 import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationRequest;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.ControlApi;
 import com.o3dr.android.client.apis.FollowApi;
@@ -69,6 +73,7 @@ import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
+import com.o3dr.services.android.lib.gcs.follow.FollowType;
 
 import org.beyene.sius.unit.length.LengthUnit;
 
@@ -84,6 +89,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         OnLongClickListener, SupportEditInputDialog.Listener {
 
     private static final double DEFAULT_SPEED = 5; //meters per second.
+
+    public static final int FOLLOW_SETTINGS_UPDATE = 147;
+
+    private static final int FOLLOW_LOCATION_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY;
+    private static final long FOLLOW_LOCATION_UPDATE_INTERVAL = 30000; // ms
+    private static final long FOLLOW_LOCATION_UPDATE_FASTEST_INTERVAL = 5000; // ms
+    private static final float FOLLOW_LOCATION_UPDATE_MIN_DISPLACEMENT = 0; // m
 
     /**
      * Used to retrieve the item detail window when the activity is destroyed,
@@ -121,6 +133,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         eventFilter.addAction(AttributeEvent.FOLLOW_STOP);
         eventFilter.addAction(AttributeEvent.FOLLOW_UPDATE);
         eventFilter.addAction(AttributeEvent.MISSION_DRONIE_CREATED);
+        eventFilter.addAction(SettingsFragment.ACTION_LOCATION_SETTINGS_UPDATED);
     }
 
     private final BroadcastReceiver eventReceiver = new BroadcastReceiver() {
@@ -196,21 +209,55 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
                  /* FALL - THROUGH */
                 case AttributeEvent.FOLLOW_UPDATE:
+                    updateFlightModeButtons();
+                    updateFollowButton();
                     break;
 
                 case AttributeEvent.MISSION_DRONIE_CREATED:
                     //Get the bearing of the dronie mission.
                     float bearing = intent.getFloatExtra(AttributeEventExtra.EXTRA_MISSION_DRONIE_BEARING, -1);
                     if (bearing >= 0) {
-//                        final FlightControlManagerFragment parent = (FlightControlManagerFragment) getParentFragment();
-//                        if (parent != null) {
-//                            parent.updateMapBearing(bearing);
-//                        }
+
+                    }
+                    break;
+                case SettingsFragment.ACTION_LOCATION_SETTINGS_UPDATED:
+                    final int resultCode = intent.getIntExtra(SettingsFragment.EXTRA_RESULT_CODE, Activity.RESULT_OK);
+                    switch (resultCode) {
+                        case Activity.RESULT_OK:
+                            // All required changes were successfully made. Enable follow me.
+                            enableFollowMe(getDrone());
+                            break;
+
+                        case Activity.RESULT_CANCELED:
+                            // The user was asked to change settings, but chose not to
+                            Toast.makeText(EditorActivity.this, "Please update your location settings!", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            break;
                     }
                     break;
             }
         }
     };
+
+    private void updateFollowButton() {
+        FollowState followState = getDrone().getAttribute(AttributeType.FOLLOW_STATE);
+        if (followState == null)
+            return;
+
+        switch (followState.getState()) {
+            case FollowState.STATE_START:
+                break;
+
+            case FollowState.STATE_RUNNING:
+                button_follow_me.setActivated(true);
+                break;
+
+            default:
+                button_follow_me.setActivated(false);
+                break;
+        }
+    }
 
     private void updateFlightModeButtons() {
         initBackground();
@@ -290,6 +337,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private GestureMapFragment gestureMapFragment;
     private EditorToolsFragment editorToolsFragment;
     private MissionDetailFragment itemDetailFragment;
+    private VideoFragment videoFragment = new VideoFragment();
+    private VideoControlFragment videoControlFragment = new VideoControlFragment();
+    private FlightMapFragment flightMapFragment =  new FlightMapFragment();
     private FragmentManager fragmentManager;
     private ImageView showhide;
     private Button button_take_off;
@@ -297,7 +347,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_go_home;
     private Button button_hover;
     private Button button_write;
-
+    private Button button_follow_me;
     private TextView infoView;
 
     /**
@@ -373,6 +423,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_hover.setOnClickListener(this);
         button_write= (Button) findViewById(R.id.button_write);
         button_write.setOnClickListener(this);
+        button_follow_me= (Button)findViewById(R.id.button_follow_me);
+        button_follow_me.setOnClickListener(this);
     }
 
     @Override
@@ -417,7 +469,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         setupButtonsByFlightState();
         updateFlightModeButtons();
-        updateMissionLength();
+//        updateMissionLength();
         getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
     }
 
@@ -473,6 +525,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             case R.id.button_write:
                 confirmConnect(R.id.button_write);
                 break;
+            case R.id.button_follow_me:
+                confirmConnect(R.id.button_follow_me);
+                break;
             case R.id.video_control_view:
                 WindowManager manager = getWindowManager();
                 float xtotal = manager.getDefaultDisplay().getWidth();
@@ -493,20 +548,21 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                setGone(R.id.location_button_container);
-                                setGone(R.id.editortools);
-                                setGone(R.id.plane_control_view);
 
                                 if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new FlightMapFragment()).commit();
+                                    fragmentManager.beginTransaction().replace(R.id.video_view,flightMapFragment).commit();
                                 }else {
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
+                                    fragmentManager.beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
                                 }
 
                                 if(findViewById(R.id.editor_map_fragment).getVisibility()==View.GONE) {
                                     setVisible(R.id.editor_map_fragment);
                                 }
-                                getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,new VideoControlFragment()).commit();
+                                fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,videoControlFragment).commit();
+                                setGone(R.id.location_button_container);
+                                setGone(R.id.editortools);
+                                setGone(R.id.button_write);
+                                setVisible(R.id.button_follow_me);
                                 showVideo = false;
                             }
                         },500);
@@ -520,14 +576,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new VideoFragment()).commit();
+                                fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
                                 if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
                                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
                                 }
-                                getSupportFragmentManager().beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
+                                fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
                                 setVisible(R.id.location_button_container);
                                 setVisible(R.id.editortools);
-                                setVisible(R.id.plane_control_view);
+                                setVisible(R.id.button_write);
+                                setGone(R.id.button_follow_me);
                                 showVideo = true;
                             }
                         },500);
@@ -557,6 +614,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     break;
                 case R.id.button_write:
                     getAutoFlyConfirmation();
+                    break;
+                case R.id.button_follow_me:
+                    getFolloeMeConfirmation();
                     break;
                 default:
                     break;
@@ -603,12 +663,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new VideoFragment()).commit();
         }
 
-        DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
-        if(pre.getMapProviderName().equals("GOOGLE_MAP")){
-            //Check if google play services is available.
-            final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-            final boolean isValid = playStatus == ConnectionResult.SUCCESS;
-            if(!isValid){
+        if(getMapName().equals("GOOGLE_MAP")){
+            if(!isSupportGooglePlay()){
                 if(showVideo){
                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
                 }
@@ -724,11 +780,14 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             String infoString = getString(R.string.editor_info_window_distance, convertedMissionLength.toString())
                     + ", " + getString(R.string.editor_info_window_flight_time, time / 60, time % 60);
 
+            infoView.setVisibility(View.VISIBLE);
             infoView.setText(infoString);
-
             // Remove detail window if item is removed
             if (missionProxy.selection.getSelected().isEmpty() && itemDetailFragment != null) {
                 removeItemDetail();
+            }
+            if(missionLength==0.0){
+                infoView.setVisibility(View.GONE);
             }
         }
     }
@@ -977,6 +1036,50 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
+    }
+
+    private void getFolloeMeConfirmation() {
+        final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Folloe Me", new Runnable() {
+            @Override
+            public void run() {
+                toggleFollowMe();
+            }
+        });
+        unlockDialog.show(getSupportFragmentManager(), "Slide to Folloe Me");
+    }
+
+    protected void toggleFollowMe() {
+        final Drone drone = getDrone();
+        if (drone == null)
+            return;
+
+        final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+        if (followState.isEnabled()) {
+            FollowApi.getApi(drone).disableFollowMe();
+        } else {
+            enableFollowMe(drone);
+        }
+    }
+
+    private void enableFollowMe(final Drone drone) {
+        if(drone == null)
+            return;
+
+        final LocationRequest locationReq = LocationRequest.create()
+                .setPriority(FOLLOW_LOCATION_PRIORITY)
+                .setFastestInterval(FOLLOW_LOCATION_UPDATE_FASTEST_INTERVAL)
+                .setInterval(FOLLOW_LOCATION_UPDATE_INTERVAL)
+                .setSmallestDisplacement(FOLLOW_LOCATION_UPDATE_MIN_DISPLACEMENT);
+
+        final CheckLocationSettings locationSettingsChecker = new CheckLocationSettings(this, locationReq,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        drone.enableFollowMe(FollowType.LEASH);
+                    }
+                });
+
+        locationSettingsChecker.check();
     }
 
     private void initBackground() {

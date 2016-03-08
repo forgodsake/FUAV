@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.demo.sdk.DisplayView;
 import com.demo.sdk.Player;
 import com.fuav.android.R;
-import com.fuav.android.fragments.widget.VideoControlCompFragment;
 import com.fuav.android.utils.VideoThread;
 
 import java.io.File;
@@ -115,7 +114,6 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
         super.onResume();
         videoThread = new VideoThread(displayView,getActivity());
         videoThread.start();
-        getChildFragmentManager().beginTransaction().replace(R.id.mission_view, new VideoControlCompFragment()).commit();
     }
 
     @Override

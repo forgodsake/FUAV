@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         eventFilter.addAction(AttributeEvent.BATTERY_UPDATED);
         eventFilter.addAction(AttributeEvent.STATE_CONNECTED);
         eventFilter.addAction(AttributeEvent.STATE_DISCONNECTED);
+        eventFilter.addAction(AttributeEvent.STATE_UPDATED);
         eventFilter.addAction(AttributeEvent.AUTOPILOT_ERROR);
         eventFilter.addAction(AttributeEvent.AUTOPILOT_MESSAGE);
         eventFilter.addAction(AttributeEvent.GPS_POSITION);
@@ -98,6 +100,9 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
                 case AttributeEvent.STATE_DISCONNECTED:
                     updateAllTelem();
                     break;
+                case AttributeEvent.STATE_UPDATED:
+                    updateFlightTimer();
+                    break;
 
                 case DroidPlannerPrefs.ACTION_PREF_RETURN_TO_ME_UPDATED:
                 case AttributeEvent.RETURN_TO_ME_STATE_UPDATE:
@@ -138,6 +143,36 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
         }
     };
 
+    private void updateFlightTimer(){
+        handler.removeCallbacks(flightTimeUpdater);
+        if(getDrone().isConnected())
+            flightTimeUpdater.run();
+        else
+            timeview.setText("00:00");
+    }
+
+    private Runnable flightTimeUpdater = new Runnable(){
+
+        @Override
+        public void run() {
+            handler.removeCallbacks(this);
+            Drone drone = getDrone();
+            if(!drone.isConnected())
+                return;
+
+            long timeInSecs = drone.getFlightTime();
+            long mins = timeInSecs / 60L;
+            long secs = timeInSecs % 60L;
+            timeview.setText(String.format("%02d:%02d", mins, secs));
+
+            handler.postDelayed(this, FLIGHT_TIMER_PERIOD);
+        }
+    };
+
+    private long FLIGHT_TIMER_PERIOD = 1000L; //1 second
+
+    protected String RESET_TIMER_TAG = "reset_timer_tag";
+
     private DroidPlannerPrefs appPrefs;
 
     private TextView homeTelem;
@@ -153,6 +188,9 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
     private PopupWindow signalPopup;
 
     private TextView flightModeTelem;
+    private TextView timeview;
+
+    private Handler handler = new Handler();
 
     private TextView warningView;
 
@@ -232,6 +270,8 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
                 Utils.showDialog(selectionDialog, getChildFragmentManager(), "Flight modes selection", true);
             }
         });
+
+        timeview = (TextView) view.findViewById(R.id.text_time);
 
         warningView = (TextView) view.findViewById(R.id.bar_warning);
 

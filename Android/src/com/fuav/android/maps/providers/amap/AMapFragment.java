@@ -23,6 +23,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.AMapOptions;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
@@ -58,6 +59,7 @@ import com.o3dr.services.android.lib.drone.property.Gps;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -165,6 +167,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
         }
 
         mMap = getMap();
+        mMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
@@ -665,21 +668,33 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
     @Override
     public void updateRealTimeFootprint(FootPrint footprint) {
-        if (footprintPoly == null) {
-            PolygonOptions pathOptions = new PolygonOptions();
-            pathOptions.strokeColor(FOOTPRINT_DEFAULT_COLOR).strokeWidth(FOOTPRINT_DEFAULT_WIDTH);
-            pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
+        List<LatLong> pathPoints = footprint == null
+                ? Collections.<LatLong>emptyList()
+                : footprint.getVertexInGlobalFrame();
 
-            for (LatLong vertex : footprint.getVertexInGlobalFrame()) {
-                pathOptions.add(DroneHelper.CoordToGaodeLatLang(vertex));
+        if (pathPoints.isEmpty()) {
+            if (footprintPoly != null) {
+                footprintPoly.remove();
+                footprintPoly = null;
             }
-            footprintPoly = mMap.addPolygon(pathOptions);
         } else {
-            List<LatLng> list = new ArrayList<LatLng>();
-            for (LatLong vertex : footprint.getVertexInGlobalFrame()) {
-                list.add(DroneHelper.CoordToGaodeLatLang(vertex));
+            if (footprintPoly == null) {
+                PolygonOptions pathOptions = new PolygonOptions()
+                        .strokeColor(FOOTPRINT_DEFAULT_COLOR)
+                        .strokeWidth(FOOTPRINT_DEFAULT_WIDTH)
+                        .fillColor(FOOTPRINT_FILL_COLOR);
+
+                for (LatLong vertex : pathPoints) {
+                    pathOptions.add(DroneHelper.CoordToGaodeLatLang(vertex));
+                }
+                footprintPoly = getMap().addPolygon(pathOptions);
+            } else {
+                List<LatLng> list = new ArrayList<LatLng>();
+                for (LatLong vertex : pathPoints) {
+                    list.add(DroneHelper.CoordToGaodeLatLang(vertex));
+                }
+                footprintPoly.setPoints(list);
             }
-            footprintPoly.setPoints(list);
         }
     }
 
@@ -745,7 +760,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             }
             LatLong latlong = DroneHelper.GaodeLatLngToCoord(latLng);
             if (mPanMode.get() == AutoPanMode.USER) {
-                updateCamera(latlong, (float) (getMap().getMaxZoomLevel() - 0.4));
+                updateCamera(latlong, GO_TO_MY_LOCATION_ZOOM);
             }
         }
     }
