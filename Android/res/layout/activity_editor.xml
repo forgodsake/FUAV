@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     android:gravity="center"
     >
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/hello_blank_fragment" />
     <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"

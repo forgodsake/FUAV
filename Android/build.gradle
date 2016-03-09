@@ -14,6 +14,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${support_lib_version}"
     compile "com.android.support:cardview-v7:${support_lib_version}"
     compile "com.android.support:recyclerview-v7:${support_lib_version}"
+    compile 'com.android.support:cardview-v7:23.1.1'
     compile "com.android.support:design:${support_lib_version}"
     //MP4 generation library
     compile(name: 'shimmer-android-release', ext: 'aar')

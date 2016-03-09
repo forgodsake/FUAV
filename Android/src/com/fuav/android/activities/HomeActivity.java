@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.helpers.SuperUI;
@@ -19,12 +20,17 @@ import com.fuav.android.fragments.home.LibraryFragment;
 import com.fuav.android.fragments.home.MallFragment;
 import com.fuav.android.fragments.home.SupportFragment;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     private LinearLayout Device,Media,Store,Support;
     private ImageView imDevice,imMedia,imStore,imSupport;
     private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
+    private static int index = 0;
 
     @Override
     protected int getToolbarId() {
@@ -44,6 +50,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
         manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
         initViews();
+        executeFixedRate();
     }
 
     private void initViews() {
@@ -126,5 +133,32 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
 //                    return true;
 //        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        index++;
+        if(index==1){
+            Toast.makeText(this,"press again to exit!",Toast.LENGTH_SHORT).show();
+        }else if(index==2){
+            finish();
+        }
+    }
+
+    /**
+     * 以固定周期频率执行任务
+     */
+    public static void executeFixedRate() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        index=0;
+                    }
+                },
+                0,
+                2000,
+                TimeUnit.MILLISECONDS);
     }
 }

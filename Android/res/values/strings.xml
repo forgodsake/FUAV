@@ -603,7 +603,6 @@
     <string name="uploader_fail_retry_message">Will try again later</string>
     <string name="uploader_notification_title">Droneshare upload</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">google play service is not available</string>
 
 

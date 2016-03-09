@@ -579,6 +579,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
                                 if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
                                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
+                                    findViewById(R.id.tips).setVisibility(View.VISIBLE);
                                 }
                                 fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
                                 setVisible(R.id.location_button_container);

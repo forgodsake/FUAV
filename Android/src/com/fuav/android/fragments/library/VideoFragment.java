@@ -60,7 +60,7 @@ public class VideoFragment extends Fragment {
                 if (position >= 0) {
                     ActivityOptionsCompat options =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), view.findViewById(R.id.grid_videoview),"VIDEO");
+                                    getActivity(), view.findViewById(R.id.cardview),"VIDEO");
                     Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
                     intent.putExtra("path",list.get(position));
                     ActivityCompat.startActivity( getActivity(),intent, options.toBundle());

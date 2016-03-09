@@ -105,7 +105,7 @@
             <PreferenceCategory android:title="@string/pref_title_local">
 
                 <ListPreference
-                    android:defaultValue="0"
+                    android:defaultValue="1"
                     android:entries="@array/unit_systems"
                     android:entryValues="@array/unit_system_values"
                     android:key="pref_unit_system"

@@ -66,7 +66,7 @@ public class PictureFragment extends Fragment {
                 if (position >= 0) {
                     ActivityOptionsCompat options =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), view.findViewById(R.id.grid_imageview),"TEST");
+                                    getActivity(), view.findViewById(R.id.cardview),"TEST");
                     Intent intent = new Intent(getActivity(), PicPlayActivity.class);
                     intent.putExtra("path",list.get(position));
                     ActivityCompat.startActivity( getActivity(),intent, options.toBundle());
