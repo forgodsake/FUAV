@@ -100,6 +100,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     private Polyline mDroneLeashPath;
     private int maxFlightPathSize;
     private LatLng latLng;
+    private int isFirst = 1;
 
     private static final float GO_TO_MY_LOCATION_ZOOM = 19f;
 
@@ -761,6 +762,9 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             LatLong latlong = DroneHelper.GaodeLatLngToCoord(latLng);
             if (mPanMode.get() == AutoPanMode.USER) {
                 updateCamera(latlong, GO_TO_MY_LOCATION_ZOOM);
+            }else if(isFirst==1){
+                updateCamera(latlong, GO_TO_MY_LOCATION_ZOOM);
+                isFirst++;
             }
         }
     }
