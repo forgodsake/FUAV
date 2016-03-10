@@ -101,7 +101,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     private int maxFlightPathSize;
     private LatLng latLng;
 
-    private static final float GO_TO_MY_LOCATION_ZOOM = 18.6f;
+    private static final float GO_TO_MY_LOCATION_ZOOM = 19f;
 
     private static final IntentFilter eventFilter = new IntentFilter(AttributeEvent.GPS_POSITION);
 
@@ -130,7 +130,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
     private void setUpMapIfNeeded() {
         if (mMap != null) {
-            mMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+            mMap.setMapType(AMap.MAP_TYPE_NORMAL);
 
             MyLocationStyle myLocationStyle = new MyLocationStyle();
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory
