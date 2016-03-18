@@ -75,6 +75,7 @@ import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
 import com.o3dr.services.android.lib.gcs.follow.FollowType;
+import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
 import org.beyene.sius.unit.length.LengthUnit;
 
@@ -1059,7 +1060,15 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Auto Fly", new Runnable() {
             @Override
             public void run() {
-                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+//                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                final Drone drone = getDrone();
+                VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
+                    @Override
+                    public void onSuccess() {
+                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
+                    }
+                });
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
