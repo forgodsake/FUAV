@@ -3,6 +3,7 @@ package com.fuav.android.maps.providers;
 
 import com.fuav.android.maps.DPMap;
 import com.fuav.android.maps.providers.amap.AMapFragment;
+import com.fuav.android.maps.providers.amap.AMapPrefFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapFragment;
 import com.fuav.android.maps.providers.google_map.GoogleMapPrefFragment;
 
@@ -34,7 +35,7 @@ public enum DPMapProvider {
 
 		@Override
 		public MapProviderPreferences getMapProviderPreferences() {
-			return new GoogleMapPrefFragment();
+			return new AMapPrefFragment();
 		}
 	}
 
@@ -44,7 +45,7 @@ public enum DPMapProvider {
 //
 //		@Override
 //		public MapProviderPreferences getMapProviderPreferences() {
-//			return new BaiduMapPrefFragment();
+//			return new AMapPrefFragment();
 //		}
 //	}
  ;

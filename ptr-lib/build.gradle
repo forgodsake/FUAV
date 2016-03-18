@@ -25,9 +25,17 @@ android {
         }
 
         androidTest.setRoot('tests')
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
-dependencies {
-}
 apply from: './gradle-mvn-push.gradle'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+repositories {
+    mavenCentral()
+}

@@ -1,5 +1,9 @@
+
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ddd"
@@ -44,7 +48,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
-            android:text="" />
+            android:text="退换货服务
+
+自商品购买之日起，如何如下条款的，在签收之日起7天之内，可以申请退货或者换货服务：
+
+1） 快递到达时，请在快递员面前现场拆开包装，如果发现产品因运输造成损坏，可以要求换货，请与售后服务人员联系换货；
+
+2） 产品经过一次换货后，仍然有质量问题，在经过售后服务人员确认后，可以申请退货。" />
 
     </LinearLayout>
     <LinearLayout
@@ -66,7 +76,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
-            android:text="" />
+            android:text="免费保修服务
+
+在整机或者部件的免费保修期内，符合以下条件的，可以向售后服务人员申请免费维修服务：
+
+1） 产品在技术支持人员指导下使用，发生故障；
+
+2） 没有私自拆卸、修改或者组装等违反免费维修服务的操作；
+
+3） 产品标签、序列号、防水标识和防伪标识未被篡改；
+
+4） 收货收据和售后服务手册保存完好。" />
 
     </LinearLayout>
     <LinearLayout
@@ -88,52 +108,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
-            android:text="" />
+            android:text="付费保修服务
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:background="#fff" >
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_margin="12dp"
-            android:src="@drawable/rule4" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="10dp"
-            android:text="" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:background="#fff" >
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_margin="12dp"
-            android:src="@drawable/rule5" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="10dp"
-            android:text="" />
+产品超过免费保修期后，依然可以得到维修服务，但是需要根据检测结果、人工费用和配件费用等支付相应的费用。详情请联系售后服务人员沟通确认。" />
 
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

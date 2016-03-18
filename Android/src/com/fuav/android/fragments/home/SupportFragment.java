@@ -38,7 +38,15 @@ public class SupportFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         fragmentManager = getChildFragmentManager();
         defaultSupportFragment = new DefaultSupportFragment();
+<<<<<<< HEAD
         fragmentManager.beginTransaction().replace(R.id.support_frame,defaultSupportFragment).commit();
+=======
+        fragmentManager.beginTransaction().replace(R.id.support_frame,defaultSupportFragment).addToBackStack(null).commit();
+>>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
 
     }
+
+
+
+
 }

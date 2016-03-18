@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fuav.android"
-    android:installLocation="auto">
+    android:installLocation="auto" >
 
     <supports-screens android:requiresSmallestWidthDp="320" />
 
@@ -61,7 +61,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme"
-        android:windowSoftInputMode="adjustPan">
+        android:windowSoftInputMode="adjustPan" >
 
         <!-- You must insert your own Google Maps for Android API v2 key in here. -->
         <meta-data
@@ -73,22 +73,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="5ee4471ba6e8cd8858006c8166469bba33d64b2f" />
-
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="6f5388bc1fd6d88e2cf23c8922c86f46"/>
-
-        <activity
-            android:name=".activities.FlightActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Transparent" />
+            android:value="6f5388bc1fd6d88e2cf23c8922c86f46" />
         <activity
             android:name=".activities.EditorActivity"
             android:label="@string/editor"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Transparent"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustNothing" >
 
             <!-- Intent for opening mission files -->
             <intent-filter>
@@ -114,8 +107,8 @@
             android:name=".activities.helpers.MapPreferencesActivity"
             android:label="@string/activity_title_map_provider_preferences"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Transparent"
-            android:parentActivityName=".activities.SettingsActivity">
+            android:parentActivityName=".activities.SettingsActivity"
+            android:theme="@style/AppTheme.Transparent" >
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
@@ -136,20 +129,22 @@
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".activities.WelcomeActivity" />
         <activity android:name=".activities.SplashActivity" />
-        <activity android:name=".activities.HomeActivity"
-            android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.HomeActivity"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.VideoPlayActivity"/>
-        <activity android:name=".activities.PicPlayActivity"
-            android:parentActivityName=".activities.HomeActivity">
+        <activity android:name=".activities.VideoPlayActivity" />
+        <activity
+            android:name=".activities.PicPlayActivity"
+            android:parentActivityName=".activities.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="activities.HomeActivity"/>
+                android:value="activities.HomeActivity" />
         </activity>
 
         <service android:name=".AppService" />
@@ -158,7 +153,7 @@
             android:name=".data.provider.FileProvider"
             android:authorities="com.o3dr.services.android.provider.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
@@ -173,7 +168,7 @@
         <service
             android:name=".api.DroidPlannerService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.o3dr.services.android.lib.model.IDroidPlannerServices" />
             </intent-filter>
@@ -185,18 +180,19 @@
 
         <receiver
             android:name=".communication.service.NetworkConnectivityReceiver"
-            android:enabled="false">
+            android:enabled="false" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <service android:name="com.amap.api.location.APSService"/>
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
 
-        <receiver android:name=".utils.apps.AppsUpdateReceiver">
+        <service android:name="com.amap.api.location.APSService" />
+        <!-- <service -->
+        <!-- android:name="com.baidu.location.f" -->
+        <!-- android:enabled="true" -->
+        <!-- android:process=":remote" /> -->
+
+        <receiver android:name=".utils.apps.AppsUpdateReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -208,9 +204,11 @@
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="5ee4471ba6e8cd8858006c8166469bba33d64b2f" />
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="s7uqBA4MvUs5BiZEFmKAT2V0" />
+        <!-- <meta-data -->
+        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
+        <!-- android:value="s7uqBA4MvUs5BiZEFmKAT2V0" /> -->
+        <activity android:name=".activities.SupportActivity" >
+        </activity>
     </application>
 
 </manifest>

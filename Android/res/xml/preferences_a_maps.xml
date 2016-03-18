@@ -2,12 +2,12 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/pref_title_baidu_maps"/>
+    <PreferenceCategory android:title="@string/pref_title_gaode_maps"/>
 
 
     <PreferenceCategory
-        android:title="@string/pref_title_baidu_tile_provider"
-        android:key="pref_google_tile_provider_settings">
+        android:title="@string/pref_title_gaode_tile_provider"
+        android:key="pref_gaode_tile_provider_settings">
         <ListPreference
             android:defaultValue="satellite"
             android:entries="@array/AMapTypes"

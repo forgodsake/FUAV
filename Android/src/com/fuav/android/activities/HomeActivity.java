@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,7 +29,13 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     private ImageView imDevice,imMedia,imStore,imSupport;
     private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
+<<<<<<< HEAD
     private static int index = 0;
+=======
+    private SupportFragment supportFragment;
+    private static int index = 0;
+
+>>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
 
     @Override
     protected int getToolbarId() {
@@ -49,6 +54,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
         setContentView(R.layout.activity_home);
         manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
+        supportFragment = new SupportFragment();
         initViews();
         executeFixedRate();
     }
@@ -103,7 +109,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                 imSupport.setEnabled(true);
                 txSupport.setTextColor(Color.BLUE);
                 Support.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
-                manager.beginTransaction().replace(R.id.content,new SupportFragment()).commit();
+                manager.beginTransaction().replace(R.id.content,supportFragment).commit();
                 break;
             default:
                 break;
@@ -126,13 +132,30 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
+            index++;
+            if(index==1){
+                Toast.makeText(this,"press again to exit!",Toast.LENGTH_SHORT).show();
+            }else if(index==2){
+                finish();
+            }
+    }
 
-//        if(keyCode==KeyEvent.KEYCODE_BACK)
-//        {
-//                    return true;
-//        }
-        return super.onKeyDown(keyCode, event);
+    /**
+     * 以固定周期频率执行任务
+     */
+    public static void executeFixedRate() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        index=0;
+                    }
+                },
+                0,
+                5000,
+                TimeUnit.MILLISECONDS);
     }
 
     @Override

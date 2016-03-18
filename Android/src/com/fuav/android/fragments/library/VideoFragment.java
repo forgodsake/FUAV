@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.fuav.android.R;
 import com.fuav.android.activities.VideoPlayActivity;
 import com.fuav.android.utils.LocalDisplay;
-import com.fuav.android.view.header.RentalsSunHeaderView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -33,14 +32,13 @@ import java.util.List;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.StoreHouseHeader;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class VideoFragment extends Fragment {
 
-    private long mStartLoadingTime = -1;
-    private boolean mImageHasLoaded = false;
     //显示图片的配置
     DisplayImageOptions options ;
     List<String> list = new ArrayList<String>();
@@ -78,13 +76,17 @@ public class VideoFragment extends Fragment {
 
         final PtrFrameLayout frame = (PtrFrameLayout) view.findViewById(R.id.material_style_ptr_frame);
         // header
-        final RentalsSunHeaderView header = new RentalsSunHeaderView(getContext());
+        final StoreHouseHeader header = new StoreHouseHeader(getContext());
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
         header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setUp(frame);
+        /**
+         * using a string, support: A-Z 0-9 - .
+         * you can add more letters by {@link in.srain.cube.views.ptr.header.StoreHousePath#addChar}
+         */
+        header.initWithString("F-U-A-V");
 
         frame.setLoadingMinTime(1000);
-        frame.setDurationToCloseHeader(1500);
+        frame.setDurationToCloseHeader(2500);
         frame.setHeaderView(header);
         frame.addPtrUIHandler(header);
         frame.setPtrHandler(new PtrHandler() {
@@ -95,18 +97,12 @@ public class VideoFragment extends Fragment {
 
             @Override
             public void onRefreshBegin(final PtrFrameLayout frame) {
-                if (mImageHasLoaded) {
-                    long delay = 1500;
-                    frame.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            frame.refreshComplete();
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, delay);
-                } else {
-                    mStartLoadingTime = System.currentTimeMillis();
-                }
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        frame.refreshComplete();
+                    }
+                }, 1000);
             }
         });
         return view;
@@ -173,7 +169,6 @@ public class VideoFragment extends Fragment {
             // set icon
             ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
 //            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
-            mImageHasLoaded = true;
             return convertView;
         }
 

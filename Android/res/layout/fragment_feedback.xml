@@ -36,6 +36,7 @@
         android:layout_height="180dp"
         android:layout_margin="10dp"
         android:paddingLeft="10dp"
+        android:background="@color/white"
         android:gravity="start"
         android:hint="请输入您的宝贵意见...." >
     </EditText>

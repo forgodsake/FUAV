@@ -131,6 +131,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     private void setUpMapIfNeeded() {
         if (mMap != null) {
             mMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+            mMap.setMapType(AMapPrefFragment.PrefManager.getMapType(getContext()));
             MyLocationStyle myLocationStyle = new MyLocationStyle();
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                     .fromResource(R.drawable.location_marker));// 设置小蓝点的图标
@@ -141,6 +142,9 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             mMap.setMyLocationStyle(myLocationStyle);
             mMap.setLocationSource(this);// 设置定位监听
             mMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+            mMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_LEFT);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+            mMap.getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
@@ -235,7 +239,8 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        mMap.getUiSettings().setZoomControlsEnabled(false);
     }
 
 

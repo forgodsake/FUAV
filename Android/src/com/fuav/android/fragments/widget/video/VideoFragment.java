@@ -43,16 +43,7 @@ public class VideoFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new VideoThread(displayView,getActivity()).start();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }

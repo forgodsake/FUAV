@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.demo.sdk.DisplayView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/full_video_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.demo.sdk.DisplayView
-        android:id="@+id/full_video_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</RelativeLayout>
+    android:layout_height="match_parent" />

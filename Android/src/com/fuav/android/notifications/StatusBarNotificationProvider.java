@@ -11,6 +11,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.fuav.android.DroidPlannerApp;
+import com.fuav.android.R;
+import com.fuav.android.activities.EditorActivity;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
+import com.fuav.android.utils.unit.UnitManager;
 import com.o3dr.android.client.Drone;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
@@ -24,11 +29,6 @@ import com.o3dr.services.android.lib.util.MathUtils;
 import com.o3dr.services.android.lib.util.SpannableUtils;
 
 import org.beyene.sius.unit.length.LengthUnit;
-import com.fuav.android.DroidPlannerApp;
-import com.fuav.android.R;
-import com.fuav.android.activities.FlightActivity;
-import com.fuav.android.utils.prefs.DroidPlannerPrefs;
-import com.fuav.android.utils.unit.UnitManager;
 
 /**
  * Implements DroidPlanner's status bar notifications.
@@ -95,7 +95,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
         mAppPrefs = new DroidPlannerPrefs(context);
 
         mNotificationIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                FlightActivity.class), 0);
+                EditorActivity.class), 0);
 
         mToggleConnectionIntent = PendingIntent
                 .getBroadcast(mContext, 0, new Intent(DroidPlannerApp.ACTION_TOGGLE_DRONE_CONNECTION), 0);

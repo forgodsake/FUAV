@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 ext {
     VERSION_MAJOR = 2
@@ -63,19 +62,14 @@ dependencies {
 
 
     compile files('libs/Mavlink.jar')
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 assemble.dependsOn ':dependencyLibs:Mavlink:jar'
 
 apply from: "${rootDir}/release_android_library.gradle"
 buildscript {
-    ext.kotlin_version = '1.0.0-beta-4589'
     repositories {
         mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 repositories {
