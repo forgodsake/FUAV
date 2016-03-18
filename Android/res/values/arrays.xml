@@ -59,11 +59,11 @@
         <item>normal</item>
         <item>terrain</item>
 
-    </string-array><string-array name="BMapTypes">
+    </string-array><string-array name="AMapTypes">
         <item>@string/menu_map_type_satellite</item>
         <item>@string/menu_map_type_normal</item>
     </string-array>
-    <string-array name="BMapTypeValues">
+    <string-array name="AMapTypeValues">
         <item>satellite</item>
         <item>normal</item>
     </string-array>

@@ -26,7 +26,6 @@ import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
-import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 import com.o3dr.services.android.lib.gcs.follow.FollowState;
@@ -163,15 +162,15 @@ public class BasicControlFragment extends BaseFlightControlFragment {
         switch (flightMode) {
 
             case COPTER_GUIDED:
-                final Drone drone = getDrone();
-                final GuidedState guidedState = drone.getAttribute(AttributeType.GUIDED_STATE);
-                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
-                if (guidedState.isInitialized() && !followState.isEnabled()) {
-                    button_hover.setActivated(true);
-                }
+//                final Drone drone = getDrone();
+//                final GuidedState guidedState = drone.getAttribute(AttributeType.GUIDED_STATE);
+//                final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
+//                if (guidedState.isInitialized() && !followState.isEnabled()) {
+//                    button_hover.setActivated(true);
+//                }
                 break;
 
-            case COPTER_BRAKE:
+            case COPTER_POSHOLD:
                 button_hover.setActivated(true);
                 break;
 
@@ -336,7 +335,7 @@ public class BasicControlFragment extends BaseFlightControlFragment {
                 if (followState.isEnabled()) {
                     FollowApi.getApi(drone).disableFollowMe();
                 }
-                ControlApi.getApi(drone).pauseAtCurrentLocation(null);
+                VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
             }
         });
         unlockDialog.show(getChildFragmentManager(), "Slide To Hover");

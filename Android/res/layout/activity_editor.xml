@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    >
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/hello_blank_fragment"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/editor_map_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_gesture_map">
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/editortools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="20dp">
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/video_view"
         android:layout_width="160dp"
         android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
 
     <FrameLayout
         android:id="@+id/video_control_view"
         android:layout_width="160dp"
         android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentLeft="true" />
+
+    <FrameLayout
+        android:id="@+id/editortools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="80dp">
+
     </FrameLayout>
+
     <ImageView
         android:id="@+id/show_hide_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/btn_contraction_n"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"/>
+        android:src="@drawable/btn_contraction_n" />
 
     <LinearLayout
         android:id="@+id/plane_control_view"
@@ -64,10 +67,10 @@
 
         <Button
             android:id="@+id/button_land"
-            android:visibility="gone"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/button_land" />
+            android:background="@drawable/button_land"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_go_home"
@@ -88,8 +91,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
-            android:visibility="gone"
-            android:background="@drawable/button_follow_me"/>
+            android:background="@drawable/button_follow_me"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_write"
@@ -103,41 +106,38 @@
     <com.fuav.android.view.FitsSystemWindowsRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        >
+        android:fitsSystemWindows="true">
 
         <include
+            android:id="@+id/actionbar_container"
             layout="@layout/actionbar_toolbar"
-            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:id="@+id/actionbar_container"
-            />
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/editorInfoWindow"
+            style="@style/editorMissionOverviewText"
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            tools:text="@string/editor_info_window"
-            style="@style/editorMissionOverviewText"
-            android:visibility="gone"
-            android:gravity="end"
-            android:layout_below="@+id/actionbar_container"
-            android:layout_alignLeft="@+id/actionbar_container"
-            android:layout_alignStart="@+id/actionbar_container"
-            android:layout_alignRight="@+id/actionbar_container"
             android:layout_alignEnd="@+id/actionbar_container"
-            />
+            android:layout_alignLeft="@+id/actionbar_container"
+            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_alignStart="@+id/actionbar_container"
+            android:layout_below="@+id/actionbar_container"
+            android:gravity="end"
+            android:visibility="gone"
+            tools:text="@string/editor_info_window" />
 
         <include
+            layout="@layout/button_my_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="80dp"
-            layout="@layout/button_my_location"
-            android:layout_alignRight="@+id/actionbar_container"
             android:layout_alignEnd="@+id/actionbar_container"
-            android:layout_alignWithParentIfMissing="true"/>
+            android:layout_alignRight="@+id/actionbar_container"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="80dp" />
 
     </com.fuav.android.view.FitsSystemWindowsRelativeLayout>
 

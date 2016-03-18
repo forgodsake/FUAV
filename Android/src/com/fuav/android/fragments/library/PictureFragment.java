@@ -66,7 +66,7 @@ public class PictureFragment extends Fragment {
                 if (position >= 0) {
                     ActivityOptionsCompat options =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), view.findViewById(R.id.grid_imageview),"TEST");
+                                    getActivity(), view.findViewById(R.id.cardview),"TEST");
                     Intent intent = new Intent(getActivity(), PicPlayActivity.class);
                     intent.putExtra("path",list.get(position));
                     ActivityCompat.startActivity( getActivity(),intent, options.toBundle());
@@ -83,10 +83,10 @@ public class PictureFragment extends Fragment {
          * using a string, support: A-Z 0-9 - .
          * you can add more letters by {@link in.srain.cube.views.ptr.header.StoreHousePath#addChar}
          */
-        header.initWithString("FUAV");
+        header.initWithString("YOU CAN FLY");
 
         frame.setLoadingMinTime(1000);
-        frame.setDurationToCloseHeader(1500);
+        frame.setDurationToCloseHeader(2500);
         frame.setHeaderView(header);
         frame.addPtrUIHandler(header);
         frame.postDelayed(new Runnable() {

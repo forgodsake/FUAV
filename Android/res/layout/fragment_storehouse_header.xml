@@ -10,19 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         cube_ptr:ptr_duration_to_close="300"
-        cube_ptr:ptr_duration_to_close_header="1500"
+        cube_ptr:ptr_duration_to_close_header="2500"
         cube_ptr:ptr_keep_header_when_refresh="true"
         cube_ptr:ptr_pull_to_fresh="false"
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
         cube_ptr:ptr_resistance="1.7">
+
             <GridView
                 android:id="@+id/rotate_header_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fadingEdge="none"
                 android:focusable="false"
-                android:horizontalSpacing="5dp"
-                android:verticalSpacing="5dp"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
                 android:paddingTop="8dp"

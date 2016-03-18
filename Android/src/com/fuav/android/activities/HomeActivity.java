@@ -4,13 +4,13 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.helpers.SuperUI;
@@ -19,12 +19,19 @@ import com.fuav.android.fragments.home.LibraryFragment;
 import com.fuav.android.fragments.home.MallFragment;
 import com.fuav.android.fragments.home.SupportFragment;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     private LinearLayout Device,Media,Store,Support;
     private ImageView imDevice,imMedia,imStore,imSupport;
     private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
+    private SupportFragment supportFragment;
+    private static int index = 0;
+
 
     @Override
     protected int getToolbarId() {
@@ -43,7 +50,9 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
         setContentView(R.layout.activity_home);
         manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content,new DeviceFragment()).commit();
+        supportFragment = new SupportFragment();
         initViews();
+        executeFixedRate();
     }
 
     private void initViews() {
@@ -96,7 +105,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                 imSupport.setEnabled(true);
                 txSupport.setTextColor(Color.BLUE);
                 Support.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
-                manager.beginTransaction().replace(R.id.content,new SupportFragment()).commit();
+                manager.beginTransaction().replace(R.id.content,supportFragment).commit();
                 break;
             default:
                 break;
@@ -119,12 +128,29 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
+            index++;
+            if(index==1){
+                Toast.makeText(this,"press again to exit!",Toast.LENGTH_SHORT).show();
+            }else if(index==2){
+                finish();
+            }
+    }
 
-//        if(keyCode==KeyEvent.KEYCODE_BACK)
-//        {
-//                    return true;
-//        }
-        return super.onKeyDown(keyCode, event);
+    /**
+     * 以固定周期频率执行任务
+     */
+    public static void executeFixedRate() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        index=0;
+                    }
+                },
+                0,
+                5000,
+                TimeUnit.MILLISECONDS);
     }
 }

@@ -48,8 +48,7 @@ artifacts {
     archives androidJavadocsJar
 }
 
-publishing {
-    publications {
+publishing.publications {
         mavenLibraryRelease(MavenPublication){
             groupId projectGroupId
             artifactId projectArtifactId
@@ -66,7 +65,7 @@ publishing {
             }
         }
     }
-}
+
 
 bintray {
     user = getMavenUsername()

@@ -23,7 +23,9 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +63,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
 import com.o3dr.android.client.Drone;
-import com.o3dr.android.client.apis.ControlApi;
 import com.o3dr.android.client.apis.FollowApi;
 import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
@@ -280,11 +281,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 final GuidedState guidedState = drone.getAttribute(AttributeType.GUIDED_STATE);
                 final FollowState followState = drone.getAttribute(AttributeType.FOLLOW_STATE);
                 if (guidedState.isInitialized() && !followState.isEnabled()) {
-                    button_hover.setActivated(true);
+//                    button_hover.setActivated(true);
                 }
                 break;
 
-            case COPTER_BRAKE:
+            case COPTER_POSHOLD:
                 button_hover.setActivated(true);
                 break;
 
@@ -335,11 +336,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * View widgets.
      */
     private GestureMapFragment gestureMapFragment;
-    private EditorToolsFragment editorToolsFragment;
-    private MissionDetailFragment itemDetailFragment;
-    private VideoFragment videoFragment = new VideoFragment();
+    private VideoFragment videoFragment= new VideoFragment();
     private VideoControlFragment videoControlFragment = new VideoControlFragment();
     private FlightMapFragment flightMapFragment =  new FlightMapFragment();
+    private EditorToolsFragment editorToolsFragment;
+    private MissionDetailFragment itemDetailFragment;
     private FragmentManager fragmentManager;
     private ImageView showhide;
     private Button button_take_off;
@@ -349,6 +350,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_write;
     private Button button_follow_me;
     private TextView infoView;
+    private FrameLayout videolayout;
+    private FrameLayout maplayout;
+    private RelativeLayout parent_view;
 
     /**
      * If the mission was loaded from a file, the filename is stored here.
@@ -373,6 +377,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         showVideo = true;
 
+        videolayout = (FrameLayout) findViewById(R.id.video_view);
+        maplayout = (FrameLayout) findViewById(R.id.editor_map_fragment);
+        parent_view = (RelativeLayout) findViewById(R.id.parent_view);
+
         if (editorToolsFragment == null) {
             editorToolsFragment = new EditorToolsFragment();
             fragmentManager.beginTransaction().replace(R.id.editortools,editorToolsFragment).commit();
@@ -380,7 +388,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         if (gestureMapFragment == null) {
             gestureMapFragment = new GestureMapFragment();
-            fragmentManager.beginTransaction().add(R.id.editor_map_fragment, gestureMapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.editor_map_fragment, gestureMapFragment).commit();
         }
 
 //      editorListFragment = (EditorListFragment) fragmentManager.findFragmentById(R.id.mission_list_fragment);
@@ -425,11 +433,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_write.setOnClickListener(this);
         button_follow_me= (Button)findViewById(R.id.button_follow_me);
         button_follow_me.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     public String getMapName(){
@@ -502,6 +505,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 break;
             case R.id.show_hide_arrow:
                 if(showhidearrow%2==0){
+
                     setGone(R.id.video_view);
                     setGone(R.id.video_control_view);
                 }else{
@@ -537,57 +541,45 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 float xscale = xtotal/x;
                 float yscale = ytotal/y;
                 if (index%2==0){
+                    if(getMapName().equals("GOOGLE_MAP")){
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(510);//设置动画持续时间
+                        animation.setDuration(400);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-                        findViewById(R.id.video_view).startAnimation(animation);
+                        videolayout.startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
-                                if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
-                                    fragmentManager.beginTransaction().replace(R.id.video_view,flightMapFragment).commit();
-                                }else {
-                                    fragmentManager.beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
-                                }
-
-                                if(findViewById(R.id.editor_map_fragment).getVisibility()==View.GONE) {
-                                    setVisible(R.id.editor_map_fragment);
-                                }
-                                fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,videoControlFragment).commit();
-                                setGone(R.id.location_button_container);
-                                setGone(R.id.editortools);
-                                setGone(R.id.button_write);
-                                setVisible(R.id.button_follow_me);
-                                showVideo = false;
+                                videopage();
                             }
-                        },500);
+                        },380);
+                    }else {
+                        videopage();
+                    }
+                    showVideo = false;
                 }else{
-
+                    if (getMapName().equals("GOOGLE_MAP")){
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(510);//设置动画持续时间
-                        findViewById(R.id.video_view).startAnimation(animation);
+                        animation.setDuration(400);//设置动画持续时间
+                        /** 常用方法 */
+//                    animation.setRepeatCount(int repeatCount);//设置重复次数
+//                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                        videolayout.startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
-                                if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
-                                    findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
-                                }
-                                fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
-                                setVisible(R.id.location_button_container);
-                                setVisible(R.id.editortools);
-                                setVisible(R.id.button_write);
-                                setGone(R.id.button_follow_me);
-                                showVideo = true;
+                                mappage();
                             }
-                        },500);
+                        },380);
+                    }else{
+                        mappage();
+                    }
+                    showVideo = true;
                 }
                 index++;
                 break;
@@ -596,6 +588,37 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
 
     }
+
+    private void mappage() {
+        fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
+        if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
+            setGone(R.id.editor_map_fragment);
+            setVisible(R.id.tips);
+        }
+        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
+        setVisible(R.id.location_button_container);
+        setVisible(R.id.editortools);
+        setVisible(R.id.button_write);
+        setGone(R.id.button_follow_me);
+    }
+
+    private void videopage() {
+        if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
+            fragmentManager.beginTransaction().replace(R.id.video_view,flightMapFragment).commit();
+        }else {
+            fragmentManager.beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
+        }
+
+        if(findViewById(R.id.editor_map_fragment).getVisibility()== View.GONE) {
+            setVisible(R.id.editor_map_fragment);
+        }
+        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,videoControlFragment).commit();
+        setGone(R.id.location_button_container);
+        setGone(R.id.editortools);
+        setGone(R.id.button_write);
+        setVisible(R.id.button_follow_me);
+    }
+
 
     void confirmConnect(int id){
         if(DroneManager.getDrone()!=null){
@@ -666,9 +689,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         if(getMapName().equals("GOOGLE_MAP")){
             if(!isSupportGooglePlay()){
                 if(showVideo){
-                    findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
+                    setGone(R.id.editor_map_fragment);
+                    setVisible(R.id.tips);
                 }
             }
+        }else{
+            setGone(R.id.show_hide_arrow);
         }
     }
 
@@ -988,7 +1014,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             public void run() {
                 getDrone().arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                ControlApi.getApi(getDrone()).takeoff(takeOffAltitude, null);
+                getDrone().doGuidedTakeoff(takeOffAltitude);
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");
@@ -1013,7 +1039,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 if (followState.isEnabled()) {
                     FollowApi.getApi(drone).disableFollowMe();
                 }
-                ControlApi.getApi(drone).pauseAtCurrentLocation(null);
+                VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Hover");
@@ -1033,6 +1059,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Auto Fly", new Runnable() {
             @Override
             public void run() {
+                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");

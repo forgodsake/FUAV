@@ -324,6 +324,7 @@
     <string name="pref_map_provider_settings_title">地图供应商偏好设定</string>
     <string name="pref_title_google_maps">Google地图偏好设定</string>
     <string name="pref_title_baidu_maps">百度地图偏好设定</string>
+    <string name="pref_title_gaode_maps">高德地图偏好设定</string>
     <string name="activity_title_map_provider_preferences">地图供应商偏好设定</string>
     <string name="pref_ui_realtime_footprints_title">实时相机足迹</string>
     <string name="pref_ui_realtime_footprints_summary">实时显示相机在地面上的投影</string>

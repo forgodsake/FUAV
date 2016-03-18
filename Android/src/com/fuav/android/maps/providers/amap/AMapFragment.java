@@ -22,25 +22,25 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.AMapOptions;
-import com.amap.api.maps2d.CameraUpdate;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.LocationSource;
-import com.amap.api.maps2d.Projection;
-import com.amap.api.maps2d.SupportMapFragment;
-import com.amap.api.maps2d.model.BitmapDescriptorFactory;
-import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.LatLngBounds;
-import com.amap.api.maps2d.model.Marker;
-import com.amap.api.maps2d.model.MarkerOptions;
-import com.amap.api.maps2d.model.MyLocationStyle;
-import com.amap.api.maps2d.model.Polygon;
-import com.amap.api.maps2d.model.PolygonOptions;
-import com.amap.api.maps2d.model.Polyline;
-import com.amap.api.maps2d.model.PolylineOptions;
-import com.amap.api.maps2d.model.VisibleRegion;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.Projection;
+import com.amap.api.maps.SupportMapFragment;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polygon;
+import com.amap.api.maps.model.PolygonOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.model.VisibleRegion;
 import com.fuav.android.DroidPlannerApp;
 import com.fuav.android.R;
 import com.fuav.android.maps.DPMap;
@@ -100,8 +100,9 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     private Polyline mDroneLeashPath;
     private int maxFlightPathSize;
     private LatLng latLng;
+    private int isFirst=1;
 
-    private static final float GO_TO_MY_LOCATION_ZOOM = 18.6f;
+    private static final float GO_TO_MY_LOCATION_ZOOM = 19f;
 
     private static final IntentFilter eventFilter = new IntentFilter(AttributeEvent.GPS_POSITION);
 
@@ -130,7 +131,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
     private void setUpMapIfNeeded() {
         if (mMap != null) {
-            mMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+            mMap.setMapType(AMapPrefFragment.PrefManager.getMapType(getContext()));
 
             MyLocationStyle myLocationStyle = new MyLocationStyle();
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory
@@ -142,6 +143,9 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             mMap.setMyLocationStyle(myLocationStyle);
             mMap.setLocationSource(this);// 设置定位监听
             mMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+            mMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_LEFT);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+            mMap.getUiSettings().setZoomControlsEnabled(false);
         }
     }
 
@@ -236,7 +240,8 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        mMap.getUiSettings().setZoomControlsEnabled(false);
     }
 
 
@@ -250,6 +255,12 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
         setUpMapIfNeeded();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+    }
 
     @Override
     public void onStop() {
@@ -440,7 +451,6 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
                 mBiMarkersMap.removeKey(markerInfo);
             }
         }
-        mMap.invalidate();
 
 
     }
@@ -760,7 +770,10 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
             }
             LatLong latlong = DroneHelper.GaodeLatLngToCoord(latLng);
             if (mPanMode.get() == AutoPanMode.USER) {
-                updateCamera(latlong, GO_TO_MY_LOCATION_ZOOM);
+                updateCamera(latlong, mMap.getMaxZoomLevel());
+            }else if(isFirst==1){
+                updateCamera(latlong, mMap.getMaxZoomLevel());
+                isFirst++;
             }
         }
     }

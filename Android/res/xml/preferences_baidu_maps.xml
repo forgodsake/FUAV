@@ -10,8 +10,8 @@
         android:key="pref_google_tile_provider_settings">
         <ListPreference
             android:defaultValue="satellite"
-            android:entries="@array/BMapTypes"
-            android:entryValues="@array/BMapTypeValues"
+            android:entries="@array/AMapTypes"
+            android:entryValues="@array/AMapTypeValues"
             android:key="pref_map_type"
             android:summary="@string/pref_map_type_summary"
             android:title="@string/pref_map_type"/>

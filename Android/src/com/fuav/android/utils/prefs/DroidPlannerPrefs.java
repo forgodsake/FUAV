@@ -82,7 +82,7 @@ public class DroidPlannerPrefs {
     private static final String DEFAULT_UDP_SERVER_PORT = "14550";
 
     public static final String PREF_UNIT_SYSTEM = "pref_unit_system";
-    private static final int DEFAULT_UNIT_SYSTEM = UnitSystem.AUTO;
+    private static final int DEFAULT_UNIT_SYSTEM = UnitSystem.METRIC;
 
     public static final String PREF_WARNING_GROUND_COLLISION = "pref_ground_collision_warning";
     private static final boolean DEFAULT_WARNING_GROUND_COLLISION = false;

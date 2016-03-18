@@ -22,11 +22,6 @@
     <!-- Enable uncaught exception tracking -->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <!-- The screen names that will show up in the report -->
-    <screenName name="com.fuav.android.activities.FlightActivity">
-        Flight Screen
-    </screenName>
-
     <screenName name="com.fuav.android.activities.EditorActivity">
         Editor Screen
     </screenName>

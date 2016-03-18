@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginBottom="1dp"
+        android:background="#FFF" >
+
+        <TextView
+            android:id="@+id/tvTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="关于我们" />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="        帝翼飞坐落于有中国硅谷之称的深圳市，是一家专业从事多旋翼无人机研究和开发的制造商。我们的无人机产品可以广泛应用于航拍、工业监测、农业和未来物流运输等领域。\n
+        我们提供从一体化多旋翼无人机到飞行控制系统、电子调速器、马达、 高性能遥控器等配件，可以根据客户的需求提供多旋翼无人机方案的定制业务。\n
+        在帝翼飞，研发人员来自不同的工作背景并具有丰富的技能，他们致力于创造高附加值的产品和为用户提供卓越的产品体验。帝翼飞的目标是保持领先的技术优势为客户提供有创意的产品设计和优质的服务。"/>
+    </LinearLayout>
+
+</LinearLayout>

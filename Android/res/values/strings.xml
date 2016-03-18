@@ -344,8 +344,10 @@
     <string name="pref_map_provider_settings_title">Map Provider Preferences</string>
     <string name="pref_title_google_maps">Google Maps Preferences</string>
     <string name="pref_title_baidu_maps">Baidu Maps Preferences</string>
+    <string name="pref_title_gaode_maps">Gaode Maps Preferences</string>
     <string name="pref_title_google_tile_provider">Google Tile Provider</string>
     <string name="pref_title_baidu_tile_provider">Baidu Tile Provider</string>
+    <string name="pref_title_gaode_tile_provider">Gaode Tile Provider</string>
     <string name="activity_title_map_provider_preferences">Map Provider Preferences</string>
     <string name="pref_ui_realtime_footprints_title">Realtime camera footprint</string>
     <string name="pref_ui_realtime_footprints_summary">Display the camera projection on the ground in realtime</string>
@@ -603,7 +605,6 @@
     <string name="uploader_fail_retry_message">Will try again later</string>
     <string name="uploader_notification_title">Droneshare upload</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">google play service is not available</string>
 
 

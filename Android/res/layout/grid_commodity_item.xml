@@ -6,39 +6,18 @@
 
     <ImageView
         android:id="@+id/imageViewGoods"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/commoditybackground"
         android:padding="5dp"
-        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="52dp"
         android:scaleType="fitXY"
         android:src="@drawable/smargle" />
-
-
-    <TextView
-        android:id="@+id/textViewPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignRight="@+id/linearLayout"
-        android:layout_marginRight="30dp"
-        android:paddingBottom="20dp"
-        android:textColor="#FF8000"
-        android:textSize="18sp"
-        android:text="68" />
-    <TextView
-        android:id="@+id/textViewsymbol"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/textViewPrice"
-        android:paddingBottom="20dp"
-        android:textColor="#FF8000"
-        android:textSize="18sp"
-        android:text="￥" />
 
     <TextView
         android:id="@+id/textViewName"
@@ -47,17 +26,39 @@
         android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/imageViewGoods"
-        android:text="smargle" />
+        android:text="smargle"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/textViewsymbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF8000"
+        android:textSize="18sp"
+        android:text="￥"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/textViewName"/>
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF8000"
+        android:textSize="18sp"
+        android:text="68"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/textViewsymbol"/>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/imageViewGoods"
-        android:layout_toRightOf="@+id/textViewName"
-        android:layout_marginLeft="5dp"
         android:background="@drawable/stroke"
-        >
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/button_add">
 
         <Button
             android:id="@+id/buttonDelete"
@@ -70,7 +71,7 @@
             android:layout_width="36dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="1"
+            android:text="0"
             android:textColor="#FF8000" />
 
         <Button
@@ -79,11 +80,30 @@
             android:layout_height="30dp"
             android:background="@drawable/addb" />
     </LinearLayout>
-    <View android:layout_width="300dp"
-        android:layout_height="1px"
-        android:background="#bbb"
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="80dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/button_pay"
+        android:background="#48D1CC"
+        android:text="加入购物车"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
+
+    <Button
+        android:id="@+id/button_pay"
+        android:layout_width="80dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/imageViewGoods"/>
+        android:layout_marginRight="20dp"
+        android:background="#FF34B3"
+        android:text="立即支付"
+        android:textColor="@color/white"
+        android:textSize="13sp"/>
 
 
 

@@ -3,7 +3,6 @@ package com.fuav.android.utils;
 import android.content.res.Resources;
 import android.location.Location;
 
-import com.baidu.mapapi.map.MyLocationData;
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 
@@ -32,34 +31,34 @@ public class DroneHelper {
 		return (int) Math.round(value * scale);
 	}
 
-	public static LatLong BaiduLatLngToCoord(com.baidu.mapapi.model.LatLng point) {
-		double d[] = new double[2];
-		untransformBaidu(point.latitude,point.longitude,d);
-		return new LatLong(d[0],d[1]);
-	}
+//	public static LatLong BaiduLatLngToCoord(com.baidu.mapapi.model.LatLng point) {
+//		double d[] = new double[2];
+//		untransformBaidu(point.latitude,point.longitude,d);
+//		return new LatLong(d[0],d[1]);
+//	}
+//
+//	public static com.baidu.mapapi.model.LatLng CoordToBaiduLatLang(LatLong coord) {
+//
+//		double d[] = new double[2];
+//		transformBaidu(coord.getLatitude(),coord.getLongitude(),d);
+//		return new com.baidu.mapapi.model.LatLng(d[0],d[1]);
+//
+//	}
+//
+//	public static LatLong BDLocationToCoord(MyLocationData location){
+//		double d[] = new double[2];
+//		untransformBaidu(location.latitude,location.longitude,d);
+//		return new LatLong(d[0],d[1]);
+//	}
 
-	public static com.baidu.mapapi.model.LatLng CoordToBaiduLatLang(LatLong coord) {
-
-		double d[] = new double[2];
-		transformBaidu(coord.getLatitude(),coord.getLongitude(),d);
-		return new com.baidu.mapapi.model.LatLng(d[0],d[1]);
-
-	}
-
-	public static LatLong BDLocationToCoord(MyLocationData location){
-		double d[] = new double[2];
-		untransformBaidu(location.latitude,location.longitude,d);
-		return new LatLong(d[0],d[1]);
-	}
-
-	public static com.amap.api.maps2d.model.LatLng CoordToGaodeLatLang(LatLong coord)
+	public static com.amap.api.maps.model.LatLng CoordToGaodeLatLang(LatLong coord)
 	{
 		double d[] = new double[2];
 		transform(coord.getLatitude(),coord.getLongitude(),d);
-		return new com.amap.api.maps2d.model.LatLng(d[0],d[1]);
+		return new com.amap.api.maps.model.LatLng(d[0],d[1]);
 	}
 
-	public static LatLong GaodeLatLngToCoord(com.amap.api.maps2d.model.LatLng point)
+	public static LatLong GaodeLatLngToCoord(com.amap.api.maps.model.LatLng point)
 	{
 		double d[] = new double[2];
 		untransform(point.latitude, point.longitude, d);

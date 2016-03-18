@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginBottom="1dp"
+        android:background="#FFF" >
+
+        <TextView
+            android:id="@+id/tvTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="常见问题" />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#fff" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/rule1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="无人机的最大控制距离为多少？\n
+        信号有效传输距离取决于实际飞行环境，实测最大距离为1公里。" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#fff" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/rule2" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="如何设置无人机的遥控器控制模式？\n
+        遥控器的控制模式出厂默认设置为模式2，在此模式下，右摇杆控制着飞机的飞行方向，左摇杆控制油门及尾舵，您也可通过app将遥控器设置为模式1或进行其他自定义设置，此操作建议高级用户使用。" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#fff" >
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/rule3" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="无人机关机延时，这正常吗？\n
+        这属于正常现象。在关闭智能电池之后，系统会等候几秒钟，待Micro SD卡里的数据存储完毕后才会关机，这是为了防止数据丢失或损坏。" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#fff" >
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/rule4" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="无人机支持双遥控器模式吗？\n
+        不支持。标配遥控器已经可以同时控制飞行器及云台俯仰。" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#fff" >
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="12dp"
+            android:src="@drawable/rule5" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="遥控器上的“P, A, F”开关的作用是什么？\n
+        这是飞行模式开关，可以根据需求切换不同模式：\n
+        P 模式为定位模式，使用GPS 模块或视觉定位系统以实现飞行器精确悬停。\n
+        A 模式为姿态模式，不使用GPS 模块与视觉定位系统进行定位，仅提供姿态增稳，若GPS卫星信号良好可实现返航。\n
+        F 模式为功能模式，此模式下可使用智能方向控制功能（IOC）。\n
+        了解智能方向控制功能（IOC）的更多详情，请参考用户手册附录部分。P 模式为出厂默认模式。其他模式的使用指南，请参见用户手册。" />
+
+    </LinearLayout>
+
+</LinearLayout>
+    </ScrollView>
