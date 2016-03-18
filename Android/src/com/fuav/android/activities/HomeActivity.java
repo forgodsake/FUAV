@@ -158,7 +158,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                     }
                 },
                 0,
-                2000,
+                10000,
                 TimeUnit.MILLISECONDS);
     }
 }

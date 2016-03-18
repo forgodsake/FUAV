@@ -12,7 +12,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.crashlytics.android.Crashlytics;
 import com.fuav.android.activities.helpers.BluetoothDevicesActivity;
 import com.fuav.android.maps.providers.google_map.tiles.mapbox.offline.MapDownloader;
@@ -146,7 +145,6 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 
     @Override
     public void onCreate() {
-        SDKInitializer.initialize(getApplicationContext());
         MultiDex.install(this);
         super.onCreate();
 

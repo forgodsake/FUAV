@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -349,6 +350,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_write;
     private Button button_follow_me;
     private TextView infoView;
+    private FrameLayout video_view;
 
     /**
      * If the mission was loaded from a file, the filename is stored here.
@@ -425,6 +427,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_write.setOnClickListener(this);
         button_follow_me= (Button)findViewById(R.id.button_follow_me);
         button_follow_me.setOnClickListener(this);
+        video_view= (FrameLayout) findViewById(R.id.video_view);
     }
 
     @Override
@@ -540,12 +543,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(510);//设置动画持续时间
+                        animation.setDuration(310);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
                         findViewById(R.id.video_view).startAnimation(animation);
-                        new Handler().postDelayed(new Runnable() {
+                    new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
 
@@ -565,13 +568,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setVisible(R.id.button_follow_me);
                                 showVideo = false;
                             }
-                        },500);
+                        },300);
                 }else{
 
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-                        animation.setDuration(510);//设置动画持续时间
+                        animation.setDuration(310);//设置动画持续时间
                         findViewById(R.id.video_view).startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -588,7 +591,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 setGone(R.id.button_follow_me);
                                 showVideo = true;
                             }
-                        },500);
+                        },300);
                 }
                 index++;
                 break;
@@ -669,7 +672,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 if(showVideo){
                     findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
                 }
+            }else {
+                setVisible(R.id.tips);
+                setGone(R.id.editor_map_fragment);
             }
+        }else {
+            setGone(R.id.show_hide_arrow);
         }
     }
 

@@ -7,7 +7,6 @@
         android:id="@+id/gesture_map_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
     <android.gesture.GestureOverlayView
         android:id="@+id/overlay1"
         android:layout_width="match_parent"
