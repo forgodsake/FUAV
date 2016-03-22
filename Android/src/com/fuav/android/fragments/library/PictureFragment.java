@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fuav.android.R;
@@ -40,12 +42,13 @@ public class PictureFragment extends Fragment {
 
     //显示图片的配置
     DisplayImageOptions options ;
-    List<String> list = new ArrayList<String>();
+    private ArrayList<String> mIconlist = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
     private GridAdapter adapter = new GridAdapter();
+    private int index = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_storehouse_header, null);
 
@@ -68,9 +71,19 @@ public class PictureFragment extends Fragment {
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
                                     getActivity(), view.findViewById(R.id.cardview),"TEST");
                     Intent intent = new Intent(getActivity(), PicPlayActivity.class);
-                    intent.putExtra("path",list.get(position));
+                    intent.putExtra("path",mIconlist.get(position));
                     ActivityCompat.startActivity( getActivity(),intent, options.toBundle());
                 }
+            }
+        });
+        gridListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0) {
+                    view.findViewById(R.id.pic_item).setVisibility(View.GONE);
+                    view.findViewById(R.id.delete_item).setVisibility(View.VISIBLE);
+                }
+                return true;
             }
         });
 
@@ -137,12 +150,12 @@ public class PictureFragment extends Fragment {
                         suffix.toLowerCase().equals(".bmp") ||
                         suffix.toLowerCase().equals(".png") ||
                         suffix.toLowerCase().equals(".gif") ) {
-                    list.add(fi.getPath());
+                    mIconlist.add(fi.getPath());
                     mNameList.add(suffixname);
                 }
             }
         }
-        return list;
+        return mIconlist;
     }
 
 
@@ -164,7 +177,7 @@ public class PictureFragment extends Fragment {
             return position;
         }
 
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ItemViewTag viewTag;
 
             if (convertView == null)
@@ -175,6 +188,8 @@ public class PictureFragment extends Fragment {
                 viewTag = new ItemViewTag();
                 viewTag.mIcon = (ImageView) convertView.findViewById(R.id.grid_imageview);
                 viewTag.mName = (TextView) convertView.findViewById(R.id.grid_name);
+                viewTag.mDelete = (Button) convertView.findViewById(R.id.delete);
+                viewTag.mLinearLayout = (LinearLayout) convertView.findViewById(R.id.delete_item);
                 convertView.setTag(viewTag);
             } else
             {
@@ -185,7 +200,28 @@ public class PictureFragment extends Fragment {
             viewTag.mName.setText(mNameList.get(position));
 
             // set icon
-            ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
+            ImageLoader.getInstance().displayImage("file://"+mIconlist.get(position),viewTag.mIcon,options);
+
+            final View finalConvertView = convertView;
+
+            viewTag.mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mNameList.remove(position);
+                    finalConvertView.findViewById(R.id.pic_item).setVisibility(View.VISIBLE);
+                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+
+            viewTag.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finalConvertView.findViewById(R.id.pic_item).setVisibility(View.VISIBLE);
+                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
+                }
+            });
+
             return convertView;
         }
 
@@ -193,6 +229,8 @@ public class PictureFragment extends Fragment {
         {
             protected ImageView mIcon;
             protected TextView mName;
+            protected Button mDelete;
+            protected LinearLayout mLinearLayout;
         }
 
     }

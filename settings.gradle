@@ -1,6 +1,5 @@
 //Android projects
-include  ':Android'
-
+include ':Android'
 
 //Library projects
 include ':ClientLib'
