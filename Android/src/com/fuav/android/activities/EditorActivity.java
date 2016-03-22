@@ -34,6 +34,7 @@ import com.fuav.android.activities.interfaces.OnEditorInteraction;
 import com.fuav.android.core.drone.DroneManager;
 import com.fuav.android.dialogs.SlideToUnlockDialog;
 import com.fuav.android.dialogs.SupportEditInputDialog;
+import com.fuav.android.dialogs.SupportYesNoWithPrefsDialog;
 import com.fuav.android.dialogs.openfile.OpenFileDialog;
 import com.fuav.android.dialogs.openfile.OpenMissionDialog;
 import com.fuav.android.fragments.BlankFragment;
@@ -70,6 +71,7 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
+import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
@@ -1059,9 +1061,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("arm", new Runnable() {
             @Override
             public void run() {
-                getDrone().arm(true);
+                final Drone drone = getDrone();
+                drone.arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                getDrone().doGuidedTakeoff(takeOffAltitude);
+                drone.doGuidedTakeoff(takeOffAltitude);
+                final Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
+                if (altitude != null) {
+                    double alt = altitude.getAltitude();
+                    if(alt==takeOffAltitude){
+                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
+                    }
+                    Toast.makeText(EditorActivity.this,alt+"",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");
@@ -1106,18 +1117,75 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final SlideToUnlockDialog unlockDialog = SlideToUnlockDialog.newInstance("Auto Fly", new Runnable() {
             @Override
             public void run() {
-//                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
-                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                final Drone drone = getDrone();
-                VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
-                    @Override
-                    public void onSuccess() {
-                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
+                final State droneState = getDrone().getAttribute(AttributeType.STATE);
+                if (droneState != null && droneState.isConnected()) {
+                    if (droneState.isArmed()) {
+                        final MissionProxy missionProxy = dpApp.getMissionProxy();
+                        if(missionProxy.getItems().isEmpty()){
+                            Toast.makeText(EditorActivity.this,"无可发送任务",Toast.LENGTH_SHORT).show();
+                        }else if ( missionProxy.hasTakeoffAndLandOrRTL()) {
+                            missionProxy.sendMissionToAPM(drone);
+                            getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                        } else {
+                            SupportYesNoWithPrefsDialog dialog = SupportYesNoWithPrefsDialog.newInstance(
+                                    getApplicationContext(), MISSION_UPLOAD_CHECK_DIALOG_TAG,
+                                    getString(R.string.mission_upload_title),
+                                    getString(R.string.mission_upload_message),
+                                    getString(android.R.string.ok),
+                                    getString(R.string.label_skip),
+                                    DroidPlannerPrefs.PREF_AUTO_INSERT_MISSION_TAKEOFF_RTL_LAND, EditorActivity.this);
+                            if (dialog != null) {
+                                dialog.show(getSupportFragmentManager(), MISSION_UPLOAD_CHECK_DIALOG_TAG);
+                            }
+                        }
+                    } else {
+                        Toast.makeText(EditorActivity.this,"请先解锁飞机",Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide to Land off");
+    }
+
+    @Override
+    public void onDialogYes(String dialogTag) {
+        final Drone drone = dpApp.getDrone();
+        final MissionProxy missionProxy = dpApp.getMissionProxy();
+
+        switch(dialogTag){
+            case MISSION_UPLOAD_CHECK_DIALOG_TAG:
+                missionProxy.addTakeOffAndRTL();
+                missionProxy.sendMissionToAPM(drone);
+                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                break;
+        }
+    }
+
+    @Override
+    public void onDialogNo(String dialogTag) {
+        final Drone drone = dpApp.getDrone();
+        final MissionProxy missionProxy = dpApp.getMissionProxy();
+        switch(dialogTag){
+            case MISSION_UPLOAD_CHECK_DIALOG_TAG:
+                missionProxy.sendMissionToAPM(drone);
+                final State droneState = getDrone().getAttribute(AttributeType.STATE);
+                if (droneState != null && droneState.isConnected()) {
+                    if (droneState.isArmed()) {
+                        if (droneState.isFlying()) {
+                            getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                        } else {
+                            final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                            VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
+                                @Override
+                                public void onSuccess() {
+                                    VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+        }
     }
 
     private void getFolloeMeConfirmation() {

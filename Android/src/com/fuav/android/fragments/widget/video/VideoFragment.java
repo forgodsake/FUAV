@@ -1,11 +1,11 @@
 package com.fuav.android.fragments.widget.video;
 
 
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,7 +29,7 @@ public class VideoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_widget_sololink_video, container, false);
         displayView = (DisplayView) view.findViewById(R.id.full_video_view);
         if(!getMapName().equals("GOOGLE_MAP")){
-            GLSurfaceView surfaceView = (GLSurfaceView) displayView.getChildAt(0);
+            SurfaceView surfaceView = (SurfaceView) displayView.getChildAt(0);
             surfaceView.setZOrderOnTop(true);
         }
         return view;

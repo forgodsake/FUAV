@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fuav.android.R;
@@ -65,6 +67,18 @@ public class VideoFragment extends Fragment {
                 }
             }
         });
+
+        gridListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0) {
+                    view.findViewById(R.id.vid_item).setVisibility(View.GONE);
+                    view.findViewById(R.id.delete_item).setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
+
         //获取sd卡下的图片并显示
         getVideos(Environment.getExternalStorageDirectory() + "/FUAV");
         options = new DisplayImageOptions.Builder()
@@ -152,11 +166,15 @@ public class VideoFragment extends Fragment {
 
             if (convertView == null)
             {
-                convertView = getLayoutInflater(null).inflate(R.layout.video_gridview_item, null);
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.video_gridview_item, parent, false);
 
                 // construct an item tag
-                viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.grid_videoview),
-                        (TextView) convertView.findViewById(R.id.grid_name));
+                viewTag = new ItemViewTag();
+                viewTag.mName =(TextView) convertView.findViewById(R.id.grid_name);
+                viewTag.mIcon = (ImageView) convertView.findViewById(R.id.grid_videoview);
+                viewTag.mDelete = (Button) convertView.findViewById(R.id.delete);
+                viewTag.mLinearLayout = (LinearLayout) convertView.findViewById(R.id.delete_item);
                 convertView.setTag(viewTag);
             } else
             {
@@ -169,6 +187,27 @@ public class VideoFragment extends Fragment {
             // set icon
             ImageLoader.getInstance().displayImage("file://"+list.get(position),viewTag.mIcon,options);
 //            viewTag.mIcon.setImageBitmap(getVideoThumbnail(list.get(position), MediaStore.Images.Thumbnails.MINI_KIND));
+
+            final View finalConvertView = convertView;
+
+            viewTag.mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mNameList.remove(position);
+                    finalConvertView.findViewById(R.id.pic_item).setVisibility(View.VISIBLE);
+                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+
+            viewTag.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finalConvertView.findViewById(R.id.vid_item).setVisibility(View.VISIBLE);
+                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
+                }
+            });
+
             return convertView;
         }
 
@@ -176,12 +215,8 @@ public class VideoFragment extends Fragment {
         {
             protected ImageView mIcon;
             protected TextView mName;
-
-            public ItemViewTag(ImageView icon, TextView name)
-            {
-                this.mName = name;
-                this.mIcon = icon;
-            }
+            protected Button mDelete;
+            protected LinearLayout mLinearLayout;
         }
 
     }

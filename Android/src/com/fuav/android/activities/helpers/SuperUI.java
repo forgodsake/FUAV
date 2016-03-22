@@ -361,7 +361,6 @@ public abstract class SuperUI extends AppCompatActivity implements DroidPlannerA
                             getString(android.R.string.ok),
                             getString(R.string.label_skip),
                             DroidPlannerPrefs.PREF_AUTO_INSERT_MISSION_TAKEOFF_RTL_LAND, this);
-
                     if (dialog != null) {
                         dialog.show(getSupportFragmentManager(), MISSION_UPLOAD_CHECK_DIALOG_TAG);
                     }
