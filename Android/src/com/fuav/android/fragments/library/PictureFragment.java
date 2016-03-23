@@ -208,6 +208,7 @@ public class PictureFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     mNameList.remove(position);
+                    mIconlist.remove(position);
                     finalConvertView.findViewById(R.id.pic_item).setVisibility(View.VISIBLE);
                     finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();

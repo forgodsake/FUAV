@@ -5,16 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.SupportActivity;
+import com.fuav.android.view.CustListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +24,6 @@ import java.util.List;
  */
 public class DefaultSupportFragment extends Fragment {
 
-    private FragmentManager fragmentManager;
-
     private int [] images = new int [] {
             R.drawable.more1,R.drawable.more2,R.drawable.more3,
             R.drawable.more4,R.drawable.more5,R.drawable.more6
@@ -35,7 +32,7 @@ public class DefaultSupportFragment extends Fragment {
             "联系客服","常见问题","服务范围","关于我们","用户协议","意见反馈"
     };
 
-    private ListView supportList;
+    private CustListView supportList;
     private SimpleAdapter adapter;
     private List<HashMap<String, Object>> list;
 
@@ -44,7 +41,7 @@ public class DefaultSupportFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_default_support, container, false);
-        supportList = (ListView) view.findViewById(R.id.listViewSupport);
+        supportList = (CustListView) view.findViewById(R.id.listViewSupport);
         return view;
     }
 
@@ -52,7 +49,6 @@ public class DefaultSupportFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         list = new ArrayList<HashMap<String,Object>>();
-        fragmentManager = getParentFragment().getChildFragmentManager();
         for (int i = 0; i < images.length; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("image", images[i]);
@@ -96,5 +92,7 @@ public class DefaultSupportFragment extends Fragment {
             }
         });
     }
+
+
 
 }
