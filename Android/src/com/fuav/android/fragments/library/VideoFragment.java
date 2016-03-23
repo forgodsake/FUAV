@@ -43,7 +43,7 @@ public class VideoFragment extends Fragment {
 
     //显示图片的配置
     DisplayImageOptions options ;
-    List<String> list = new ArrayList<String>();
+    private List<String> list = new ArrayList<String>();
     private ArrayList<String> mNameList = new ArrayList<String>();
     private GridAdapter adapter = new GridAdapter();
 
@@ -194,9 +194,10 @@ public class VideoFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     mNameList.remove(position);
-                    finalConvertView.findViewById(R.id.pic_item).setVisibility(View.VISIBLE);
-                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
+                    list.remove(position);
                     adapter.notifyDataSetChanged();
+                    finalConvertView.findViewById(R.id.vid_item).setVisibility(View.VISIBLE);
+                    finalConvertView.findViewById(R.id.delete_item).setVisibility(View.GONE);
                 }
             });
 

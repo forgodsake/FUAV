@@ -353,13 +353,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_write;
     private Button button_follow_me;
     private TextView infoView;
-<<<<<<< HEAD
-    private FrameLayout video_view;
-=======
     private FrameLayout videolayout;
     private FrameLayout maplayout;
     private RelativeLayout parent_view;
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
 
     /**
      * If the mission was loaded from a file, the filename is stored here.
@@ -440,7 +436,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_write.setOnClickListener(this);
         button_follow_me= (Button)findViewById(R.id.button_follow_me);
         button_follow_me.setOnClickListener(this);
-        video_view= (FrameLayout) findViewById(R.id.video_view);
     }
 
     public String getMapName(){
@@ -553,59 +548,30 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-<<<<<<< HEAD
-                        animation.setDuration(310);//设置动画持续时间
-                        /** 常用方法 */
-//                    animation.setRepeatCount(int repeatCount);//设置重复次数
-//                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-                        findViewById(R.id.video_view).startAnimation(animation);
-                    new Handler().postDelayed(new Runnable() {
-=======
+
                         animation.setDuration(400);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
 //                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
                         videolayout.startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
+
                             @Override
                             public void run() {
                                 videopage();
                             }
-<<<<<<< HEAD
-                        },300);
-=======
+
                         },380);
                     }else {
                         videopage();
                     }
                     showVideo = false;
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
                 }else{
                     if (getMapName().equals("GOOGLE_MAP")){
                         /** 设置缩放动画 */
                         final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
-<<<<<<< HEAD
-                        animation.setDuration(310);//设置动画持续时间
-                        findViewById(R.id.video_view).startAnimation(animation);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
-                                if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
-                                    findViewById(R.id.editor_map_fragment).setVisibility(View.GONE);
-                                    findViewById(R.id.tips).setVisibility(View.VISIBLE);
-                                }
-                                fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
-                                setVisible(R.id.location_button_container);
-                                setVisible(R.id.editortools);
-                                setVisible(R.id.button_write);
-                                setGone(R.id.button_follow_me);
-                                showVideo = true;
-                            }
-                        },300);
-=======
+
                         animation.setDuration(400);//设置动画持续时间
                         /** 常用方法 */
 //                    animation.setRepeatCount(int repeatCount);//设置重复次数
@@ -621,7 +587,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         mappage();
                     }
                     showVideo = true;
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
                 }
                 index++;
                 break;
@@ -738,11 +703,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 setVisible(R.id.tips);
                 setGone(R.id.editor_map_fragment);
             }
-<<<<<<< HEAD
-        }else {
-=======
         }else{
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
             setGone(R.id.show_hide_arrow);
         }
     }

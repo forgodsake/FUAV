@@ -145,10 +145,6 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 
     @Override
     public void onCreate() {
-<<<<<<< HEAD
-=======
-//        SDKInitializer.initialize(getApplicationContext());
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
         MultiDex.install(this);
         super.onCreate();
 

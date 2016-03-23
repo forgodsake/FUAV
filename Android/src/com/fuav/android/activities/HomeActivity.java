@@ -29,13 +29,8 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
     private ImageView imDevice,imMedia,imStore,imSupport;
     private TextView txDevice,txMedia,txStore,txSupport;
     private FragmentManager manager;
-<<<<<<< HEAD
-    private static int index = 0;
-=======
     private SupportFragment supportFragment;
     private static int index = 0;
-
->>>>>>> 17c16ff529b34972c2c5e8d3a26372621c3a067e
 
     @Override
     protected int getToolbarId() {
@@ -155,33 +150,6 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                 },
                 0,
                 5000,
-                TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void onBackPressed() {
-        index++;
-        if(index==1){
-            Toast.makeText(this,"press again to exit!",Toast.LENGTH_SHORT).show();
-        }else if(index==2){
-            finish();
-        }
-    }
-
-    /**
-     * 以固定周期频率执行任务
-     */
-    public static void executeFixedRate() {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        index=0;
-                    }
-                },
-                0,
-                10000,
                 TimeUnit.MILLISECONDS);
     }
 }
