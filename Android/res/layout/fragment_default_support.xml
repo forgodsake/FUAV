@@ -1,15 +1,74 @@
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#333333">
+    android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/listViewSupport"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#333333">
+
+        <RelativeLayout
+            android:id="@+id/account_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/dark_grey"
-            android:dividerHeight="0.1dp">
-        </ListView>
+            android:background="@color/white">
 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/head_portrait"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/fuav" />
+
+            <TextView
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/head_portrait"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="你尚未登录" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="100dp"
+                android:background="#F08080"
+                android:text="注册" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="120dp"
+                android:layout_marginRight="120dp"
+                android:layout_marginTop="100dp"
+                android:background="#66CDAA"
+                android:text="登陆" />
+
+
+        </RelativeLayout>
+
+        <com.fuav.android.view.CustListView
+            android:id="@+id/listViewSupport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/account_view"
+            android:divider="@color/dark_grey"
+            android:dividerHeight="0.1dp"/>
+
+    </RelativeLayout>
+
+</ScrollView>
