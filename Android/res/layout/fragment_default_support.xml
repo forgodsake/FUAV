@@ -32,6 +32,7 @@
                 android:text="你尚未登录" />
 
             <Button
+                android:id="@+id/btn_register"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
@@ -45,6 +46,7 @@
                 android:text="注册" />
 
             <Button
+                android:id="@+id/btn_login"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"

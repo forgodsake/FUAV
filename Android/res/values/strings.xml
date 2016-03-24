@@ -606,6 +606,27 @@
     <string name="uploader_notification_title">Droneshare upload</string>
 
     <string name="hello_blank_fragment">google play service is not available</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="Login_failed">Login failed:</string>
+    <string name="Is_landing">logining..</string>
+    <string name="Password_cannot_be_empty">Password cannot be empty!</string>
+    <string name="User_name_cannot_be_empty">User name cannot be empty!</string>
+    <string name="network_isnot_available">The network is not available</string>
+    <string name="em_user_remove">This user has been removed</string>
+    <string name="messages_are_empty">Messages has been cleared</string>
+    <string name="user_already_in_contactlist">This user already is your friend, only need remove out from the black list</string>
+    <string name="Are_refuse_with">Refusing</string>
+    <string name="Refuse_with_failure">Failed to refuse</string>
+    <string name="refuse">Refuse</string>
+    <string name="invite_join_group">Invite to join the group</string>
+    <string name="accept_join_group">accept join group:</string>
+    <string name="refuse_join_group">refuse join group:</string>
+    <string name="join_need_owner_approval">Join need group owner approval</string>
+    <string name="group_nick">Group Nickname:</string>
+    <string name="group_owner">Group Owner:</string>
+    <string name="delete_msg_when_exit_group">Delete messages when exit group</string>
+    <string name="auto_accept_group_invitation">Auto accept group invitation</string>
 
 
 </resources>

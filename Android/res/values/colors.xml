@@ -54,5 +54,9 @@
     <color name="very_dark_grey">#1C1C1C</color>
     <color name="medium_grey">#3C3C3C</color>
     <color name="grey700">#616161</color>
+    <color name="btn_register_pressed">#00acff</color>
+    <color name="btn_register_normal">#ffffff</color>
+    <color name="btn_login_pressed">#46678d</color>
+    <color name="btn_login_normal">#00acff</color>
 
 </resources>

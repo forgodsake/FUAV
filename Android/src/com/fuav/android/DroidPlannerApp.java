@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.fuav.android.activities.helpers.BluetoothDevicesActivity;
+import com.fuav.android.chat.DemoHelper;
 import com.fuav.android.maps.providers.google_map.tiles.mapbox.offline.MapDownloader;
 import com.fuav.android.proxy.mission.MissionProxy;
 import com.fuav.android.utils.LogToFileTree;
@@ -45,6 +46,11 @@ import timber.log.Timber;
 public class DroidPlannerApp extends MultiDexApplication implements DroneListener, TowerListener {
 
     private static final long DELAY_TO_DISCONNECTION = 1000l; // ms
+
+    /**
+     * 当前用户nickname,为了苹果推送不是userid而是昵称
+     */
+    public static String currentUserNick = "";
 
     private static final String TAG = DroidPlannerApp.class.getSimpleName();
 
@@ -137,6 +143,9 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 
     private LogToFileTree logToFileTree;
 
+    public static Context applicationContext;
+    private static DroidPlannerApp instance;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -148,6 +157,12 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 //        SDKInitializer.initialize(getApplicationContext());
         MultiDex.install(this);
         super.onCreate();
+
+        applicationContext = this;
+        instance = this;
+
+        //init demo helper
+        DemoHelper.getInstance().init(applicationContext);
 
         //创建默认的ImageLoader配置参数
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration
@@ -195,6 +210,10 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
         intentFilter.addAction(ACTION_TOGGLE_DRONE_CONNECTION);
 
         registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    public static DroidPlannerApp getInstance() {
+        return instance;
     }
 
     public MapDownloader getMapDownloader() {

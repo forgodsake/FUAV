@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.SimpleAdapter;
 
 import com.fuav.android.R;
 import com.fuav.android.activities.SupportActivity;
+import com.fuav.android.chat.ui.LoginActivity;
+import com.fuav.android.chat.ui.RegisterActivity;
 import com.fuav.android.view.CustListView;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class DefaultSupportFragment extends Fragment {
     private CustListView supportList;
     private SimpleAdapter adapter;
     private List<HashMap<String, Object>> list;
+    private Button btn_register,btn_login;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +46,8 @@ public class DefaultSupportFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_default_support, container, false);
         supportList = (CustListView) view.findViewById(R.id.listViewSupport);
+        btn_register = (Button) view.findViewById(R.id.btn_register);
+        btn_login = (Button) view.findViewById(R.id.btn_login);
         return view;
     }
 
@@ -89,6 +95,20 @@ public class DefaultSupportFragment extends Fragment {
                     default:
                         break;
                 }
+            }
+        });
+
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), RegisterActivity.class));
+            }
+        });
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
     }
