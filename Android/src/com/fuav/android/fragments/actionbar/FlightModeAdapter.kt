@@ -4,9 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.TextView
+import com.fuav.android.R
+import com.fuav.android.utils.analytics.GAUtils
 import com.google.android.gms.analytics.HitBuilders
 import com.o3dr.android.client.Drone
 import com.o3dr.android.client.apis.VehicleApi
@@ -14,8 +15,6 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType
 import com.o3dr.services.android.lib.drone.property.State
 import com.o3dr.services.android.lib.drone.property.Type
 import com.o3dr.services.android.lib.drone.property.VehicleMode
-import com.fuav.android.R
-import com.fuav.android.utils.analytics.GAUtils
 
 /**
  * Created by Fredia Huya-Kouadio on 9/25/15.
@@ -33,7 +32,7 @@ public class FlightModeAdapter(context: Context, val drone: Drone) : SelectionLi
         flightModes = VehicleMode.getVehicleModePerDroneType(type.droneType)
     }
 
-    override fun getCount() = flightModes.size()
+    override fun getCount() = flightModes.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View{
         val vehicleMode = flightModes[position]

@@ -29,6 +29,7 @@ dependencies {
     compile project(':dependencyLibs:usb-serial-for-android:UsbSerialLibrary')
     compile project(':ClientLib')
     compile project(':ptr-lib')
+    compile project(':easeui')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
         transitive = true;
     }
@@ -51,6 +52,9 @@ dependencies {
     compile 'com.android.support:support-v4:23.2.0'
     compile files('libs/Android_Map_V2.7.20151124.jar')
     compile files('libs/easyandroidanimationslibrary-v0.5.jar')
+    compile files('libs/bolts-android-1.2.0.jar')
+    compile files('libs/hyphenatechat_3.1.0.jar')
+    compile files('libs/Parse-1.9.4.jar')
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)

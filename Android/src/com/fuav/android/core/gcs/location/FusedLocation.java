@@ -5,8 +5,9 @@ import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
 
+import com.fuav.android.core.gcs.location.Location.LocationFinder;
+import com.fuav.android.core.gcs.location.Location.LocationReceiver;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -16,9 +17,6 @@ import com.google.android.gms.location.LocationServices;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager;
 import com.o3dr.services.android.lib.util.googleApi.GoogleApiClientManager.GoogleApiClientTask;
-
-import com.fuav.android.core.gcs.location.Location.LocationFinder;
-import com.fuav.android.core.gcs.location.Location.LocationReceiver;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -196,7 +194,7 @@ public class FusedLocation extends LocationCallback implements LocationFinder, G
     public void onGoogleApiConnectionError(ConnectionResult result) {
         notifyLocationUnavailable();
 
-        GooglePlayServicesUtil.showErrorNotification(result.getErrorCode(), this.context);
+//        GooglePlayServicesUtil.showErrorNotification(result.getErrorCode(), this.context);
     }
 
     @Override

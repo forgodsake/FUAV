@@ -700,8 +700,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     setVisible(R.id.tips);
                 }
             }else {
-                setVisible(R.id.tips);
-                setGone(R.id.editor_map_fragment);
+                setGone(R.id.tips);
+                setVisible(R.id.editor_map_fragment);
             }
         }else{
             setGone(R.id.show_hide_arrow);
