@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import cn.jpush.android.api.JPushInterface;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
@@ -160,6 +161,9 @@ public class DroidPlannerApp extends MultiDexApplication implements DroneListene
 
         applicationContext = this;
         instance = this;
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
 
         //init demo helper
         DemoHelper.getInstance().init(applicationContext);

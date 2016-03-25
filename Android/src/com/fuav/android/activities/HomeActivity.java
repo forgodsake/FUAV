@@ -23,6 +23,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class HomeActivity extends SuperUI implements View.OnClickListener{
 
     private LinearLayout Device,Media,Store,Support;
@@ -52,6 +54,7 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
         supportFragment = new SupportFragment();
         initViews();
         executeFixedRate();
+        JPushInterface.init(getApplicationContext());
     }
 
     private void initViews() {
@@ -152,4 +155,18 @@ public class HomeActivity extends SuperUI implements View.OnClickListener{
                 5000,
                 TimeUnit.MILLISECONDS);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
+
+
 }

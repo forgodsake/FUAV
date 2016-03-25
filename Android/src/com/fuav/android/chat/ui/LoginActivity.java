@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
 		if (DemoHelper.getInstance().isLoggedIn()) {
 			autoLogin = true;
 			startActivity(new Intent(LoginActivity.this, MainActivity.class));
-
+            finish();
 			return;
 		}
 		setContentView(R.layout.em_activity_login);
