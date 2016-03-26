@@ -10,15 +10,14 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fuav.android.R;
+import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.VehicleApi;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.gcs.returnToMe.ReturnToMeState;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
-
-import com.fuav.android.R;
-import com.fuav.android.utils.prefs.DroidPlannerPrefs;
 
 import timber.log.Timber;
 
