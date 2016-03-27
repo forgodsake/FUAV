@@ -70,6 +70,15 @@
             android:divider="@color/dark_grey"
             android:dividerHeight="0.1dp"/>
 
+        <ImageView
+            android:id="@+id/img_share"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/listViewSupport"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/share"/>
+
     </RelativeLayout>
 
 </ScrollView>

@@ -39,7 +39,7 @@ dependencies {
     //Java semver library
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
-//    compile files('libs/httpclient-4.5.1.jar')
+    //    compile files('libs/httpclient-4.5.1.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
     compile 'com.sothree.slidinguppanel:library:2.0.2'
@@ -52,10 +52,25 @@ dependencies {
     compile files('libs/Android_Map_V2.7.20151124.jar')
     compile files('libs/easyandroidanimationslibrary-v0.5.jar')
     compile files('libs/bolts-android-1.2.0.jar')
-//    compile files('libs/hyphenatechat_3.1.0.jar')
+    //    compile files('libs/hyphenatechat_3.1.0.jar')
     compile files('libs/Parse-1.9.4.jar')
-    compile "org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589"
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
     compile files('libs/jpush-android-2.1.0.jar')
+    compile files('libs/MobTools-2016.0301.1053.jar')
+    compile files('libs/MobCommons-2016.0301.1053.jar')
+    compile files('libs/ShareSDK-Bluetooth-2.7.0.jar')
+    compile files('libs/ShareSDK-Core-2.7.0.jar')
+    compile files('libs/ShareSDK-Email-2.7.0.jar')
+    compile files('libs/ShareSDK-Facebook-2.7.0.jar')
+    compile files('libs/ShareSDK-QQ-2.7.0.jar')
+    compile files('libs/ShareSDK-QZone-2.7.0.jar')
+    compile files('libs/ShareSDK-ShortMessage-2.7.0.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.7.0.jar')
+    compile files('libs/ShareSDK-Twitter-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.7.0.jar')
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)
