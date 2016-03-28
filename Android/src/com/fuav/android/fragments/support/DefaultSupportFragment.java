@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,21 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.fuav.android.R;
 import com.fuav.android.activities.SupportActivity;
+import com.fuav.android.chat.DemoHelper;
 import com.fuav.android.chat.ui.LoginActivity;
+import com.fuav.android.chat.ui.MainActivity;
 import com.fuav.android.chat.ui.RegisterActivity;
+import com.fuav.android.view.CircleImageView;
 import com.fuav.android.view.CustListView;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +54,8 @@ public class DefaultSupportFragment extends Fragment {
     private CustListView supportList;
     private SimpleAdapter adapter;
     private List<HashMap<String, Object>> list;
+    private CircleImageView head_portrait;
+    private TextView textview;
     private Button btn_register,btn_login;
     private ImageView img_share;
 
@@ -53,6 +65,8 @@ public class DefaultSupportFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_default_support, container, false);
         supportList = (CustListView) view.findViewById(R.id.listViewSupport);
+        head_portrait = (CircleImageView) view.findViewById(R.id.head_portrait);
+        textview = (TextView) view.findViewById(R.id.nickname);
         btn_register = (Button) view.findViewById(R.id.btn_register);
         btn_login = (Button) view.findViewById(R.id.btn_login);
         img_share = (ImageView) view.findViewById(R.id.img_share);
@@ -115,6 +129,20 @@ public class DefaultSupportFragment extends Fragment {
             }
         });
 
+        initListener();
+
+        // 如果登录成功过，直接进入主页面
+        if (DemoHelper.getInstance().isLoggedIn()) {
+            btn_login.setVisibility(View.GONE);
+            btn_register.setVisibility(View.GONE);
+            head_portrait.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                }
+            });
+        }
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +157,45 @@ public class DefaultSupportFragment extends Fragment {
             }
         });
 
+    }
+
+    private void initListener() {
+        String username = EMClient.getInstance().getCurrentUser();
+        if(username != null){
+            if (username.equals(EMClient.getInstance().getCurrentUser())) {
+                EaseUserUtils.setUserNick(username, textview);
+                EaseUserUtils.setUserAvatar(getActivity(), username, head_portrait);
+            } else {
+                EaseUserUtils.setUserNick(username, textview);
+                EaseUserUtils.setUserAvatar(getActivity(), username, head_portrait);
+                asyncFetchUserInfo(username);
+            }
+        }
+    }
+
+    public void asyncFetchUserInfo(String username){
+        DemoHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
+
+            @Override
+            public void onSuccess(EaseUser user) {
+                if (user != null) {
+                    DemoHelper.getInstance().saveContact(user);
+                    if(getActivity().isFinishing()){
+                        return;
+                    }
+                    textview.setText(user.getNick());
+                    if(!TextUtils.isEmpty(user.getAvatar())){
+                        Glide.with(getActivity()).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(head_portrait);
+                    }else{
+                        Glide.with(getActivity()).load(R.drawable.em_default_avatar).into(head_portrait);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+            }
+        });
     }
 
     /**

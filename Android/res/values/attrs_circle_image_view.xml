@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="examString" format="string" />
+        <attr name="examDimension" format="dimension" />
+        <attr name="examColor" format="color" />
+        <attr name="examDrawable" format="color|reference" />
+    </declare-styleable>
+</resources>
