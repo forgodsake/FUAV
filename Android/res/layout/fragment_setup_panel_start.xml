@@ -19,7 +19,7 @@
     <Button
         android:id="@+id/buttonStart"
         style="@style/modeControl"
-        android:layout_width="@dimen/setup_action_button_width"
+        android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:background="@drawable/button_green_drawable"

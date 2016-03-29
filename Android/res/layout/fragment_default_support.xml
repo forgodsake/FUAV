@@ -33,6 +33,7 @@
                 android:layout_below="@+id/head_portrait"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="你尚未登录" />
 
             <Button
