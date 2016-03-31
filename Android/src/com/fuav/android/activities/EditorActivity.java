@@ -71,7 +71,6 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
-import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
@@ -1026,14 +1025,14 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 drone.arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
                 drone.doGuidedTakeoff(takeOffAltitude);
-                final Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
-                if (altitude != null) {
-                    double alt = altitude.getAltitude();
-                    if(alt==takeOffAltitude){
-                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
-                    }
-                    Toast.makeText(EditorActivity.this,alt+"",Toast.LENGTH_SHORT).show();
-                }
+//                final Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
+//                if (altitude != null) {
+//                    double alt = altitude.getAltitude();
+//                    if(alt==takeOffAltitude){
+//                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
+//                    }
+//                    Toast.makeText(EditorActivity.this,alt+"",Toast.LENGTH_SHORT).show();
+//                }
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");

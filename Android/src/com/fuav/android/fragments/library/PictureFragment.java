@@ -96,7 +96,7 @@ public class PictureFragment extends Fragment {
          * using a string, support: A-Z 0-9 - .
          * you can add more letters by {@link in.srain.cube.views.ptr.header.StoreHousePath#addChar}
          */
-        header.initWithString("YOU CAN FLY");
+        header.initWithString("JUST FLY");
 
         frame.setLoadingMinTime(1000);
         frame.setDurationToCloseHeader(2500);

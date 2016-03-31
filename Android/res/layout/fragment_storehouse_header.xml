@@ -16,6 +16,7 @@
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
         cube_ptr:ptr_resistance="1.7">
 
+
             <GridView
                 android:id="@+id/rotate_header_grid_view"
                 android:layout_width="match_parent"

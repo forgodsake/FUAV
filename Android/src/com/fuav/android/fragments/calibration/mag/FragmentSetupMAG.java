@@ -162,9 +162,9 @@ public class FragmentSetupMAG extends ApiListenerFragment  {
 					int percent = msg.getData().getInt("percent");
 					if(percent>30&&percent<60){
 						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_warning));
-					}else if(percent>=60&&percent<99){
+					}else if(percent>=60&&percent<100){
 						progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.pstate_good));
-					}else if(percent==99){
+					}else if(percent==100){
 						calibration_step = 1;
 						updateDescription(calibration_step);
 					}
