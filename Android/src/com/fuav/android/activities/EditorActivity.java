@@ -1,6 +1,7 @@
 package com.fuav.android.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,19 +14,22 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +75,7 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEventExtra;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.mission.MissionItemType;
+import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.GuidedState;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
@@ -80,7 +85,11 @@ import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
 import org.beyene.sius.unit.length.LengthUnit;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This implements the map editor activity. The map editor activity allows the
@@ -118,9 +127,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     private static final IntentFilter eventFilter = new IntentFilter();
     private static final String MISSION_FILENAME_DIALOG_TAG = "Mission filename";
+
     private int index = 0;
     private int showhidearrow = 0;
     private boolean showVideo;
+    private boolean isFirstFly;
 
     static {
         eventFilter.addAction(MissionProxy.ACTION_MISSION_PROXY_UPDATE);
@@ -305,16 +316,16 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     private void setupButtonsByFlightState() {
         final State droneState = getDrone().getAttribute(AttributeType.STATE);
-            if (droneState.isArmed()) {
-                setupButtonsForArmed();
-                if (droneState.isFlying()) {
+        if (droneState.isArmed()) {
+            setupButtonsForArmed();
+            if (droneState.isFlying()) {
 //                    setupButtonsForFlying();
-                } else {
-
-                }
             } else {
-                setupButtonsForDisarmed();
+
             }
+        } else {
+            setupButtonsForDisarmed();
+        }
     }
 
     private void setupButtonsForArmed() {
@@ -338,9 +349,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
      * View widgets.
      */
     private GestureMapFragment gestureMapFragment;
-    private VideoFragment videoFragment= new VideoFragment();
+    private VideoFragment videoFragment = new VideoFragment();
     private VideoControlFragment videoControlFragment = new VideoControlFragment();
-    private FlightMapFragment flightMapFragment =  new FlightMapFragment();
+    private FlightMapFragment flightMapFragment = new FlightMapFragment();
     private EditorToolsFragment editorToolsFragment;
     private MissionDetailFragment itemDetailFragment;
     private FragmentManager fragmentManager;
@@ -353,8 +364,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_follow_me;
     private TextView infoView;
     private FrameLayout videolayout;
-    private FrameLayout maplayout;
-    private RelativeLayout parent_view;
+    private PIDAdapter pidAdapter;
+    private double[] params = new double[6];
+    private ArrayList<String> mNameList = new ArrayList<String>();
 
     /**
      * If the mission was loaded from a file, the filename is stored here.
@@ -364,7 +376,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 //    private EditorListFragment editorListFragment;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         fragmentManager = getSupportFragmentManager();
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
@@ -377,15 +389,22 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         setContentView(R.layout.activity_editor);
 
+        // create adapter
+        mNameList.add("RATE_PIT_P");
+        mNameList.add("RATE_PIT_I");
+        mNameList.add("RATE_PIT_D");
+        mNameList.add("RATE_RLL_P");
+        mNameList.add("RATE_RLL_I");
+        mNameList.add("RATE_RLL_D");
+        pidAdapter = new PIDAdapter();
+
         showVideo = true;
 
         videolayout = (FrameLayout) findViewById(R.id.video_view);
-        maplayout = (FrameLayout) findViewById(R.id.editor_map_fragment);
-        parent_view = (RelativeLayout) findViewById(R.id.parent_view);
 
         if (editorToolsFragment == null) {
             editorToolsFragment = new EditorToolsFragment();
-            fragmentManager.beginTransaction().replace(R.id.editortools,editorToolsFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.editortools, editorToolsFragment).commit();
         }
 
         if (gestureMapFragment == null) {
@@ -410,7 +429,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         mGoToDroneLocation.setOnLongClickListener(this);
 
 
-
         if (savedInstanceState != null) {
             openedMissionFilename = savedInstanceState.getString(EXTRA_OPENED_MISSION_FILENAME);
         }
@@ -421,31 +439,48 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         gestureMapFragment.setOnPathFinishedListener(this);
         openActionDrawer();
 
-        showhide= (ImageView) findViewById(R.id.show_hide_arrow);
+        showhide = (ImageView) findViewById(R.id.show_hide_arrow);
         showhide.setOnClickListener(this);
-        button_take_off= (Button) findViewById(R.id.button_take_off);
+        button_take_off = (Button) findViewById(R.id.button_take_off);
         button_take_off.setOnClickListener(this);
-        button_land= (Button) findViewById(R.id.button_land);
+        button_land = (Button) findViewById(R.id.button_land);
         button_land.setOnClickListener(this);
-        button_go_home= (Button) findViewById(R.id.button_go_home);
+        button_go_home = (Button) findViewById(R.id.button_go_home);
         button_go_home.setOnClickListener(this);
-        button_hover= (Button) findViewById(R.id.button_hover);
+        button_hover = (Button) findViewById(R.id.button_hover);
         button_hover.setOnClickListener(this);
-        button_write= (Button) findViewById(R.id.button_write);
+        button_write = (Button) findViewById(R.id.button_write);
         button_write.setOnClickListener(this);
-        button_follow_me= (Button)findViewById(R.id.button_follow_me);
+        button_follow_me = (Button) findViewById(R.id.button_follow_me);
         button_follow_me.setOnClickListener(this);
+        findViewById(R.id.btn_pid).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drone.isConnected()) {
+                    VehicleApi.getApi(getDrone()).refreshParameters();
+                }
+                params = drone.getPIDParameters();
+                pidAdapter.notifyDataSetChanged();
+                View view = getLayoutInflater().inflate(R.layout.dialog_params_list, null);
+                ListView list = (ListView) view.findViewById(R.id.params_list);
+                list.setAdapter(pidAdapter);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
+                builder.setView(view);
+                builder.show();
+            }
+        });
     }
 
-    public String getMapName(){
+
+    public String getMapName() {
         DroidPlannerPrefs pre = new DroidPlannerPrefs(this);
         return pre.getMapProviderName();
     }
 
-    public boolean isSupportGooglePlay(){
+    public boolean isSupportGooglePlay() {
         final int playStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(EditorActivity.this);
         final boolean isValid = playStatus == ConnectionResult.SUCCESS;
-        return  isValid;
+        return isValid;
     }
 
     @Override
@@ -464,6 +499,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRA_OPENED_MISSION_FILENAME, openedMissionFilename);
+    }
+
+    @Override
     public void onApiConnected() {
         super.onApiConnected();
 
@@ -472,8 +513,13 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             missionProxy.selection.addSelectionUpdateListener(this);
         }
 
+        params = drone.getPIDParameters();
+        pidAdapter.notifyDataSetChanged();
+
         setupButtonsByFlightState();
         updateFlightModeButtons();
+//        执行起飞后的模式转换
+        executeChangeMode();
 //        updateMissionLength();
         getBroadcastManager().registerReceiver(eventReceiver, eventFilter);
     }
@@ -506,11 +552,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 planningMapFragment.goToMyLocation();
                 break;
             case R.id.show_hide_arrow:
-                if(showhidearrow%2==0){
+                if (showhidearrow % 2 == 0) {
 
                     setGone(R.id.video_view);
                     setGone(R.id.video_control_view);
-                }else{
+                } else {
                     setVisible(R.id.video_view);
                     setVisible(R.id.video_control_view);
                 }
@@ -540,12 +586,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 float ytotal = manager.getDefaultDisplay().getHeight();
                 float x = findViewById(R.id.video_view).getWidth();
                 float y = findViewById(R.id.video_view).getHeight();
-                float xscale = xtotal/x;
-                float yscale = ytotal/y;
-                if (index%2==0){
-                    if(getMapName().equals("GOOGLE_MAP")){
+                float xscale = xtotal / x;
+                float yscale = ytotal / y;
+                if (index % 2 == 0) {
+                    if (getMapName().equals("GOOGLE_MAP")) {
                         /** 设置缩放动画 */
-                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
+                        final ScaleAnimation animation = new ScaleAnimation(1f, xscale + 0.1f, 1f, yscale + 0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
 
                         animation.setDuration(400);//设置动画持续时间
@@ -560,29 +606,26 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 videopage();
                             }
 
-                        },380);
-                    }else {
+                        }, 380);
+                    } else {
                         videopage();
                     }
                     showVideo = false;
-                }else{
-                    if (getMapName().equals("GOOGLE_MAP")){
+                } else {
+                    if (getMapName().equals("GOOGLE_MAP")) {
                         /** 设置缩放动画 */
-                        final ScaleAnimation animation =new ScaleAnimation(1f, xscale+0.1f, 1f, yscale+0.1f,
+                        final ScaleAnimation animation = new ScaleAnimation(1f, xscale + 0.1f, 1f, yscale + 0.1f,
                                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1f);
 
                         animation.setDuration(400);//设置动画持续时间
-                        /** 常用方法 */
-//                    animation.setRepeatCount(int repeatCount);//设置重复次数
-//                    animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
                         videolayout.startAnimation(animation);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 mappage();
                             }
-                        },380);
-                    }else{
+                        }, 380);
+                    } else {
                         mappage();
                     }
                     showVideo = true;
@@ -596,12 +639,12 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     private void mappage() {
-        fragmentManager.beginTransaction().replace(R.id.video_view,videoFragment).commit();
-        if(getMapName().equals("GOOGLE_MAP")&&!isSupportGooglePlay()) {
+        fragmentManager.beginTransaction().replace(R.id.video_view, videoFragment).commit();
+        if (getMapName().equals("GOOGLE_MAP") && !isSupportGooglePlay()) {
             setGone(R.id.editor_map_fragment);
             setVisible(R.id.tips);
         }
-        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,gestureMapFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment, gestureMapFragment).commit();
         setVisible(R.id.location_button_container);
         setVisible(R.id.editortools);
         setVisible(R.id.button_write);
@@ -609,16 +652,16 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     private void videopage() {
-        if(!getMapName().equals("GOOGLE_MAP")||(isSupportGooglePlay())){
-            fragmentManager.beginTransaction().replace(R.id.video_view,flightMapFragment).commit();
-        }else {
-            fragmentManager.beginTransaction().replace(R.id.video_view,new BlankFragment()).commit();
+        if (!getMapName().equals("GOOGLE_MAP") || (isSupportGooglePlay())) {
+            fragmentManager.beginTransaction().replace(R.id.video_view, flightMapFragment).commit();
+        } else {
+            fragmentManager.beginTransaction().replace(R.id.video_view, new BlankFragment()).commit();
         }
 
-        if(findViewById(R.id.editor_map_fragment).getVisibility()== View.GONE) {
+        if (findViewById(R.id.editor_map_fragment).getVisibility() == View.GONE) {
             setVisible(R.id.editor_map_fragment);
         }
-        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment,videoControlFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.editor_map_fragment, videoControlFragment).commit();
         setGone(R.id.location_button_container);
         setGone(R.id.editortools);
         setGone(R.id.button_write);
@@ -626,9 +669,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
 
-    void confirmConnect(int id){
-        if(DroneManager.getDrone()!=null){
-            switch (id){
+    void confirmConnect(int id) {
+        if (DroneManager.getDrone() != null) {
+            switch (id) {
                 case R.id.button_take_off:
                     getArmingConfirmation();
                     break;
@@ -650,8 +693,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 default:
                     break;
             }
-        }else{
-            Toast.makeText(this,"无人机未连接",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "无人机未连接", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -671,11 +714,11 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
     }
 
-    void setGone(int id){
+    void setGone(int id) {
         findViewById(id).setVisibility(View.GONE);
     }
 
-    void setVisible(int id){
+    void setVisible(int id) {
         findViewById(id).setVisibility(View.VISIBLE);
     }
 
@@ -688,21 +731,21 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         findViewById(R.id.video_control_view).setOnClickListener(this);
 
-        if (showVideo){
-            getSupportFragmentManager().beginTransaction().replace(R.id.video_view,new VideoFragment()).commit();
+        if (showVideo) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.video_view, new VideoFragment()).commit();
         }
 
-        if(getMapName().equals("GOOGLE_MAP")){
-            if(!isSupportGooglePlay()){
-                if(showVideo){
+        if (getMapName().equals("GOOGLE_MAP")) {
+            if (!isSupportGooglePlay()) {
+                if (showVideo) {
                     setGone(R.id.editor_map_fragment);
                     setVisible(R.id.tips);
                 }
-            }else {
+            } else {
                 setGone(R.id.tips);
                 setVisible(R.id.editor_map_fragment);
             }
-        }else{
+        } else {
             setGone(R.id.show_hide_arrow);
         }
     }
@@ -712,11 +755,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         return R.id.actionbar_container;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(EXTRA_OPENED_MISSION_FILENAME, openedMissionFilename);
-    }
 
     @Override
     protected int getNavigationDrawerMenuItemId() {
@@ -753,7 +791,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             public void waypointFileLoaded(MissionReader reader) {
                 openedMissionFilename = getSelectedFilename();
 
-                if(missionProxy != null) {
+                if (missionProxy != null) {
                     missionProxy.readMissionFromFile(reader);
                     gestureMapFragment.getMapFragment().zoomToFit();
                 }
@@ -821,7 +859,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             if (missionProxy.selection.getSelected().isEmpty() && itemDetailFragment != null) {
                 removeItemDetail();
             }
-            if(missionLength==0.0){
+            if (missionLength == 0.0) {
                 infoView.setVisibility(View.GONE);
             }
         }
@@ -880,7 +918,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     @Override
-    protected void addToolbarFragment(){
+    protected void addToolbarFragment() {
         final int toolbarId = getToolbarId();
         final FragmentManager fm = getSupportFragmentManager();
         Fragment actionBarTelem = fm.findFragmentById(toolbarId);
@@ -1025,17 +1063,40 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 drone.arm(true);
                 final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
                 drone.doGuidedTakeoff(takeOffAltitude);
-//                final Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
-//                if (altitude != null) {
-//                    double alt = altitude.getAltitude();
-//                    if(alt==takeOffAltitude){
-//                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
-//                    }
-//                    Toast.makeText(EditorActivity.this,alt+"",Toast.LENGTH_SHORT).show();
-//                }
+                isFirstFly = true;
             }
         });
         unlockDialog.show(getSupportFragmentManager(), "Slide To Arm");
+    }
+
+    /**
+     * 以固定周期频率执行任务
+     */
+    public void executeChangeMode() {
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        double alt = getAltitude();
+                        final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                        if (alt == takeOffAltitude && isFirstFly) {
+                            VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_POSHOLD);
+                            isFirstFly = false;
+                        }
+                    }
+                },
+                0,
+                100,
+                TimeUnit.MILLISECONDS);
+    }
+
+
+    private double getAltitude() {
+
+        Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
+
+        return altitude.getAltitude();
     }
 
     private void getGoHomeConfirmation() {
@@ -1079,14 +1140,23 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             public void run() {
                 final State droneState = getDrone().getAttribute(AttributeType.STATE);
                 if (droneState != null && droneState.isConnected()) {
-                    if (droneState.isArmed()) {
-                        final MissionProxy missionProxy = dpApp.getMissionProxy();
-                        if(missionProxy.getItems().isEmpty()){
-                            Toast.makeText(EditorActivity.this,"无可发送任务",Toast.LENGTH_SHORT).show();
-                        }else if ( missionProxy.hasTakeoffAndLandOrRTL()) {
+                    final MissionProxy missionProxy = dpApp.getMissionProxy();
+                    if (missionProxy.getItems().isEmpty()) {
+                        Toast.makeText(EditorActivity.this, "无可发送任务", Toast.LENGTH_SHORT).show();
+                    } else if (droneState.isFlying()) {
+                        getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                    } else if (!droneState.isArmed()) {
+                        if(missionProxy.hasTakeoffAndLandOrRTL()){
+                            drone.arm(true);
                             missionProxy.sendMissionToAPM(drone);
-                            getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
-                        } else {
+                            final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                            VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
+                                @Override
+                                public void onSuccess() {
+                                    VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
+                                }
+                            });
+                        }  else {
                             SupportYesNoWithPrefsDialog dialog = SupportYesNoWithPrefsDialog.newInstance(
                                     getApplicationContext(), MISSION_UPLOAD_CHECK_DIALOG_TAG,
                                     getString(R.string.mission_upload_title),
@@ -1098,8 +1168,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                                 dialog.show(getSupportFragmentManager(), MISSION_UPLOAD_CHECK_DIALOG_TAG);
                             }
                         }
-                    } else {
-                        Toast.makeText(EditorActivity.this,"请先解锁飞机",Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -1112,11 +1180,18 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         final Drone drone = dpApp.getDrone();
         final MissionProxy missionProxy = dpApp.getMissionProxy();
 
-        switch(dialogTag){
+        switch (dialogTag) {
             case MISSION_UPLOAD_CHECK_DIALOG_TAG:
                 missionProxy.addTakeOffAndRTL();
                 missionProxy.sendMissionToAPM(drone);
-                getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
+                drone.arm(true);
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
+                    @Override
+                    public void onSuccess() {
+                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
+                    }
+                });
                 break;
         }
     }
@@ -1125,25 +1200,17 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public void onDialogNo(String dialogTag) {
         final Drone drone = dpApp.getDrone();
         final MissionProxy missionProxy = dpApp.getMissionProxy();
-        switch(dialogTag){
+        switch (dialogTag) {
             case MISSION_UPLOAD_CHECK_DIALOG_TAG:
                 missionProxy.sendMissionToAPM(drone);
-                final State droneState = getDrone().getAttribute(AttributeType.STATE);
-                if (droneState != null && droneState.isConnected()) {
-                    if (droneState.isArmed()) {
-                        if (droneState.isFlying()) {
-                            getDrone().changeVehicleMode(VehicleMode.COPTER_AUTO);
-                        } else {
-                            final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
-                            VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
-                                @Override
-                                public void onSuccess() {
-                                    VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
-                                }
-                            });
-                        }
+                drone.arm(true);
+                final double takeOffAltitude = getAppPrefs().getDefaultAltitude();
+                VehicleApi.getApi(drone).takeoff(takeOffAltitude, new SimpleCommandListener() {
+                    @Override
+                    public void onSuccess() {
+                        VehicleApi.getApi(drone).setVehicleMode(VehicleMode.COPTER_AUTO);
                     }
-                }
+                });
                 break;
         }
     }
@@ -1172,7 +1239,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     private void enableFollowMe(final Drone drone) {
-        if(drone == null)
+        if (drone == null)
             return;
 
         final LocationRequest locationReq = LocationRequest.create()
@@ -1197,6 +1264,53 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_land.setActivated(false);
         button_hover.setActivated(false);
         button_write.setActivated(false);
+    }
+
+    public class PIDAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 6;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mNameList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ItemViewTag viewTag;
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.row_params, parent, false);
+                // construct an item tag
+                viewTag = new ItemViewTag();
+                viewTag.mName = (TextView) convertView.findViewById(R.id.params_row_name);
+                viewTag.mValue = (TextView) convertView.findViewById(R.id.params_row_desc);
+                convertView.setTag(viewTag);
+            } else {
+                viewTag = (ItemViewTag) convertView.getTag();
+            }
+
+            // set name
+            viewTag.mName.setText(mNameList.get(position));
+            viewTag.mValue.setText(params[position] + "");
+
+
+            return convertView;
+        }
+
+        class ItemViewTag {
+            protected TextView mName;
+            protected TextView mValue;
+        }
     }
 
 }

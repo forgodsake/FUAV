@@ -304,10 +304,19 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
             case Log.ERROR:
             case Log.WARN:
                 warningView.setText(errorMsg);
+                handleWarning();
                 break;
         }
     }
 
+    private void handleWarning() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                warningView.setText("");
+            }
+        },3000);
+    }
 
 
     @Override
@@ -406,7 +415,7 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
 
         final String update;
         if (!drone.isConnected()) {
-            update = (displayHdop ? "hdop: " : "") + emptyString;
+            update = (displayHdop ? "" : "") + emptyString;
             satNoView.setText("S: " + emptyString);
             hdopStatusView.setText("hdop: " + emptyString);
         } else {
@@ -414,7 +423,7 @@ public class ActionBarTelemFragment extends ApiListenerFragment {
             final String fixStatus = droneGps.getFixStatus();
 
             if (displayHdop) {
-                update = String.format(Locale.ENGLISH, "hdop: %.1f", droneGps.getGpsEph());
+                update = String.format(Locale.ENGLISH, "%.1f", droneGps.getGpsEph());
             } else {
                 update = String.format(Locale.ENGLISH, "%s", fixStatus);
             }

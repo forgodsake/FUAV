@@ -1,13 +1,5 @@
 package com.fuav.android.view.adapterViews;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.fuav.android.R;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +10,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fuav.android.R;
 import com.o3dr.services.android.lib.drone.property.Parameter;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 2013-12-08 Time: 11:00 PM

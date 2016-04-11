@@ -221,6 +221,39 @@ public class Drone {
         return 0;
     }
 
+    public double[] getPIDParameters(){
+        double [] parameters = new double[6];
+        Parameters params = getAttribute(AttributeType.PARAMETERS);
+        if (params != null) {
+            Parameter pitchParamP = params.getParameter("RATE_PIT_P");
+            if (pitchParamP != null){
+                parameters[0] = pitchParamP.getValue();
+            }
+            Parameter pitchParamI = params.getParameter("RATE_PIT_I");
+            if (pitchParamI != null){
+                parameters[1] = pitchParamI.getValue();
+            }
+            Parameter pitchParamD = params.getParameter("RATE_PIT_D");
+            if (pitchParamD != null){
+                parameters[2] = pitchParamD.getValue();
+            }
+            Parameter rollParamP = params.getParameter("RATE_RLL_P");
+            if (rollParamP != null){
+                parameters[3] = rollParamP.getValue();
+            }
+            Parameter rollParamI = params.getParameter("RATE_RLL_I");
+            if (rollParamI != null){
+                parameters[4] = rollParamI.getValue();
+            }
+            Parameter rollParamD = params.getParameter("RATE_RLL_D");
+            if (rollParamD != null){
+                parameters[5] = rollParamD.getValue();
+            }
+        }
+
+        return parameters;
+    }
+
     /**
      * Causes the Runnable to be added to the message queue.
      *
