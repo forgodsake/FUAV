@@ -115,14 +115,14 @@
             android:layout_height="46dp"
             android:layout_alignParentTop="true" />
 
-        <Button
-            android:id="@+id/btn_pid"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/actionbar_container"
-            android:layout_alignParentRight="true"
-            android:background="@color/btn_blue_normal"
-            android:text="PID"/>
+        <!--<Button-->
+            <!--android:id="@+id/btn_pid"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_below="@+id/actionbar_container"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:background="@color/btn_blue_normal"-->
+            <!--android:text="PID"/>-->
 
         <TextView
             android:id="@+id/editorInfoWindow"

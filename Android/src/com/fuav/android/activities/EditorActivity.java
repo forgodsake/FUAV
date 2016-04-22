@@ -1,7 +1,6 @@
 package com.fuav.android.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,22 +13,18 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +80,6 @@ import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
 import org.beyene.sius.unit.length.LengthUnit;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -364,9 +358,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private Button button_follow_me;
     private TextView infoView;
     private FrameLayout videolayout;
-    private PIDAdapter pidAdapter;
-    private double[] params = new double[6];
-    private ArrayList<String> mNameList = new ArrayList<String>();
+//    private PIDAdapter pidAdapter;
+//    private double[] params = new double[6];
+//    private ArrayList<String> mNameList = new ArrayList<String>();
 
     /**
      * If the mission was loaded from a file, the filename is stored here.
@@ -389,14 +383,14 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         setContentView(R.layout.activity_editor);
 
-        // create adapter
-        mNameList.add("RATE_PIT_P");
-        mNameList.add("RATE_PIT_I");
-        mNameList.add("RATE_PIT_D");
-        mNameList.add("RATE_RLL_P");
-        mNameList.add("RATE_RLL_I");
-        mNameList.add("RATE_RLL_D");
-        pidAdapter = new PIDAdapter();
+//        // create adapter
+//        mNameList.add("RATE_PIT_P");
+//        mNameList.add("RATE_PIT_I");
+//        mNameList.add("RATE_PIT_D");
+//        mNameList.add("RATE_RLL_P");
+//        mNameList.add("RATE_RLL_I");
+//        mNameList.add("RATE_RLL_D");
+//        pidAdapter = new PIDAdapter();
 
         showVideo = true;
 
@@ -453,22 +447,22 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_write.setOnClickListener(this);
         button_follow_me = (Button) findViewById(R.id.button_follow_me);
         button_follow_me.setOnClickListener(this);
-        findViewById(R.id.btn_pid).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drone.isConnected()) {
-                    VehicleApi.getApi(getDrone()).refreshParameters();
-                }
-                params = drone.getPIDParameters();
-                pidAdapter.notifyDataSetChanged();
-                View view = getLayoutInflater().inflate(R.layout.dialog_params_list, null);
-                ListView list = (ListView) view.findViewById(R.id.params_list);
-                list.setAdapter(pidAdapter);
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
-                builder.setView(view);
-                builder.show();
-            }
-        });
+//        findViewById(R.id.btn_pid).setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (drone.isConnected()) {
+//                    VehicleApi.getApi(getDrone()).refreshParameters();
+//                }
+//                params = drone.getPIDParameters();
+//                pidAdapter.notifyDataSetChanged();
+//                View view = getLayoutInflater().inflate(R.layout.dialog_params_list, null);
+//                ListView list = (ListView) view.findViewById(R.id.params_list);
+//                list.setAdapter(pidAdapter);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
+//                builder.setView(view);
+//                builder.show();
+//            }
+//        });
     }
 
 
@@ -513,8 +507,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             missionProxy.selection.addSelectionUpdateListener(this);
         }
 
-        params = drone.getPIDParameters();
-        pidAdapter.notifyDataSetChanged();
+//        params = drone.getPIDParameters();
+//        pidAdapter.notifyDataSetChanged();
 
         setupButtonsByFlightState();
         updateFlightModeButtons();
@@ -1266,51 +1260,51 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         button_write.setActivated(false);
     }
 
-    public class PIDAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return 6;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mNameList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ItemViewTag viewTag;
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.row_params, parent, false);
-                // construct an item tag
-                viewTag = new ItemViewTag();
-                viewTag.mName = (TextView) convertView.findViewById(R.id.params_row_name);
-                viewTag.mValue = (TextView) convertView.findViewById(R.id.params_row_desc);
-                convertView.setTag(viewTag);
-            } else {
-                viewTag = (ItemViewTag) convertView.getTag();
-            }
-
-            // set name
-            viewTag.mName.setText(mNameList.get(position));
-            viewTag.mValue.setText(params[position] + "");
-
-
-            return convertView;
-        }
-
-        class ItemViewTag {
-            protected TextView mName;
-            protected TextView mValue;
-        }
-    }
+//    public class PIDAdapter extends BaseAdapter {
+//
+//        @Override
+//        public int getCount() {
+//            return 6;
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return mNameList.get(position);
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            ItemViewTag viewTag;
+//
+//            if (convertView == null) {
+//                convertView = LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.row_params, parent, false);
+//                // construct an item tag
+//                viewTag = new ItemViewTag();
+//                viewTag.mName = (TextView) convertView.findViewById(R.id.params_row_name);
+//                viewTag.mValue = (TextView) convertView.findViewById(R.id.params_row_desc);
+//                convertView.setTag(viewTag);
+//            } else {
+//                viewTag = (ItemViewTag) convertView.getTag();
+//            }
+//
+//            // set name
+//            viewTag.mName.setText(mNameList.get(position));
+//            viewTag.mValue.setText(params[position] + "");
+//
+//
+//            return convertView;
+//        }
+//
+//        class ItemViewTag {
+//            protected TextView mName;
+//            protected TextView mValue;
+//        }
+//    }
 
 }

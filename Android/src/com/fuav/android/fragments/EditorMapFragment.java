@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fuav.android.activities.interfaces.OnEditorInteraction;
 import com.fuav.android.maps.DPMap;
@@ -61,6 +62,8 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public void onMapLongClick(LatLong point) {
+
+		Toast.makeText(getActivity(),"long click now",Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
