@@ -8,6 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <TextView
+        android:id="@+id/text_tips_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="暂无视频"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="@color/holo_blue_bright"/>
+
     <include
         layout="@layout/widget_container_layout"
         android:layout_marginTop="46dp"

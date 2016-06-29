@@ -86,7 +86,7 @@ import java.io.Serializable;
 public class MAVLinkPacket implements Serializable {
     private static final long serialVersionUID = 2095947771227815314L;
 
-    public static final int MAVLINK_STX = 254;
+    public static final int MAVLINK_STX = 235;
 
     /**
     * Message length. NOT counting STX, LENGTH, SEQ, SYSID, COMPID, MSGID, CRC1 and CRC2

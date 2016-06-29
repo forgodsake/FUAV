@@ -74,13 +74,13 @@
         <!--Enable="true" />-->
 
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
-    <QZone
-        Id="3"
-        SortId="3"
-        AppId="100371282"
-        AppKey="aed9b0303e3ed1e27bae87c33761161d"
-        ShareByAppClient="false"
-        Enable="true" />
+    <!--<QZone-->
+        <!--Id="3"-->
+        <!--SortId="3"-->
+        <!--AppId="100371282"-->
+        <!--AppKey="aed9b0303e3ed1e27bae87c33761161d"-->
+        <!--ShareByAppClient="false"-->
+        <!--Enable="true" />-->
     
     <!-- 
     	Wechat微信和WechatMoments微信朋友圈的appid是一样的；
@@ -110,12 +110,12 @@
         BypassApproval="false"
         Enable="true" />
         
-	<WechatFavorite
-        Id="6"
-        SortId="6"
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
-        Enable="true" />
+	<!--<WechatFavorite-->
+        <!--Id="6"-->
+        <!--SortId="6"-->
+        <!--AppId="wx4868b35061f87885"-->
+        <!--AppSecret="64020361b8ec4c99936c0e3999a9f249"-->
+        <!--Enable="true" />-->
     
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
 	<QQ
@@ -157,16 +157,16 @@
         <!--AppSecret="da32179d859c016169f66d90b6db2a23"-->
         <!--RedirectUri="http://www.sharesdk.cn"-->
         <!--Enable="true" />-->
+    <!---->
+    <!--<Email-->
+        <!--Id="12" -->
+        <!--SortId="12"-->
+        <!--Enable="true" />-->
     
-    <Email
-        Id="12" 
-        SortId="12"
-        Enable="true" />
-    
-    <ShortMessage
-        Id="13" 
-        SortId="13"
-        Enable="true" />
+    <!--<ShortMessage-->
+        <!--Id="13" -->
+        <!--SortId="13"-->
+        <!--Enable="true" />-->
     
     <!--<Douban-->
         <!--Id="16"-->

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 ext {
     VERSION_MAJOR = 2
@@ -58,10 +59,11 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.google.android.gms:play-services-base:7.3.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
 
 
     compile files('libs/Mavlink.jar')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 assemble.dependsOn ':dependencyLibs:Mavlink:jar'

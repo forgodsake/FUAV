@@ -1,12 +1,13 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 20
+        minSdkVersion 14
+        targetSdkVersion 21
     }
 	
 	sourceSets {
@@ -32,6 +33,7 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     buildTypes {
@@ -48,4 +50,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.android.support:support-v4:23.2.1'
     compile files('libs/httpclient-4.5.1.jar')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

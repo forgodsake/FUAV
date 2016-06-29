@@ -10,14 +10,12 @@ ext {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:7.8.0'
     compile "com.android.support:appcompat-v7:${support_lib_version}"
     compile "com.android.support:cardview-v7:${support_lib_version}"
     compile "com.android.support:recyclerview-v7:${support_lib_version}"
     compile "com.android.support:cardview-v7:${support_lib_version}"
     compile "com.android.support:support-v4:${support_lib_version}"
     compile "com.android.support:design:${support_lib_version}"
-    compile 'com.android.support:multidex:1.0.1'
     //MP4 generation library
     compile(name: 'shimmer-android-release', ext: 'aar')
     compile files('libs/droneapi-java-0.3-SNAPSHOT.jar')
@@ -42,6 +40,24 @@ dependencies {
     //    compile files('libs/httpclient-4.5.1.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
+    // compile files('libs/Android_Map_V2.7.20151124.jar')
+    compile files('libs/easyandroidanimationslibrary-v0.5.jar')
+    compile files('libs/bolts-android-1.2.0.jar')
+    //    compile files('libs/hyphenatechat_3.1.0.jar')
+    compile files('libs/Parse-1.9.4.jar')
+    compile files('libs/jpush-android-2.1.0.jar')
+    compile files('libs/MobTools-2016.0301.1053.jar')
+    compile files('libs/MobCommons-2016.0301.1053.jar')
+    compile files('libs/ShareSDK-Core-2.7.0.jar')
+    compile files('libs/ShareSDK-Facebook-2.7.0.jar')
+    compile files('libs/ShareSDK-QQ-2.7.0.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.7.0.jar')
+    compile files('libs/ShareSDK-Twitter-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.7.0.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.7.0.jar')
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.sothree.slidinguppanel:library:2.0.2'
     compile 'com.googlecode.mp4parser:isoparser:1.1.7'
     compile 'me.grantland:autofittextview:0.2.1'
@@ -49,28 +65,8 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.5@aar'
     compile 'com.github.zafarkhaja:java-semver:0.9.0'
     compile 'com.jcraft:jsch:0.1.51'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile files('libs/Android_Map_V2.7.20151124.jar')
-    compile files('libs/easyandroidanimationslibrary-v0.5.jar')
-    compile files('libs/bolts-android-1.2.0.jar')
-    //    compile files('libs/hyphenatechat_3.1.0.jar')
-    compile files('libs/Parse-1.9.4.jar')
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
-    compile files('libs/jpush-android-2.1.0.jar')
-    compile files('libs/MobTools-2016.0301.1053.jar')
-    compile files('libs/MobCommons-2016.0301.1053.jar')
-    compile files('libs/ShareSDK-Bluetooth-2.7.0.jar')
-    compile files('libs/ShareSDK-Core-2.7.0.jar')
-    compile files('libs/ShareSDK-Email-2.7.0.jar')
-    compile files('libs/ShareSDK-Facebook-2.7.0.jar')
-    compile files('libs/ShareSDK-QQ-2.7.0.jar')
-    compile files('libs/ShareSDK-QZone-2.7.0.jar')
-    compile files('libs/ShareSDK-ShortMessage-2.7.0.jar')
-    compile files('libs/ShareSDK-SinaWeibo-2.7.0.jar')
-    compile files('libs/ShareSDK-Twitter-2.7.0.jar')
-    compile files('libs/ShareSDK-Wechat-2.7.0.jar')
-    compile files('libs/ShareSDK-Wechat-Core-2.7.0.jar')
-    compile files('libs/ShareSDK-Wechat-Favorite-2.7.0.jar')
-    compile files('libs/ShareSDK-Wechat-Moments-2.7.0.jar')
 }
 
 //Decomposed version name and code (https://plus.google.com/+JakeWharton/posts/6f5TcVPRZij)
@@ -92,7 +88,8 @@ android {
 
     dexOptions {
         incremental true
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
+        preDexLibraries = false;
     }
 
     compileSdkVersion 23
@@ -143,8 +140,8 @@ android {
 
     //FIXME: remove this after lint errors have been taken care of
     lintOptions {
-        checkReleaseBuilds false
         abortOnError false
+        checkReleaseBuilds false
     }
 
     signingConfigs {
@@ -188,51 +185,39 @@ android {
         }
     }
 }
-buildscript {
-    ext.kotlin_version = '1.0.0-beta-4589'
 
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-repositories {
-    mavenCentral()
-}
 
 /**
  * @return The most recent git tag to be used as version name for the app.
  */
-def getGitVersion() {
-    def cmd = "git describe --tag"
-    try {
-        def proc = cmd.execute()
-        return proc.text.trim()
-    } catch (IOException e) {
-        //Unable to find 'git'
-        return "please update version name manually"
+    def getGitVersion() {
+        def cmd = "git describe --tag"
+        try {
+            def proc = cmd.execute()
+            return proc.text.trim()
+        } catch (IOException e) {
+            //Unable to find 'git'
+            return "please update version name manually"
+        }
     }
-}
 
-def getAppKeystoreFile() {
-    def filePath = hasProperty('ORG_DROIDPLANNER_ANDROID_KEYSTORE') ? ORG_DROIDPLANNER_ANDROID_KEYSTORE : null
-    return filePath ? file(filePath) : null
-}
+    def getAppKeystoreFile() {
+        def filePath = hasProperty('ORG_DROIDPLANNER_ANDROID_KEYSTORE') ? ORG_DROIDPLANNER_ANDROID_KEYSTORE : null
+        return filePath ? file(filePath) : null
+    }
 
-def getAppKeystorePassword() {
-    return hasProperty('ORG_DROIDPLANNER_ANDROID_KEYSTORE_PWD') ? ORG_DROIDPLANNER_ANDROID_KEYSTORE_PWD : ''
-}
+    def getAppKeystorePassword() {
+        return hasProperty('ORG_DROIDPLANNER_ANDROID_KEYSTORE_PWD') ? ORG_DROIDPLANNER_ANDROID_KEYSTORE_PWD : ''
+    }
 
-def getAppKeyPassword() {
-    return hasProperty('ORG_DROIDPLANNER_ANDROID_KEY_PWD') ? ORG_DROIDPLANNER_ANDROID_KEY_PWD : ''
-}
+    def getAppKeyPassword() {
+        return hasProperty('ORG_DROIDPLANNER_ANDROID_KEY_PWD') ? ORG_DROIDPLANNER_ANDROID_KEY_PWD : ''
+    }
 
-def getAppKey() {
-    return hasProperty('ORG_DROIDPLANNER_ANDROID_KEY_ALIAS') ? ORG_DROIDPLANNER_ANDROID_KEY_ALIAS : ''
-}
+    def getAppKey() {
+        return hasProperty('ORG_DROIDPLANNER_ANDROID_KEY_ALIAS') ? ORG_DROIDPLANNER_ANDROID_KEY_ALIAS : ''
+    }
 
-def getLocalIp() {
-    return '\"' + InetAddress.getLocalHost().getCanonicalHostName() + '\"'
-}
+    def getLocalIp() {
+        return '\"' + InetAddress.getLocalHost().getCanonicalHostName() + '\"'
+    }

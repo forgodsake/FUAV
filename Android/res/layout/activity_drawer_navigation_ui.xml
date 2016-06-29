@@ -48,6 +48,7 @@
         android:layout_width="158dp"
         android:layout_height="240dp"
         android:layout_gravity="start|center_vertical"
+        android:foregroundGravity="center"
         android:fitsSystemWindows="true"
         android:background="#DFFF"
         app:menu="@menu/navigation_drawer_items" />

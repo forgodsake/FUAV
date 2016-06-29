@@ -3,4 +3,15 @@
 <com.demo.sdk.DisplayView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/full_video_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/text_tips_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="视频窗口"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:background="@color/holo_blue_bright"
+        />
+
+</com.demo.sdk.DisplayView>

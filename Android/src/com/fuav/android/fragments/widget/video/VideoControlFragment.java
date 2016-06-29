@@ -1,7 +1,6 @@
 package com.fuav.android.fragments.widget.video;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,16 +12,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.demo.sdk.DisplayView;
-import com.demo.sdk.Player;
 import com.fuav.android.R;
 import com.fuav.android.utils.VideoThread;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -122,45 +117,45 @@ public class VideoControlFragment extends Fragment implements View.OnClickListen
             case R.id.shot_key_on:
                 SimpleDateFormat sDateFormat = new  SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
                 String date = sDateFormat.format(new Date());
-                Player _player = VideoThread._module.getPlayer();
-                if(shot_switch_left.getVisibility()==View.VISIBLE){
-                    Bitmap photo = _player.takePhoto();
-                    if (photo == null) {
-                        Toast.makeText(getActivity(),"拍照失败,请先连接相机.",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    String path = _projectPath.getPath() + "/" + date + ".jpeg";
-                    FileOutputStream out = null;
-                    try {
-                        out = new FileOutputStream(path);
-                        photo.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    } catch (IOException e) {
-
-                    }
-                      finally {
-                        try {
-                            if (out != null) {
-                                out.close();
-                            }
-                        } catch (IOException ignored) {}
-                    }
-                    Toast.makeText(getActivity(),"照片已存储",Toast.LENGTH_SHORT).show();
-                }else{
-                    if (_recording) {
-                        _player.endRecord();
-                        _recording = false;
-                        Toast.makeText(getActivity(),"结束录像",Toast.LENGTH_SHORT).show();
-                    } else {
-                        // file extension is mkv (default)
-                        if (_player.beginRecord(_projectPath.getPath(), date)) {
-                            _recording = true;
-                            Toast.makeText(getActivity(),"开始录像",Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(getActivity(),"录制失败,请先连接相机.",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                break;
+//                Player _player = VideoThread._module.getPlayer();
+//                if(shot_switch_left.getVisibility()==View.VISIBLE){
+//                    Bitmap photo = _player.takePhoto();
+//                    if (photo == null) {
+//                        Toast.makeText(getActivity(),"拍照失败,请先连接相机.",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    String path = _projectPath.getPath() + "/" + date + ".jpeg";
+//                    FileOutputStream out = null;
+//                    try {
+//                        out = new FileOutputStream(path);
+//                        photo.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//                    } catch (IOException e) {
+//
+//                    }
+//                      finally {
+//                        try {
+//                            if (out != null) {
+//                                out.close();
+//                            }
+//                        } catch (IOException ignored) {}
+//                    }
+//                    Toast.makeText(getActivity(),"照片已存储",Toast.LENGTH_SHORT).show();
+//                }else{
+//                    if (_recording) {
+//                        _player.endRecord();
+//                        _recording = false;
+//                        Toast.makeText(getActivity(),"结束录像",Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        // file extension is mkv (default)
+//                        if (_player.beginRecord(_projectPath.getPath(), date)) {
+//                            _recording = true;
+//                            Toast.makeText(getActivity(),"开始录像",Toast.LENGTH_SHORT).show();
+//                        }else{
+//                            Toast.makeText(getActivity(),"录制失败,请先连接相机.",Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }
+//                break;
         }
     }
 }

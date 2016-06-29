@@ -110,11 +110,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     private static final String ITEM_DETAIL_TAG = "Item Detail Window";
     private static final String MISSION_UPLOAD_CHECK_DIALOG_TAG = "Mission Upload check.";
 
-    /**
-     * Determines how long the failsafe view is visible for.
-     */
-    private static final long WARNING_VIEW_DISPLAY_TIMEOUT = 10000l; //ms
-
     private static final String ACTION_FLIGHT_ACTION_BUTTON = "Copter flight action button";
 
     private static final String EXTRA_OPENED_MISSION_FILENAME = "extra_opened_mission_filename";
@@ -373,9 +368,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public void onCreate(final Bundle savedInstanceState) {
         fragmentManager = getSupportFragmentManager();
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏(软件内)
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉状态栏(系统)
 
         super.onCreate(savedInstanceState);
 

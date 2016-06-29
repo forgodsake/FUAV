@@ -69,7 +69,7 @@ public class AMapFragment extends SupportMapFragment implements DPMap, LocationS
 
     private static final String TAG = AMapFragment.class.getSimpleName();
     private AMap mMap;
-    private OnLocationChangedListener mListener;
+    private LocationSource.OnLocationChangedListener mListener;
     //声明AMapLocationClient类对象
     public AMapLocationClient mlocationClient = null;
     //声明mLocationOption对象
